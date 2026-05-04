@@ -6,54 +6,693 @@
     <title>Manish Analysis</title>
     <style>
       :root {
-        color-scheme: light dark;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #f7f5ef;
-        color: #171717;
+        color: #1f2933;
+        background: #f3f1ea;
+        --ink: #1f2933;
+        --muted: #697586;
+        --line: #ddd8cb;
+        --panel: #fbfaf7;
+        --panel-strong: #ffffff;
+        --accent: #176b5b;
+        --accent-soft: #dbeae5;
+        --warn: #946327;
+        --shadow: 0 18px 48px rgba(31, 41, 51, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 292px 1fr;
+      }
+
+      aside {
+        padding: 22px;
+        border-right: 1px solid var(--line);
+        background: #ebe7dc;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .mark {
+        width: 38px;
+        height: 38px;
         display: grid;
         place-items: center;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.08rem;
+        line-height: 1.1;
+        letter-spacing: 0;
+      }
+
+      .brand span,
+      .section-label {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .section-label {
+        display: block;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+      }
+
+      .company-form {
+        display: grid;
+        grid-template-columns: 1fr 42px;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+
+      .company-form input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        color: var(--ink);
+        border-radius: 8px;
+        outline: 0;
+      }
+
+      .company-form input {
+        min-width: 0;
+        height: 42px;
+        padding: 0 12px;
+      }
+
+      .icon-button,
+      .ghost-button,
+      .primary-button,
+      .danger-button {
+        min-height: 40px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+
+      .icon-button,
+      .primary-button {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .ghost-button {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      .danger-button {
+        background: #f5e4da;
+        color: #8a3b20;
+      }
+
+      .companies {
+        display: grid;
+        gap: 8px;
+      }
+
+      .company {
+        width: 100%;
+        min-height: 54px;
+        padding: 9px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--ink);
+        text-align: left;
+      }
+
+      .company.active {
+        background: var(--panel-strong);
+        box-shadow: 0 8px 24px rgba(31, 41, 51, 0.08);
+      }
+
+      .company strong {
+        display: block;
+        font-size: 0.96rem;
+      }
+
+      .company small {
+        color: var(--muted);
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 99px;
+        background: var(--accent);
+        flex: 0 0 auto;
       }
 
       main {
-        width: min(720px, calc(100% - 40px));
+        padding: 28px;
       }
 
-      h1 {
-        margin: 0 0 12px;
-        font-size: clamp(2rem, 6vw, 4rem);
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .topbar h2 {
+        margin: 0;
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
         line-height: 1;
         letter-spacing: 0;
       }
 
-      p {
-        margin: 0;
-        max-width: 54ch;
-        color: #4b5563;
-        font-size: 1.125rem;
-        line-height: 1.7;
+      .topbar p {
+        margin: 8px 0 0;
+        color: var(--muted);
       }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          background: #111827;
-          color: #f9fafb;
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .stat {
+        min-height: 96px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-strong);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        min-height: 58px;
+        padding: 15px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-header h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .status {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .editor {
+        padding: 18px;
+        display: grid;
+        gap: 14px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      textarea {
+        min-height: 96px;
+        resize: vertical;
+        padding: 12px;
+        line-height: 1.5;
+      }
+
+      textarea[name="summary"] {
+        min-height: 124px;
+      }
+
+      .review {
+        padding: 18px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .review-section {
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .review-section:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .review-section span {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .review-section p {
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.58;
+      }
+
+      .empty {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      .hidden-file {
+        display: none;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          grid-template-columns: 1fr;
         }
 
-        p {
-          color: #d1d5db;
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .workspace,
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        main,
+        aside {
+          padding: 18px;
+        }
+
+        .topbar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .actions {
+          justify-content: stretch;
+        }
+
+        .actions button {
+          flex: 1 1 140px;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Manish Analysis</h1>
-      <p>A clean starting point for analysis notes, dashboards, experiments, and published insights.</p>
-    </main>
+    <div class="shell">
+      <aside>
+        <div class="brand">
+          <div class="mark">MA</div>
+          <div>
+            <h1>Manish Analysis</h1>
+            <span>Company research desk</span>
+          </div>
+        </div>
+
+        <span class="section-label">Companies</span>
+        <form class="company-form" id="companyForm">
+          <input id="companyName" aria-label="Company name" placeholder="Add company">
+          <button class="icon-button" title="Add company" aria-label="Add company">+</button>
+        </form>
+        <div class="companies" id="companies"></div>
+      </aside>
+
+      <main>
+        <div class="topbar">
+          <div>
+            <h2 id="pageTitle">Company X</h2>
+            <p id="pageSubtitle">Analysis saves automatically in this browser.</p>
+          </div>
+          <div class="actions">
+            <button class="ghost-button" id="exportBtn">Export</button>
+            <button class="ghost-button" id="importBtn">Import</button>
+            <button class="danger-button" id="deleteBtn">Delete</button>
+            <input class="hidden-file" id="importFile" type="file" accept="application/json">
+          </div>
+        </div>
+
+        <section class="stats">
+          <div class="stat">
+            <span>Companies</span>
+            <strong id="companyCount">0</strong>
+          </div>
+          <div class="stat">
+            <span>Words</span>
+            <strong id="wordCount">0</strong>
+          </div>
+          <div class="stat">
+            <span>Sections</span>
+            <strong id="sectionCount">0</strong>
+          </div>
+          <div class="stat">
+            <span>Last Saved</span>
+            <strong id="lastSaved">Now</strong>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Analysis Editor</h3>
+              <span class="status" id="saveStatus">Saved</span>
+            </div>
+            <form class="editor" id="analysisForm">
+              <label>
+                Summary
+                <textarea name="summary" placeholder="What does this company do, and why does it matter?"></textarea>
+              </label>
+              <label>
+                Business Model
+                <textarea name="businessModel" placeholder="Revenue streams, customer segments, pricing, distribution."></textarea>
+              </label>
+              <label>
+                Strengths
+                <textarea name="strengths" placeholder="Moats, advantages, founder insight, execution quality."></textarea>
+              </label>
+              <label>
+                Risks
+                <textarea name="risks" placeholder="Market risk, competition, regulation, concentration, weak signals."></textarea>
+              </label>
+              <label>
+                Notes
+                <textarea name="notes" placeholder="Anything else worth remembering."></textarea>
+              </label>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Review</h3>
+              <span class="status">Read mode</span>
+            </div>
+            <div class="review" id="review"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const storageKey = "manish-analysis:v1";
+      const fields = ["summary", "businessModel", "strengths", "risks", "notes"];
+      const labels = {
+        summary: "Summary",
+        businessModel: "Business Model",
+        strengths: "Strengths",
+        risks: "Risks",
+        notes: "Notes"
+      };
+
+      const defaultData = {
+        activeId: "company-x",
+        companies: [
+          {
+            id: "company-x",
+            name: "Company X",
+            updatedAt: Date.now(),
+            analysis: {
+              summary: "A sample company profile. Replace this with your own business analysis.",
+              businessModel: "Describe how revenue is created, captured, and scaled.",
+              strengths: "Add durable advantages, distribution strengths, or product quality.",
+              risks: "List uncertainty, constraints, and watchpoints.",
+              notes: "Use this space for loose observations."
+            }
+          },
+          {
+            id: "company-y",
+            name: "Company Y",
+            updatedAt: Date.now(),
+            analysis: {
+              summary: "",
+              businessModel: "",
+              strengths: "",
+              risks: "",
+              notes: ""
+            }
+          }
+        ]
+      };
+
+      const state = load();
+      const companiesEl = document.querySelector("#companies");
+      const form = document.querySelector("#analysisForm");
+      const companyForm = document.querySelector("#companyForm");
+      const companyName = document.querySelector("#companyName");
+      const pageTitle = document.querySelector("#pageTitle");
+      const saveStatus = document.querySelector("#saveStatus");
+      const review = document.querySelector("#review");
+      const companyCount = document.querySelector("#companyCount");
+      const wordCount = document.querySelector("#wordCount");
+      const sectionCount = document.querySelector("#sectionCount");
+      const lastSaved = document.querySelector("#lastSaved");
+      const exportBtn = document.querySelector("#exportBtn");
+      const importBtn = document.querySelector("#importBtn");
+      const importFile = document.querySelector("#importFile");
+      const deleteBtn = document.querySelector("#deleteBtn");
+
+      function load() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey));
+          return saved && Array.isArray(saved.companies) ? saved : structuredClone(defaultData);
+        } catch {
+          return structuredClone(defaultData);
+        }
+      }
+
+      function persist() {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+        saveStatus.textContent = "Saved";
+      }
+
+      function activeCompany() {
+        return state.companies.find((company) => company.id === state.activeId) || state.companies[0];
+      }
+
+      function slug(name) {
+        return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `company-${Date.now()}`;
+      }
+
+      function emptyAnalysis() {
+        return fields.reduce((acc, key) => ({ ...acc, [key]: "" }), {});
+      }
+
+      function render() {
+        const company = activeCompany();
+        if (!company) return;
+
+        pageTitle.textContent = company.name;
+        companiesEl.innerHTML = "";
+        state.companies.forEach((item) => {
+          const button = document.createElement("button");
+          button.className = `company${item.id === company.id ? " active" : ""}`;
+          button.type = "button";
+          button.innerHTML = `
+            <span>
+              <strong>${escapeHtml(item.name)}</strong>
+              <small>${relativeTime(item.updatedAt)}</small>
+            </span>
+            <span class="dot" aria-hidden="true"></span>
+          `;
+          button.addEventListener("click", () => {
+            state.activeId = item.id;
+            persist();
+            render();
+          });
+          companiesEl.appendChild(button);
+        });
+
+        fields.forEach((field) => {
+          form.elements[field].value = company.analysis[field] || "";
+        });
+
+        const filled = fields.filter((field) => (company.analysis[field] || "").trim());
+        companyCount.textContent = state.companies.length;
+        wordCount.textContent = fields.reduce((sum, field) => sum + countWords(company.analysis[field]), 0);
+        sectionCount.textContent = filled.length;
+        lastSaved.textContent = relativeTime(company.updatedAt).replace(" ago", "");
+
+        review.innerHTML = fields.map((field) => `
+          <div class="review-section">
+            <span>${labels[field]}</span>
+            <p class="${company.analysis[field] ? "" : "empty"}">${escapeHtml(company.analysis[field] || "No notes yet.")}</p>
+          </div>
+        `).join("");
+      }
+
+      function countWords(text = "") {
+        return text.trim() ? text.trim().split(/\s+/).length : 0;
+      }
+
+      function relativeTime(time) {
+        const diff = Math.max(0, Date.now() - time);
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        if (days) return `${days}d ago`;
+        if (hours) return `${hours}h ago`;
+        if (minutes) return `${minutes}m ago`;
+        return "Now";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      form.addEventListener("input", (event) => {
+        const company = activeCompany();
+        company.analysis[event.target.name] = event.target.value;
+        company.updatedAt = Date.now();
+        saveStatus.textContent = "Saving...";
+        persist();
+        render();
+      });
+
+      companyForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = companyName.value.trim();
+        if (!name) return;
+        const idBase = slug(name);
+        let id = idBase;
+        let i = 2;
+        while (state.companies.some((company) => company.id === id)) {
+          id = `${idBase}-${i}`;
+          i += 1;
+        }
+        state.companies.push({ id, name, updatedAt: Date.now(), analysis: emptyAnalysis() });
+        state.activeId = id;
+        companyName.value = "";
+        persist();
+        render();
+      });
+
+      deleteBtn.addEventListener("click", () => {
+        const company = activeCompany();
+        if (state.companies.length === 1) return;
+        state.companies = state.companies.filter((item) => item.id !== company.id);
+        state.activeId = state.companies[0].id;
+        persist();
+        render();
+      });
+
+      exportBtn.addEventListener("click", () => {
+        const file = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "manish-analysis.json";
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+
+      importBtn.addEventListener("click", () => importFile.click());
+      importFile.addEventListener("change", async () => {
+        const file = importFile.files[0];
+        if (!file) return;
+        const imported = JSON.parse(await file.text());
+        if (!Array.isArray(imported.companies)) return;
+        state.companies = imported.companies;
+        state.activeId = imported.activeId || imported.companies[0].id;
+        persist();
+        render();
+      });
+
+      render();
+    </script>
   </body>
 </html>
