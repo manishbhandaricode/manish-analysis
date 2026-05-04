@@ -136,6 +136,21 @@
         visibility: hidden;
       }
 
+      .skip-intro {
+        position: fixed;
+        top: 18px;
+        right: 18px;
+        z-index: 22;
+        min-height: 32px;
+        padding: 0 10px;
+        border-radius: 8px;
+        color: rgba(255,255,255,.72);
+        background: rgba(255,255,255,.07);
+        border: 1px solid rgba(255,255,255,.12);
+        font-size: .78rem;
+        font-weight: 800;
+      }
+
       .book-stage {
         width: min(1120px, 96vw);
         min-height: min(720px, 86vh);
@@ -275,6 +290,59 @@
         letter-spacing: 0;
       }
 
+      .dossier-lines {
+        display: grid;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .dossier-line {
+        height: 8px;
+        border-radius: 999px;
+        background: #d7d9d4;
+        overflow: hidden;
+      }
+
+      .dossier-line::before {
+        content: "";
+        display: block;
+        width: var(--w);
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #111, #d8b86f, #75d7cd);
+        animation: dossierLoad 1800ms ease-in-out both;
+      }
+
+      .insight-map {
+        position: relative;
+        height: 120px;
+        margin-top: 24px;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 10px;
+        background:
+          linear-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,.06) 1px, transparent 1px);
+        background-size: 42px 42px;
+      }
+
+      .insight-node {
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        border-radius: 999px;
+        background: #111;
+        box-shadow: 0 0 18px rgba(0,0,0,.2);
+        animation: nodePulse 1800ms ease-in-out infinite;
+      }
+
+      .insight-node:nth-child(1) { left: 16%; top: 62%; }
+      .insight-node:nth-child(2) { left: 48%; top: 28%; background: #d8b86f; animation-delay: .25s; }
+      .insight-node:nth-child(3) { left: 76%; top: 48%; background: #75d7cd; animation-delay: .5s; }
+
+      .welcome.hide + .shell {
+        animation: dashboardIn 900ms cubic-bezier(.2,.8,.2,1) both;
+      }
+
       .inside-page p {
         margin: 18px 0 0;
         max-width: 28ch;
@@ -282,16 +350,6 @@
         line-height: 1.55;
       }
 
-      .welcome-action {
-        position: absolute;
-        left: 50%;
-        bottom: 28px;
-        transform: translateX(-50%);
-      }
-
-      .welcome.hide + .shell {
-        animation: dashboardIn 700ms ease both;
-      }
 
       button, input, textarea { font: inherit; }
       button { border: 0; cursor: pointer; }
@@ -978,6 +1036,13 @@
         from { opacity: 0; transform: translateY(18px) scale(.985); }
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
+      @keyframes dossierLoad {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+      }
+      @keyframes nodePulse {
+        50% { transform: scale(1.25); filter: brightness(1.15); }
+      }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -1013,14 +1078,25 @@
     <div class="light-orbit one" aria-hidden="true"></div>
     <div class="light-orbit two" aria-hidden="true"></div>
     <section class="welcome" id="welcome" aria-label="Business Analyst welcome">
+      <button class="skip-intro" id="skipIntroBtn">Skip</button>
       <div class="book-stage">
         <div class="book" aria-hidden="true">
           <div class="inside-page left-inside">
             <p>Global workspace for competitor research, company analysis, and founder handoff reports.</p>
+            <div class="dossier-lines">
+              <div class="dossier-line" style="--w: 74%"></div>
+              <div class="dossier-line" style="--w: 52%"></div>
+              <div class="dossier-line" style="--w: 88%"></div>
+            </div>
           </div>
           <div class="inside-page right-inside">
             <h1>Business<br>Analyst</h1>
             <p>Turn research into clear decisions for teams that build.</p>
+            <div class="insight-map">
+              <i class="insight-node"></i>
+              <i class="insight-node"></i>
+              <i class="insight-node"></i>
+            </div>
           </div>
           <div class="cover left-cover">
             <div class="cover-title">Business</div>
@@ -1030,7 +1106,6 @@
           </div>
           <div class="book-spine"></div>
         </div>
-        <button class="glow-button welcome-action" id="enterDashboardBtn">Open Dashboard</button>
       </div>
     </section>
     <div class="shell">
@@ -1543,8 +1618,13 @@
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
-      $("enterDashboardBtn").addEventListener("click", () => {
+      function finishIntro() {
         welcome.classList.add("hide");
+      }
+
+      $("skipIntroBtn").addEventListener("click", finishIntro);
+      window.addEventListener("load", () => {
+        setTimeout(finishIntro, 3900);
       });
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
