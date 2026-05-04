@@ -11,6 +11,8 @@ Minimal business analysis documentation tool.
 - Source document list with delete controls
 - Full-screen editable business analysis report view
 - Entire report delete/clear action
+- Compact section-tab report builder
+- Custom cursor, reactive glass panels, and animated strategy graphics
 - Static Vercel deployment
 
 ## Local

@@ -32,6 +32,39 @@
         overflow-x: hidden;
       }
 
+      .cursor-dot,
+      .cursor-ring {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 30;
+        pointer-events: none;
+        border-radius: 999px;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+      }
+
+      .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        box-shadow: 0 0 18px rgba(255,255,255,.9);
+      }
+
+      .cursor-ring {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(255,255,255,.52);
+        transition: width 160ms ease, height 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .cursor-active .cursor-ring {
+        width: 52px;
+        height: 52px;
+        border-color: rgba(255,255,255,.92);
+        background: rgba(255,255,255,.06);
+      }
+
       body::before {
         content: "";
         position: fixed;
@@ -311,12 +344,31 @@
 
       .workspace {
         display: grid;
-        grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+        grid-template-columns: minmax(0, 1fr) minmax(360px, .86fr);
         gap: 18px;
         align-items: start;
       }
 
-      .panel { overflow: hidden; }
+      .panel {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .panel::before,
+      .stat::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.16), transparent 34%);
+        transition: opacity 180ms ease;
+      }
+
+      .panel:hover::before,
+      .stat:hover::before {
+        opacity: 1;
+      }
       .panel-header {
         min-height: 66px;
         padding: 16px 18px;
@@ -328,7 +380,40 @@
         background: rgba(255,255,255,.05);
       }
 
-      .editor, .review, .source-body { padding: 18px; }
+      .editor, .review, .source-body, .strategy-body { padding: 18px; }
+      .section-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .section-tab {
+        min-height: 48px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        color: var(--muted);
+        background: rgba(255,255,255,.05);
+        border: 1px solid var(--line);
+        text-align: left;
+        font-weight: 850;
+        transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+      }
+
+      .section-tab:hover,
+      .section-tab.active {
+        transform: translateY(-1px);
+        color: #fff;
+        background: rgba(255,255,255,.1);
+      }
+
+      .section-tab small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: .72rem;
+        font-weight: 700;
+      }
+
       label {
         display: grid;
         gap: 8px;
@@ -356,7 +441,82 @@
         box-shadow: 0 0 0 4px rgba(255,255,255,.1);
       }
 
-      textarea[name="summary"] { min-height: 124px; }
+      textarea[name="activeSection"] {
+        min-height: 236px;
+      }
+
+      .strategy-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .signal-card {
+        min-height: 134px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255,255,255,.06);
+        overflow: hidden;
+      }
+
+      .signal-card span {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: .74rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .bars {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar {
+        height: 9px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.08);
+        overflow: hidden;
+      }
+
+      .bar::before {
+        content: "";
+        display: block;
+        width: var(--w);
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--teal));
+        animation: loadbar 2.8s ease-in-out infinite alternate;
+      }
+
+      .matrix {
+        position: relative;
+        height: 86px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+        background-size: 50% 50%;
+      }
+
+      .matrix-dot {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 18px rgba(255,255,255,.8);
+        animation: floatdot 3.4s ease-in-out infinite;
+      }
+
+      .matrix-dot:nth-child(1) { left: 18%; top: 56%; }
+      .matrix-dot:nth-child(2) { left: 58%; top: 28%; animation-delay: .4s; background: var(--gold); }
+      .matrix-dot:nth-child(3) { left: 76%; top: 48%; animation-delay: .8s; background: var(--teal); }
+
       .source-card {
         justify-content: space-between;
         gap: 10px;
@@ -470,6 +630,14 @@
         letter-spacing: 0;
       }
 
+      .report-paper blockquote {
+        margin: 18px 0 0;
+        padding: 14px 16px;
+        border-left: 4px solid #111;
+        background: #f0f1ee;
+        color: #3b4048;
+      }
+
       .report-paper h3 {
         margin: 18px 0 8px;
         color: #3f4651;
@@ -512,6 +680,14 @@
       @keyframes spin { to { --spin: 360deg; } }
       @keyframes ambient { to { transform: translate3d(2%, -1%, 0) scale(1.03); } }
       @keyframes breathe { 50% { transform: scale(1.28); opacity: .72; } }
+      @keyframes loadbar { to { filter: brightness(1.35); transform: translateX(8px); } }
+      @keyframes floatdot { 50% { transform: translate3d(6px, -7px, 0); } }
+
+      @media (pointer: fine) {
+        body, button { cursor: none; }
+        input, textarea, [contenteditable="true"] { cursor: text; }
+        .cursor-dot, .cursor-ring { opacity: 1; }
+      }
 
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
@@ -535,6 +711,8 @@
     </style>
   </head>
   <body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
     <div class="shell">
       <aside>
         <div class="brand">
@@ -585,12 +763,42 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h3>Report Builder</h3>
-                  <span>Structured business research sections</span>
+                  <h3>Focused Report Builder</h3>
+                  <span>Pick one compact analyst section at a time</span>
                 </div>
                 <span class="status" id="saveStatus">Saved</span>
               </div>
               <form class="editor" id="analysisForm"></form>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <h3>Strategy Signals</h3>
+                  <span>Growth, weakness conversion, and competitive motion</span>
+                </div>
+                <span class="status">Live graphic</span>
+              </div>
+              <div class="strategy-body">
+                <div class="strategy-grid">
+                  <div class="signal-card">
+                    <span>Growth Levers</span>
+                    <div class="bars">
+                      <div class="bar" style="--w: 72%"></div>
+                      <div class="bar" style="--w: 54%"></div>
+                      <div class="bar" style="--w: 86%"></div>
+                    </div>
+                  </div>
+                  <div class="signal-card">
+                    <span>Competitive Map</span>
+                    <div class="matrix" aria-hidden="true">
+                      <i class="matrix-dot"></i>
+                      <i class="matrix-dot"></i>
+                      <i class="matrix-dot"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="panel">
@@ -635,21 +843,17 @@
     </div>
 
     <script>
-      const storageKey = "manish-analysis:v4";
-      const legacyKeys = ["manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
+      const storageKey = "manish-analysis:v5";
+      const legacyKeys = ["manish-analysis:v4", "manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
       const fields = [
-        ["summary", "Executive Summary", "High-level thesis, why this company matters, and key conclusion."],
-        ["companyOverview", "Company Overview", "Products, customers, geography, operating stage, leadership context."],
-        ["industryContext", "Industry & Macro Context", "Industry cycle, macro drivers, regulation, category tailwinds/headwinds."],
-        ["market", "Market Opportunity", "Market size, growth, customer demand, timing, and segmentation."],
-        ["businessModel", "Business Model & Unit Economics", "Revenue streams, pricing, margins, acquisition, retention, payback."],
-        ["competitivePosition", "Competitive Positioning", "Competitors, substitutes, differentiation, defensibility, switching costs."],
-        ["financialSignals", "Financial & Operating Signals", "Revenue quality, profitability, burn, growth efficiency, key KPIs."],
-        ["strengths", "Key Strengths", "Moats, distribution, product quality, operating leverage, team advantages."],
-        ["risks", "Principal Risks", "Market, execution, competition, capital, regulation, concentration, unknowns."],
-        ["recommendation", "Analyst Recommendation", "Final view, conviction level, next diligence steps, open questions."],
-        ["notes", "Research Notes & Source Extracts", "Imported source text and loose analyst observations."]
-      ].map(([key, label, placeholder]) => ({ key, label, placeholder }));
+        ["thesis", "Analyst Thesis", "Executive view: what this company is, why it matters, and what can be learned from it.", "Core view"],
+        ["growthModel", "Growth Model", "How this business grows: acquisition, retention, monetization, expansion, operations, and scale loops.", "How it grows"],
+        ["competitiveIntel", "Competitive Intelligence", "Competitors, positioning, differentiation, customer pull, weak spots, and where this company wins or loses.", "Market fight"],
+        ["weaknessToAdvantage", "Weakness To Advantage", "Convert observed weaknesses into your company's strengths: gaps, mistakes, ignored segments, bad UX, pricing openings.", "Exploit gaps"],
+        ["executionPlan", "Action Plan", "What to implement: strategic moves, product changes, GTM experiments, risks, owners, and next research steps.", "Do next"],
+        ["sourceNotes", "Source Notes", "Imported document excerpts, rough notes, reference findings, and evidence behind the report.", "Evidence"]
+      ].map(([key, label, placeholder, short]) => ({ key, label, placeholder, short }));
+      let activeSectionKey = fields[0].key;
 
       const defaultData = {
         activeId: "company-x",
@@ -661,16 +865,12 @@
             documents: [],
             analysis: {
               summary: "Company X is a sample business analysis report. Replace this with the central analyst thesis.",
-              companyOverview: "Describe the product, customer, operating stage, geography, and leadership context.",
-              industryContext: "Frame the industry cycle, macro conditions, regulatory context, and timing.",
-              market: "Define the addressable market, growth rate, customer demand, and market segmentation.",
-              businessModel: "Explain how value is created, captured, retained, and scaled.",
-              competitivePosition: "Map direct competitors, substitutes, differentiation, and defensibility.",
-              financialSignals: "Track revenue quality, margin structure, burn, efficiency, and core KPIs.",
-              strengths: "Add durable advantages, distribution strengths, product quality, or operating leverage.",
-              risks: "List uncertainty, constraints, and watchpoints.",
-              recommendation: "Summarize analyst view, confidence, and next diligence steps.",
-              notes: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
+              thesis: "Company X is a sample target. Replace this with the central analyst thesis and strategic reason to study it.",
+              growthModel: "Map growth loops, acquisition channels, retention hooks, monetization, and operational scale advantages.",
+              competitiveIntel: "Track competitors, positioning, differentiation, customer pull, and where Company X is vulnerable.",
+              weaknessToAdvantage: "Turn Company X weaknesses into your company's opportunities: product gaps, pricing openings, ignored customers, slow operations, or poor UX.",
+              executionPlan: "List concrete moves your company can implement to overtake competition: product bets, GTM tests, process changes, and next research.",
+              sourceNotes: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
             }
           },
           { id: "company-y", name: "Company Y", updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() }
@@ -691,6 +891,8 @@
       const docFile = $("docFile");
       const reportModal = $("reportModal");
       const reportPaper = $("reportPaper");
+      const cursorDot = $("cursorDot");
+      const cursorRing = $("cursorRing");
 
       function emptyAnalysis() {
         return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
@@ -702,7 +904,7 @@
           const saved = raw ? JSON.parse(raw) : null;
           if (!saved || !Array.isArray(saved.companies)) return structuredClone(defaultData);
           saved.companies.forEach((company) => {
-            company.analysis = { ...emptyAnalysis(), ...(company.analysis || {}) };
+            company.analysis = migrateAnalysis(company.analysis || {});
             company.documents = Array.isArray(company.documents) ? company.documents : [];
             company.updatedAt = company.updatedAt || Date.now();
           });
@@ -710,6 +912,17 @@
         } catch {
           return structuredClone(defaultData);
         }
+      }
+
+      function migrateAnalysis(analysis) {
+        const migrated = { ...emptyAnalysis(), ...analysis };
+        if (!migrated.thesis) migrated.thesis = analysis.summary || "";
+        if (!migrated.growthModel) migrated.growthModel = [analysis.companyOverview, analysis.market, analysis.businessModel, analysis.financialSignals].filter(Boolean).join("\n\n");
+        if (!migrated.competitiveIntel) migrated.competitiveIntel = analysis.competitivePosition || "";
+        if (!migrated.weaknessToAdvantage) migrated.weaknessToAdvantage = [analysis.strengths && `Observed strengths to benchmark:\n${analysis.strengths}`, analysis.risks && `Observed weaknesses or risks to convert:\n${analysis.risks}`].filter(Boolean).join("\n\n");
+        if (!migrated.executionPlan) migrated.executionPlan = analysis.recommendation || "";
+        if (!migrated.sourceNotes) migrated.sourceNotes = analysis.notes || "";
+        return migrated;
       }
 
       function activeCompany() {
@@ -751,11 +964,21 @@
       }
 
       function renderEditor(company) {
-        form.innerHTML = fields.map((field) => `
-          <label>${field.label}
-            <textarea name="${field.key}" placeholder="${field.placeholder}">${esc(company.analysis[field.key] || "")}</textarea>
+        const activeField = fields.find((field) => field.key === activeSectionKey) || fields[0];
+        activeSectionKey = activeField.key;
+        form.innerHTML = `
+          <div class="section-tabs">
+            ${fields.map((field) => `
+              <button class="section-tab${field.key === activeSectionKey ? " active" : ""}" type="button" data-section="${field.key}">
+                ${field.label}
+                <small>${field.short}</small>
+              </button>
+            `).join("")}
+          </div>
+          <label>${activeField.label}
+            <textarea name="activeSection" data-field="${activeField.key}" placeholder="${activeField.placeholder}">${esc(company.analysis[activeField.key] || "")}</textarea>
           </label>
-        `).join("");
+        `;
       }
 
       function renderStats(company) {
@@ -848,6 +1071,7 @@
       }
 
       function deleteActiveReport() {
+        if (!confirm("Delete this report from this browser? This removes the current report, imported documents, and saved analysis.")) return;
         if (state.companies.length === 1) {
           updateCompany((company) => {
             company.documents = [];
@@ -879,15 +1103,15 @@
         const doc = { id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, name: fileName, text, createdAt: Date.now() };
         company.documents.push(doc);
         const block = `Source: ${fileName}\n${text}`;
-        company.analysis.notes = `${company.analysis.notes ? `${company.analysis.notes}\n\n` : ""}${block}`;
-        if (!company.analysis.summary) company.analysis.summary = text.split(/\n\s*\n/)[0].slice(0, 760);
+        company.analysis.sourceNotes = `${company.analysis.sourceNotes ? `${company.analysis.sourceNotes}\n\n` : ""}${block}`;
+        if (!company.analysis.thesis) company.analysis.thesis = text.split(/\n\s*\n/)[0].slice(0, 760);
       }
 
       function removeDocument(company, id) {
         const doc = company.documents.find((item) => item.id === id);
         if (!doc) return;
         company.documents = company.documents.filter((item) => item.id !== id);
-        company.analysis.notes = company.analysis.notes.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
+        company.analysis.sourceNotes = company.analysis.sourceNotes.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
       }
 
       function countWords(text = "") { return text.trim() ? text.trim().split(/\s+/).length : 0; }
@@ -913,7 +1137,17 @@
         persist();
         render();
       });
-      form.addEventListener("input", (event) => updateCompany((company) => { company.analysis[event.target.name] = event.target.value; }));
+      form.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-section]");
+        if (!button) return;
+        activeSectionKey = button.dataset.section;
+        render();
+      });
+      form.addEventListener("input", (event) => {
+        const field = event.target.dataset.field;
+        if (!field) return;
+        updateCompany((company) => { company.analysis[field] = event.target.value; });
+      });
       companyForm.addEventListener("submit", (event) => {
         event.preventDefault();
         const name = companyName.value.trim();
@@ -954,6 +1188,22 @@
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
+
+      window.addEventListener("pointermove", (event) => {
+        if (!cursorDot || !cursorRing) return;
+        cursorDot.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
+        cursorRing.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
+        const target = event.target.closest("button, .company, .panel, .stat, [contenteditable='true']");
+        document.body.classList.toggle("cursor-active", Boolean(target));
+      });
+
+      document.addEventListener("pointermove", (event) => {
+        const target = event.target.closest(".panel, .stat");
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
+        target.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+        target.style.setProperty("--my", `${event.clientY - rect.top}px`);
+      });
 
       render();
     </script>
