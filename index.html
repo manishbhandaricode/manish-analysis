@@ -351,6 +351,117 @@
         animation: streakOut 1.25s ease .42s both;
       }
 
+      .insight-entry {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .insight-entry::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
+          linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(circle at center, black, transparent 72%);
+        animation: gridDrift 2.4s ease-in-out both;
+      }
+
+      .insight-entry::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 22% 28%, rgba(255,255,255,.16), transparent 20%),
+          radial-gradient(circle at 78% 62%, rgba(117,215,205,.12), transparent 24%),
+          radial-gradient(circle at 58% 18%, rgba(216,184,111,.14), transparent 22%);
+        animation: insightFade 2.7s ease both;
+      }
+
+      .insight-stage {
+        position: relative;
+        z-index: 2;
+        width: min(980px, calc(100% - 36px));
+        min-height: min(620px, 82vh);
+        display: grid;
+        place-items: center;
+      }
+
+      .insight-blocks {
+        position: absolute;
+        inset: 0;
+      }
+
+      .insight-block {
+        position: absolute;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 10px;
+        background: rgba(255,255,255,.08);
+        box-shadow: 0 24px 70px rgba(0,0,0,.24);
+        backdrop-filter: blur(16px);
+        animation: blockAssemble 1.25s cubic-bezier(.2,.8,.2,1) both, blockBreathe 1.4s ease-in-out 1.15s infinite alternate;
+      }
+
+      .insight-block:nth-child(1) { width: 26%; height: 62%; left: 4%; top: 19%; transform: translate(-44vw, 8vh) rotate(-8deg); }
+      .insight-block:nth-child(2) { width: 38%; height: 22%; left: 32%; top: 18%; transform: translate(0, -42vh) rotate(4deg); animation-delay: .08s, 1.2s; }
+      .insight-block:nth-child(3) { width: 38%; height: 38%; left: 32%; top: 44%; transform: translate(0, 42vh) rotate(-4deg); animation-delay: .16s, 1.28s; }
+      .insight-block:nth-child(4) { width: 24%; height: 30%; right: 4%; top: 19%; transform: translate(42vw, -6vh) rotate(8deg); animation-delay: .24s, 1.36s; }
+      .insight-block:nth-child(5) { width: 24%; height: 28%; right: 4%; bottom: 19%; transform: translate(42vw, 10vh) rotate(-8deg); animation-delay: .32s, 1.44s; }
+
+      .insight-wordmark {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        justify-items: center;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .flow-words {
+        display: flex;
+        gap: clamp(10px, 2vw, 18px);
+        flex-wrap: wrap;
+        justify-content: center;
+        color: rgba(255,255,255,.58);
+        font-size: clamp(.8rem, 1.5vw, 1rem);
+        font-weight: 900;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .flow-words span {
+        opacity: 0;
+        transform: translateY(10px);
+        animation: wordIn .52s ease both;
+      }
+
+      .flow-words span:nth-child(2) { animation-delay: .28s; }
+      .flow-words span:nth-child(3) { animation-delay: .56s; }
+
+      .insight-wordmark h1 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(3rem, 9vw, 8rem);
+        line-height: .9;
+        letter-spacing: 0;
+        animation: titleResolve 1.2s cubic-bezier(.2,.8,.2,1) .62s both;
+      }
+
+      .insight-wordmark p {
+        width: min(620px, 90vw);
+        margin: 0;
+        color: rgba(255,255,255,.68);
+        line-height: 1.55;
+        animation: wordIn .55s ease .96s both;
+      }
+
+      .insight-entry.opening .insight-stage {
+        animation: insightExit .72s ease both;
+      }
+
       .book-stage {
         position: absolute;
         inset: 0;
@@ -1348,6 +1459,28 @@
         40% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
         100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1.18); }
       }
+      @keyframes blockAssemble {
+        to { transform: translate(0, 0) rotate(0); }
+      }
+      @keyframes blockBreathe {
+        to { border-color: rgba(255,255,255,.24); background: rgba(255,255,255,.105); }
+      }
+      @keyframes wordIn {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes titleResolve {
+        from { opacity: 0; transform: scale(.96); filter: blur(8px); }
+        to { opacity: 1; transform: scale(1); filter: blur(0); }
+      }
+      @keyframes insightExit {
+        to { opacity: 0; transform: translateY(-18px) scale(.985); filter: blur(10px); }
+      }
+      @keyframes gridDrift {
+        to { transform: translate3d(-18px, -18px, 0); opacity: .54; }
+      }
+      @keyframes insightFade {
+        80%, 100% { opacity: .72; }
+      }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -1382,24 +1515,24 @@
     <div class="cursor-ring" id="cursorRing"></div>
     <div class="light-orbit one" aria-hidden="true"></div>
     <div class="light-orbit two" aria-hidden="true"></div>
-    <section class="welcome museum-entry" id="welcome" aria-label="Opening the Business Analyst archive">
+    <section class="welcome insight-entry" id="welcome" aria-label="Business Analyst insight blocks intro">
       <button class="skip-intro" id="skipIntroBtn">Skip</button>
-      <div class="museum-entry-panel museum-entry-left" aria-hidden="true">
-        <div class="museum-entry-lattice"></div>
-      </div>
-      <div class="museum-entry-panel museum-entry-right" aria-hidden="true">
-        <div class="museum-entry-lattice"></div>
-      </div>
-      <div class="data-streak" aria-hidden="true"></div>
-      <div class="museum-entry-center">
-        <span class="museum-entry-seal">BA</span>
-        <strong>Business Analyst</strong>
-        <small>Opening the archive doors</small>
-        <p class="entry-microcopy">Research entries, opportunity signals, and team-ready decisions.</p>
-        <div class="entry-kpis" aria-hidden="true">
-          <span>Learn</span>
-          <span>Decide</span>
-          <span>Ship</span>
+      <div class="insight-stage">
+        <div class="insight-blocks" aria-hidden="true">
+          <i class="insight-block"></i>
+          <i class="insight-block"></i>
+          <i class="insight-block"></i>
+          <i class="insight-block"></i>
+          <i class="insight-block"></i>
+        </div>
+        <div class="insight-wordmark">
+          <div class="flow-words">
+            <span>Research</span>
+            <span>Insight</span>
+            <span>Action</span>
+          </div>
+          <h1>Business<br>Analyst</h1>
+          <p>Structured reports for founders, developers, and teams that need clear decisions.</p>
         </div>
       </div>
     </section>
@@ -1915,12 +2048,12 @@
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
       function finishIntro() {
         welcome.classList.add("opening");
-        setTimeout(() => welcome.classList.add("hide"), 1250);
+        setTimeout(() => welcome.classList.add("hide"), 720);
       }
 
       $("skipIntroBtn").addEventListener("click", () => welcome.classList.add("hide"));
       window.addEventListener("load", () => {
-        setTimeout(finishIntro, 520);
+        setTimeout(finishIntro, 2500);
       });
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
