@@ -202,11 +202,12 @@
         will-change: transform;
         background:
           linear-gradient(90deg, rgba(255,255,255,.12), transparent 16%, rgba(0,0,0,.22) 82%),
+          radial-gradient(circle at var(--glow-x, 50%) 50%, rgba(255,255,255,.13), transparent 24%),
           repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 42px),
           repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 68px),
           linear-gradient(135deg, #17191d, #090a0c 54%, #25282e);
         box-shadow: inset 0 0 70px rgba(0,0,0,.42), 0 0 58px rgba(0,0,0,.5);
-        transition: transform 1.9s cubic-bezier(.76,.02,.14,1), opacity .78s 1.35s;
+        transition: transform 1.18s cubic-bezier(.76,.02,.14,1), opacity .48s .84s;
       }
 
       .museum-entry-panel::after {
@@ -226,6 +227,7 @@
         left: 0;
         border-right: 1px solid rgba(255,255,255,.16);
         transform-origin: 0;
+        --glow-x: 72%;
       }
 
       .museum-entry-left::after {
@@ -236,6 +238,7 @@
         right: 0;
         border-left: 1px solid rgba(255,255,255,.16);
         transform-origin: 100%;
+        --glow-x: 28%;
       }
 
       .museum-entry-right::after {
@@ -244,12 +247,12 @@
 
       .museum-entry.opening .museum-entry-left {
         opacity: .94;
-        transform: perspective(1400px) rotateY(-86deg) translate(-18vw);
+        transform: perspective(1400px) rotateY(-88deg) translate(-22vw);
       }
 
       .museum-entry.opening .museum-entry-right {
         opacity: .94;
-        transform: perspective(1400px) rotateY(86deg) translate(18vw);
+        transform: perspective(1400px) rotateY(88deg) translate(22vw);
       }
 
       .museum-entry-lattice {
@@ -276,7 +279,7 @@
         background: linear-gradient(rgba(255,255,255,.13), rgba(255,255,255,.06)), rgba(0,0,0,.38);
         border: 1px solid rgba(255,255,255,.24);
         border-radius: 8px;
-        transition: opacity .52s .52s, transform .52s .52s;
+        transition: opacity .38s .24s, transform .38s .24s;
       }
 
       .museum-entry.opening .museum-entry-center {
@@ -306,6 +309,46 @@
       .museum-entry-center small {
         color: rgba(255,255,255,.82);
         font-size: clamp(14px, 2.3vw, 18px);
+      }
+
+      .entry-microcopy {
+        margin: 0;
+        color: rgba(255,255,255,.58);
+        font-size: .82rem;
+        line-height: 1.45;
+      }
+
+      .entry-kpis {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 6px;
+      }
+
+      .entry-kpis span {
+        min-height: 34px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 8px;
+        color: rgba(255,255,255,.75);
+        background: rgba(255,255,255,.06);
+        font-size: .72rem;
+        font-weight: 900;
+      }
+
+      .data-streak {
+        position: absolute;
+        z-index: 4;
+        left: 50%;
+        top: 50%;
+        width: min(72vw, 760px);
+        height: 1px;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), var(--gold), rgba(117,215,205,.75), transparent);
+        box-shadow: 0 0 28px rgba(255,255,255,.38);
+        animation: streakOut 1.25s ease .42s both;
       }
 
       .book-stage {
@@ -1300,6 +1343,11 @@
         from { opacity: 0; transform: scale(.96); }
         to { opacity: 1; transform: scale(1); }
       }
+      @keyframes streakOut {
+        0% { opacity: 0; transform: translate(-50%, -50%) scaleX(.08); }
+        40% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1.18); }
+      }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -1342,10 +1390,17 @@
       <div class="museum-entry-panel museum-entry-right" aria-hidden="true">
         <div class="museum-entry-lattice"></div>
       </div>
+      <div class="data-streak" aria-hidden="true"></div>
       <div class="museum-entry-center">
         <span class="museum-entry-seal">BA</span>
         <strong>Business Analyst</strong>
         <small>Opening the archive doors</small>
+        <p class="entry-microcopy">Research entries, opportunity signals, and team-ready decisions.</p>
+        <div class="entry-kpis" aria-hidden="true">
+          <span>Learn</span>
+          <span>Decide</span>
+          <span>Ship</span>
+        </div>
       </div>
     </section>
     <div class="shell">
@@ -1860,12 +1915,12 @@
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
       function finishIntro() {
         welcome.classList.add("opening");
-        setTimeout(() => welcome.classList.add("hide"), 1900);
+        setTimeout(() => welcome.classList.add("hide"), 1250);
       }
 
       $("skipIntroBtn").addEventListener("click", () => welcome.classList.add("hide"));
       window.addEventListener("load", () => {
-        setTimeout(finishIntro, 900);
+        setTimeout(finishIntro, 520);
       });
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
