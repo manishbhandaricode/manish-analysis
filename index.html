@@ -348,6 +348,87 @@
         line-height: 1.55;
       }
 
+      /* Reference-style archive door preloader: full viewport doors reveal the dashboard behind. */
+      .book-stage {
+        perspective: 2400px;
+      }
+
+      .inside-page,
+      .cover-title,
+      .book::before {
+        display: none;
+      }
+
+      .book-spine {
+        z-index: 4;
+        width: 16px;
+        background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.62), rgba(255,255,255,.05));
+        box-shadow: 0 0 54px rgba(255,255,255,.44);
+        animation: spineFade 1200ms ease 2300ms both;
+      }
+
+      .cover {
+        z-index: 3;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.08), transparent 18%, transparent 82%, rgba(0,0,0,.34)),
+          radial-gradient(circle at 50% 42%, rgba(255,255,255,.12), transparent 28%),
+          linear-gradient(180deg, #050505, #17191e);
+        box-shadow: 0 30px 90px rgba(0,0,0,.62);
+      }
+
+      .cover::after {
+        background: linear-gradient(115deg, transparent, rgba(255,255,255,.38), transparent);
+        animation: sheen 2300ms ease 520ms infinite;
+      }
+
+      .left-cover {
+        animation: archiveLeftOpen 2600ms cubic-bezier(.18,.76,.18,1) 650ms both;
+      }
+
+      .right-cover {
+        animation: archiveRightOpen 2600ms cubic-bezier(.18,.76,.18,1) 650ms both;
+      }
+
+      .archive-copy {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        pointer-events: none;
+        animation: archiveCopyOut 900ms ease 2200ms both;
+      }
+
+      .archive-copy h1 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(3rem, 9vw, 8rem);
+        font-weight: 950;
+        line-height: .9;
+        letter-spacing: 0;
+      }
+
+      .archive-copy p {
+        margin: 18px 0 0;
+        color: rgba(255,255,255,.64);
+        font-size: clamp(.9rem, 1.7vw, 1.1rem);
+      }
+
+      .archive-dashboard-hint {
+        position: absolute;
+        inset: clamp(28px, 5vw, 64px);
+        z-index: 0;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 14px;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px),
+          linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+          rgba(255,255,255,.04);
+        background-size: 92px 92px;
+        animation: hintIn 1500ms ease 800ms both;
+      }
+
 
       button, input, textarea { font: inherit; }
       button { border: 0; cursor: pointer; }
@@ -1041,6 +1122,26 @@
       @keyframes nodePulse {
         50% { transform: scale(1.25); filter: brightness(1.15); }
       }
+      @keyframes archiveLeftOpen {
+        0% { transform: rotateY(0deg) translateX(0) translateZ(18px); }
+        62% { transform: rotateY(-74deg) translateX(-14vw) translateZ(18px); }
+        100% { transform: rotateY(-82deg) translateX(-54vw) translateZ(18px); }
+      }
+      @keyframes archiveRightOpen {
+        0% { transform: rotateY(0deg) translateX(0) translateZ(18px); }
+        62% { transform: rotateY(74deg) translateX(14vw) translateZ(18px); }
+        100% { transform: rotateY(82deg) translateX(54vw) translateZ(18px); }
+      }
+      @keyframes spineFade {
+        to { opacity: 0; transform: translateX(-50%) scaleY(.82); }
+      }
+      @keyframes archiveCopyOut {
+        to { opacity: 0; transform: translateY(-14px) scale(.97); }
+      }
+      @keyframes hintIn {
+        from { opacity: 0; transform: scale(.96); }
+        to { opacity: 1; transform: scale(1); }
+      }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -1079,6 +1180,13 @@
       <button class="skip-intro" id="skipIntroBtn">Skip</button>
       <div class="book-stage">
         <div class="book" aria-hidden="true">
+          <div class="archive-dashboard-hint"></div>
+          <div class="archive-copy">
+            <div>
+              <h1>Business<br>Analyst</h1>
+              <p>Opening the archive doors</p>
+            </div>
+          </div>
           <div class="inside-page left-inside">
             <p>Global workspace for competitor research, company analysis, and founder handoff reports.</p>
             <div class="dossier-lines">
