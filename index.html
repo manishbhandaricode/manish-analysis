@@ -3,24 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Manish Analysis</title>
+    <title>Inscrbe - Research to Reality</title>
     <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
     <style>
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        --bg: #070708;
-        --bg2: #111215;
-        --panel: rgba(22, 23, 27, 0.78);
-        --panel2: rgba(255, 255, 255, 0.07);
-        --line: rgba(255, 255, 255, 0.12);
-        --text: #f6f6f3;
-        --muted: #a5abb4;
+        --bg: #090a0c;
+        --bg2: #111318;
+        --panel: rgba(20, 22, 27, 0.84);
+        --panel2: rgba(255, 255, 255, 0.065);
+        --line: rgba(255, 255, 255, 0.13);
+        --line-strong: rgba(255, 255, 255, 0.22);
+        --text: #f4f5f1;
+        --muted: #aeb5bf;
+        --muted2: #7f8792;
         --paper: #fbfbf7;
-        --paperText: #151821;
-        --gold: #d8b86f;
-        --teal: #75d7cd;
-        --danger: #ffb3a8;
-        --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+        --paperText: #141821;
+        --amber: #d7b760;
+        --aqua: #66d2c8;
+        --steel: #9fb1c9;
+        --danger: #ffb6ad;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
       }
 
       * { box-sizing: border-box; }
@@ -30,6 +33,7 @@
         color: var(--text);
         background: var(--bg);
         overflow-x: hidden;
+        font-size: 15px;
       }
 
       .cursor-dot,
@@ -71,10 +75,10 @@
         inset: -20%;
         z-index: -2;
         background:
-          radial-gradient(circle at 18% 10%, rgba(255,255,255,.16), transparent 24%),
-          radial-gradient(circle at 76% 8%, rgba(216,184,111,.18), transparent 25%),
-          radial-gradient(circle at 72% 72%, rgba(117,215,205,.13), transparent 28%),
-          linear-gradient(135deg, #050505, #111215 52%, #1c1e22);
+          radial-gradient(circle at 18% 8%, rgba(255,255,255,.1), transparent 21%),
+          radial-gradient(circle at 76% 10%, rgba(215,183,96,.12), transparent 22%),
+          radial-gradient(circle at 76% 70%, rgba(102,210,200,.1), transparent 26%),
+          linear-gradient(135deg, #07080a, #101218 54%, #191c22);
         animation: ambient 18s ease-in-out infinite alternate;
       }
 
@@ -83,11 +87,11 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        opacity: .16;
+        opacity: .1;
         background-image:
           linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
           linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
-        background-size: 46px 46px;
+        background-size: 54px 54px;
         mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
 
@@ -96,10 +100,10 @@
         z-index: -1;
         width: 220px;
         height: 220px;
-        border: 1px solid rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.06);
         border-radius: 999px;
         filter: blur(.2px);
-        animation: orbit 22s linear infinite;
+        animation: orbit 30s linear infinite;
       }
 
       .light-orbit.one { left: 42%; top: 12%; }
@@ -113,8 +117,8 @@
         left: 50%;
         top: -5px;
         border-radius: 999px;
-        background: #fff;
-        box-shadow: 0 0 24px rgba(255,255,255,.9);
+        background: var(--aqua);
+        box-shadow: 0 0 24px rgba(102,210,200,.65);
       }
 
       .welcome {
@@ -124,10 +128,11 @@
         display: block;
         padding: 0;
         background:
-          radial-gradient(circle at 50% 12%, rgba(255,255,255,.18), transparent 24%),
-          radial-gradient(circle at 78% 72%, rgba(216,184,111,.14), transparent 28%),
-          linear-gradient(135deg, #050505, #111215 56%, #1a1b1f);
-        transition: opacity 700ms ease, visibility 700ms ease;
+          radial-gradient(circle at 50% 15%, rgba(255,255,255,.14), transparent 22%),
+          radial-gradient(circle at 22% 74%, rgba(102,210,200,.12), transparent 24%),
+          radial-gradient(circle at 78% 68%, rgba(215,183,96,.14), transparent 27%),
+          linear-gradient(135deg, #050607, #101218 58%, #181b21);
+        transition: opacity 520ms ease, visibility 520ms ease;
       }
 
       .welcome.hide {
@@ -141,214 +146,13 @@
         right: 18px;
         z-index: 22;
         min-height: 32px;
-        padding: 0 10px;
+        padding: 0 11px;
         border-radius: 8px;
-        color: rgba(255,255,255,.72);
-        background: rgba(255,255,255,.07);
-        border: 1px solid rgba(255,255,255,.12);
+        color: rgba(255,255,255,.78);
+        background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.16);
         font-size: .78rem;
         font-weight: 800;
-      }
-
-      .museum-entry {
-        display: grid;
-        place-items: center;
-        perspective: 1400px;
-        isolation: isolate;
-        overflow: hidden;
-      }
-
-      .museum-entry::before,
-      .museum-entry::after {
-        content: "";
-        pointer-events: none;
-        position: absolute;
-      }
-
-      .museum-entry::before {
-        z-index: 3;
-        inset: 0;
-        opacity: .76;
-        background:
-          radial-gradient(circle at 50% 42%, rgba(255,255,255,.16), transparent 24%),
-          radial-gradient(circle at 18% 18%, rgba(255,255,255,.18) 0 1px, transparent 2px) 0 0/26px 26px,
-          radial-gradient(circle at 82% 82%, rgba(216,184,111,.18) 0 1px, transparent 2px) 0 0/34px 34px,
-          linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
-        transition: opacity .72s .32s;
-      }
-
-      .museum-entry::after {
-        z-index: 4;
-        inset: 7vh 9vw;
-        opacity: .7;
-        border: 1px solid rgba(255,255,255,.18);
-        border-radius: 999px;
-        transform: scaleX(.72);
-        box-shadow: inset 0 0 0 16px rgba(255,255,255,.03), 0 0 0 1px rgba(216,184,111,.16);
-        transition: opacity .72s .32s;
-      }
-
-      .museum-entry.opening::before,
-      .museum-entry.opening::after {
-        opacity: 0;
-      }
-
-      .museum-entry-panel {
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        bottom: 0;
-        width: calc(50% + 1px);
-        will-change: transform;
-        background:
-          linear-gradient(90deg, rgba(255,255,255,.12), transparent 16%, rgba(0,0,0,.22) 82%),
-          radial-gradient(circle at var(--glow-x, 50%) 50%, rgba(255,255,255,.13), transparent 24%),
-          repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 42px),
-          repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 68px),
-          linear-gradient(135deg, #17191d, #090a0c 54%, #25282e);
-        box-shadow: inset 0 0 70px rgba(0,0,0,.42), 0 0 58px rgba(0,0,0,.5);
-        transition: transform 1.18s cubic-bezier(.76,.02,.14,1), opacity .48s .84s;
-      }
-
-      .museum-entry-panel::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        aspect-ratio: 1;
-        width: clamp(34px, 5vw, 58px);
-        border-radius: 50%;
-        border: 2px solid rgba(255,255,255,.38);
-        background: radial-gradient(circle, transparent 42%, rgba(216,184,111,.28) 44% 49%, transparent 51%), rgba(255,255,255,.06);
-        transform: translateY(-50%);
-        box-shadow: inset 0 0 0 5px rgba(255,255,255,.04), 0 14px 30px rgba(0,0,0,.36);
-      }
-
-      .museum-entry-left {
-        left: 0;
-        border-right: 1px solid rgba(255,255,255,.16);
-        transform-origin: 0;
-        --glow-x: 72%;
-      }
-
-      .museum-entry-left::after {
-        right: clamp(28px, 5vw, 76px);
-      }
-
-      .museum-entry-right {
-        right: 0;
-        border-left: 1px solid rgba(255,255,255,.16);
-        transform-origin: 100%;
-        --glow-x: 28%;
-      }
-
-      .museum-entry-right::after {
-        left: clamp(28px, 5vw, 76px);
-      }
-
-      .museum-entry.opening .museum-entry-left {
-        opacity: .94;
-        transform: perspective(1400px) rotateY(-88deg) translate(-22vw);
-      }
-
-      .museum-entry.opening .museum-entry-right {
-        opacity: .94;
-        transform: perspective(1400px) rotateY(88deg) translate(22vw);
-      }
-
-      .museum-entry-lattice {
-        position: absolute;
-        inset: clamp(22px, 5vw, 68px);
-        border: 1px solid rgba(255,255,255,.2);
-        background:
-          linear-gradient(90deg, rgba(255,255,255,.13) 1px, transparent 1px) 0 0/clamp(32px,5vw,58px) 100%,
-          linear-gradient(0deg, rgba(255,255,255,.1) 1px, transparent 1px) 0 0/100% clamp(42px,7vw,72px),
-          radial-gradient(circle, rgba(255,255,255,.12), transparent 44%);
-        box-shadow: inset 0 0 0 8px rgba(0,0,0,.08);
-      }
-
-      .museum-entry-center {
-        z-index: 5;
-        position: relative;
-        display: grid;
-        place-items: center;
-        gap: 10px;
-        width: min(72vw, 440px);
-        padding: clamp(24px, 5vw, 46px);
-        text-align: center;
-        text-shadow: 0 2px 20px rgba(0,0,0,.42);
-        background: linear-gradient(rgba(255,255,255,.13), rgba(255,255,255,.06)), rgba(0,0,0,.38);
-        border: 1px solid rgba(255,255,255,.24);
-        border-radius: 8px;
-        transition: opacity .38s .24s, transform .38s .24s;
-      }
-
-      .museum-entry.opening .museum-entry-center {
-        opacity: 0;
-        transform: translateY(-18px) scale(.96);
-      }
-
-      .museum-entry-seal {
-        width: clamp(58px, 12vw, 92px);
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        color: #08090a;
-        background: radial-gradient(circle, rgba(255,255,255,.96), rgba(216,184,111,.8));
-        border: 1px solid rgba(255,255,255,.5);
-        border-radius: 50%;
-        font-size: clamp(28px, 6vw, 48px);
-        font-weight: 950;
-        box-shadow: inset 0 0 0 5px rgba(0,0,0,.06), 0 24px 58px rgba(0,0,0,.38);
-      }
-
-      .museum-entry-center strong {
-        font-size: clamp(28px, 6vw, 52px);
-        line-height: 1.02;
-      }
-
-      .museum-entry-center small {
-        color: rgba(255,255,255,.82);
-        font-size: clamp(14px, 2.3vw, 18px);
-      }
-
-      .entry-microcopy {
-        margin: 0;
-        color: rgba(255,255,255,.58);
-        font-size: .82rem;
-        line-height: 1.45;
-      }
-
-      .entry-kpis {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin-top: 6px;
-      }
-
-      .entry-kpis span {
-        min-height: 34px;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(255,255,255,.14);
-        border-radius: 8px;
-        color: rgba(255,255,255,.75);
-        background: rgba(255,255,255,.06);
-        font-size: .72rem;
-        font-weight: 900;
-      }
-
-      .data-streak {
-        position: absolute;
-        z-index: 4;
-        left: 50%;
-        top: 50%;
-        width: min(72vw, 760px);
-        height: 1px;
-        transform: translate(-50%, -50%);
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), var(--gold), rgba(117,215,205,.75), transparent);
-        box-shadow: 0 0 28px rgba(255,255,255,.38);
-        animation: streakOut 1.25s ease .42s both;
       }
 
       .insight-entry {
@@ -363,11 +167,11 @@
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
-          linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
-        background-size: 72px 72px;
+          linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px),
+          linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+        background-size: 68px 68px;
         mask-image: radial-gradient(circle at center, black, transparent 72%);
-        animation: gridDrift 2.4s ease-in-out both;
+        animation: gridDrift 1.7s ease-in-out both;
       }
 
       .insight-entry::after {
@@ -375,17 +179,17 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(circle at 22% 28%, rgba(255,255,255,.16), transparent 20%),
-          radial-gradient(circle at 78% 62%, rgba(117,215,205,.12), transparent 24%),
-          radial-gradient(circle at 58% 18%, rgba(216,184,111,.14), transparent 22%);
-        animation: insightFade 2.7s ease both;
+          radial-gradient(circle at 22% 28%, rgba(255,255,255,.14), transparent 18%),
+          radial-gradient(circle at 78% 62%, rgba(102,210,200,.13), transparent 24%),
+          radial-gradient(circle at 58% 18%, rgba(215,183,96,.14), transparent 22%);
+        animation: insightFade 2s ease both;
       }
 
       .insight-stage {
         position: relative;
         z-index: 2;
-        width: min(980px, calc(100% - 36px));
-        min-height: min(620px, 82vh);
+        width: min(1040px, calc(100% - 36px));
+        min-height: min(620px, 80vh);
         display: grid;
         place-items: center;
       }
@@ -398,25 +202,50 @@
       .insight-block {
         position: absolute;
         border: 1px solid rgba(255,255,255,.13);
-        border-radius: 10px;
-        background: rgba(255,255,255,.08);
-        box-shadow: 0 24px 70px rgba(0,0,0,.24);
-        backdrop-filter: blur(16px);
-        animation: blockAssemble 1.25s cubic-bezier(.2,.8,.2,1) both, blockBreathe 1.4s ease-in-out 1.15s infinite alternate;
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.045)),
+          rgba(255,255,255,.055);
+        box-shadow: 0 20px 58px rgba(0,0,0,.28);
+        backdrop-filter: blur(18px);
+        animation: blockAssemble 850ms cubic-bezier(.2,.8,.2,1) both, blockBreathe 1.2s ease-in-out .84s infinite alternate;
       }
 
-      .insight-block:nth-child(1) { width: 26%; height: 62%; left: 4%; top: 19%; transform: translate(-44vw, 8vh) rotate(-8deg); }
-      .insight-block:nth-child(2) { width: 38%; height: 22%; left: 32%; top: 18%; transform: translate(0, -42vh) rotate(4deg); animation-delay: .08s, 1.2s; }
-      .insight-block:nth-child(3) { width: 38%; height: 38%; left: 32%; top: 44%; transform: translate(0, 42vh) rotate(-4deg); animation-delay: .16s, 1.28s; }
-      .insight-block:nth-child(4) { width: 24%; height: 30%; right: 4%; top: 19%; transform: translate(42vw, -6vh) rotate(8deg); animation-delay: .24s, 1.36s; }
-      .insight-block:nth-child(5) { width: 24%; height: 28%; right: 4%; bottom: 19%; transform: translate(42vw, 10vh) rotate(-8deg); animation-delay: .32s, 1.44s; }
+      .insight-block::before {
+        content: "";
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: 16px;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(255,255,255,.64), rgba(215,183,96,.7), rgba(102,210,200,.55));
+        opacity: .74;
+      }
+
+      .insight-block::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        right: 28%;
+        top: 42px;
+        height: 1px;
+        background: rgba(255,255,255,.22);
+        box-shadow: 0 18px 0 rgba(255,255,255,.14), 0 36px 0 rgba(255,255,255,.1);
+      }
+
+      .insight-block:nth-child(1) { width: 27%; height: 58%; left: 4%; top: 21%; transform: translate(-38vw, 5vh) rotate(-7deg); }
+      .insight-block:nth-child(2) { width: 38%; height: 20%; left: 32%; top: 19%; transform: translate(0, -34vh) rotate(3deg); animation-delay: .05s, .9s; }
+      .insight-block:nth-child(3) { width: 38%; height: 36%; left: 32%; top: 45%; transform: translate(0, 34vh) rotate(-3deg); animation-delay: .1s, .95s; }
+      .insight-block:nth-child(4) { width: 24%; height: 28%; right: 4%; top: 21%; transform: translate(34vw, -5vh) rotate(7deg); animation-delay: .15s, 1s; }
+      .insight-block:nth-child(5) { width: 24%; height: 26%; right: 4%; bottom: 21%; transform: translate(34vw, 8vh) rotate(-7deg); animation-delay: .2s, 1.05s; }
 
       .insight-wordmark {
         position: relative;
         z-index: 3;
         display: grid;
         justify-items: center;
-        gap: 16px;
+        gap: 14px;
         text-align: center;
       }
 
@@ -425,8 +254,8 @@
         gap: clamp(10px, 2vw, 18px);
         flex-wrap: wrap;
         justify-content: center;
-        color: rgba(255,255,255,.58);
-        font-size: clamp(.8rem, 1.5vw, 1rem);
+        color: rgba(255,255,255,.68);
+        font-size: clamp(.76rem, 1.3vw, .96rem);
         font-weight: 900;
         letter-spacing: .12em;
         text-transform: uppercase;
@@ -435,310 +264,57 @@
       .flow-words span {
         opacity: 0;
         transform: translateY(10px);
-        animation: wordIn .52s ease both;
+        animation: wordIn .38s ease both;
       }
 
-      .flow-words span:nth-child(2) { animation-delay: .28s; }
-      .flow-words span:nth-child(3) { animation-delay: .56s; }
+      .flow-words span:nth-child(2) { animation-delay: .16s; }
+      .flow-words span:nth-child(3) { animation-delay: .32s; }
 
       .insight-wordmark h1 {
         margin: 0;
         color: #fff;
-        font-size: clamp(3rem, 9vw, 8rem);
+        font-size: clamp(3rem, 8.4vw, 7.4rem);
         line-height: .9;
         letter-spacing: 0;
-        animation: titleResolve 1.2s cubic-bezier(.2,.8,.2,1) .62s both;
+        text-shadow: 0 20px 70px rgba(0,0,0,.48);
+        animation: titleResolve .72s cubic-bezier(.2,.8,.2,1) .38s both;
       }
 
       .insight-wordmark p {
         width: min(620px, 90vw);
         margin: 0;
-        color: rgba(255,255,255,.68);
+        color: rgba(255,255,255,.74);
         line-height: 1.55;
-        animation: wordIn .55s ease .96s both;
+        animation: wordIn .38s ease .62s both;
+      }
+
+      .intro-meter {
+        width: min(460px, 72vw);
+        height: 3px;
+        margin-top: 6px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        overflow: hidden;
+        animation: wordIn .32s ease .72s both;
+      }
+
+      .intro-meter::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, rgba(255,255,255,.95), var(--amber), var(--aqua));
+        transform: translateX(-100%);
+        animation: introLoad 1.08s cubic-bezier(.2,.8,.2,1) .34s both;
       }
 
       .insight-entry.opening .insight-stage {
-        animation: insightExit .72s ease both;
+        animation: insightExit .46s ease both;
       }
-
-      .book-stage {
-        position: absolute;
-        inset: 0;
-        perspective: 2600px;
-        overflow: hidden;
-      }
-
-      .book {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        transform-style: preserve-3d;
-      }
-
-      .book::before {
-        content: "";
-        position: absolute;
-        inset: 18% 12% -16%;
-        border-radius: 50%;
-        background: rgba(255,255,255,.16);
-        filter: blur(46px);
-        transform: translateZ(-100px);
-      }
-
-      .book-spine {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 22px;
-        z-index: 4;
-        transform: translateX(-50%);
-        border-radius: 999px;
-        background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.34), rgba(255,255,255,.08));
-        box-shadow: 0 0 34px rgba(255,255,255,.28);
-      }
-
-      .cover,
-      .inside-page {
-        position: absolute;
-        inset: 0;
-        width: 50%;
-        overflow: hidden;
-        transform-style: preserve-3d;
-      }
-
-      .inside-page {
-        top: 0;
-        height: 100%;
-        padding: clamp(24px, 4vw, 50px);
-        color: #111;
-        background:
-          linear-gradient(90deg, rgba(0,0,0,.08), transparent 12%, transparent 88%, rgba(0,0,0,.08)),
-          linear-gradient(135deg, rgba(255,255,255,.98), rgba(226,228,225,.96));
-        border: 1px solid rgba(255,255,255,.38);
-        box-shadow: inset 0 0 90px rgba(0,0,0,.12);
-      }
-
-      .cover {
-        top: 0;
-        height: 100%;
-        border: 1px solid rgba(255,255,255,.18);
-        background:
-          radial-gradient(circle at 50% 40%, rgba(255,255,255,.12), transparent 24%),
-          linear-gradient(135deg, rgba(255,255,255,.1), transparent 34%),
-          linear-gradient(180deg, #050505, #181a1f);
-        box-shadow: 0 28px 80px rgba(0,0,0,.48);
-      }
-
-      .cover::before {
-        content: "";
-        position: absolute;
-        inset: 34px;
-        border: 1px solid rgba(255,255,255,.16);
-        border-radius: 14px;
-      }
-
-      .cover::after,
-      .inside-page::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(115deg, transparent, rgba(255,255,255,.74), transparent);
-        transform: translateX(-120%);
-        animation: sheen 2400ms ease 900ms infinite;
-      }
-
-      .left-cover,
-      .left-inside {
-        left: 0;
-        border-radius: 0;
-      }
-
-      .right-cover,
-      .right-inside {
-        right: 0;
-        border-radius: 0;
-      }
-
-      .left-cover {
-        z-index: 3;
-        transform-origin: right center;
-        animation: openLeftCover 2300ms cubic-bezier(.18,.76,.18,1) 450ms both;
-      }
-
-      .right-cover {
-        z-index: 3;
-        transform-origin: left center;
-        animation: openRightCover 2300ms cubic-bezier(.18,.76,.18,1) 450ms both;
-      }
-
-      .left-inside {
-        transform-origin: right center;
-        animation: revealLeftPage 2100ms cubic-bezier(.2,.8,.2,1) 560ms both;
-      }
-
-      .right-inside {
-        transform-origin: left center;
-        animation: revealRightPage 2100ms cubic-bezier(.2,.8,.2,1) 560ms both;
-      }
-
-      .cover-title {
-        position: absolute;
-        inset: auto clamp(28px, 6vw, 86px) clamp(34px, 8vh, 86px);
-        color: #fff;
-        font-size: clamp(2rem, 6vw, 4.8rem);
-        font-weight: 950;
-        line-height: .92;
-        letter-spacing: 0;
-      }
-
-      .inside-page h1 {
-        margin: 0;
-        font-size: clamp(2.4rem, 7vw, 5.8rem);
-        line-height: .9;
-        letter-spacing: 0;
-      }
-
-      .dossier-lines {
-        display: grid;
-        gap: 10px;
-        margin-top: 26px;
-      }
-
-      .dossier-line {
-        height: 8px;
-        border-radius: 999px;
-        background: #d7d9d4;
-        overflow: hidden;
-      }
-
-      .dossier-line::before {
-        content: "";
-        display: block;
-        width: var(--w);
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, #111, #d8b86f, #75d7cd);
-        animation: dossierLoad 1800ms ease-in-out both;
-      }
-
-      .insight-map {
-        position: relative;
-        height: 120px;
-        margin-top: 24px;
-        border: 1px solid rgba(0,0,0,.12);
-        border-radius: 10px;
-        background:
-          linear-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,.06) 1px, transparent 1px);
-        background-size: 42px 42px;
-      }
-
-      .insight-node {
-        position: absolute;
-        width: 13px;
-        height: 13px;
-        border-radius: 999px;
-        background: #111;
-        box-shadow: 0 0 18px rgba(0,0,0,.2);
-        animation: nodePulse 1800ms ease-in-out infinite;
-      }
-
-      .insight-node:nth-child(1) { left: 16%; top: 62%; }
-      .insight-node:nth-child(2) { left: 48%; top: 28%; background: #d8b86f; animation-delay: .25s; }
-      .insight-node:nth-child(3) { left: 76%; top: 48%; background: #75d7cd; animation-delay: .5s; }
 
       .welcome.hide + .shell {
-        animation: dashboardIn 900ms cubic-bezier(.2,.8,.2,1) both;
-      }
-
-      .inside-page p {
-        margin: 18px 0 0;
-        max-width: 28ch;
-        color: #4f5661;
-        line-height: 1.55;
-      }
-
-      /* Reference-style archive door preloader: full viewport doors reveal the dashboard behind. */
-      .book-stage {
-        perspective: 2400px;
-      }
-
-      .inside-page,
-      .cover-title,
-      .book::before {
-        display: none;
-      }
-
-      .book-spine {
-        z-index: 4;
-        width: 16px;
-        background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.62), rgba(255,255,255,.05));
-        box-shadow: 0 0 54px rgba(255,255,255,.44);
-        animation: spineFade 1200ms ease 2300ms both;
-      }
-
-      .cover {
-        z-index: 3;
-        background:
-          linear-gradient(90deg, rgba(255,255,255,.08), transparent 18%, transparent 82%, rgba(0,0,0,.34)),
-          radial-gradient(circle at 50% 42%, rgba(255,255,255,.12), transparent 28%),
-          linear-gradient(180deg, #050505, #17191e);
-        box-shadow: 0 30px 90px rgba(0,0,0,.62);
-      }
-
-      .cover::after {
-        background: linear-gradient(115deg, transparent, rgba(255,255,255,.38), transparent);
-        animation: sheen 2300ms ease 520ms infinite;
-      }
-
-      .left-cover {
-        animation: archiveLeftOpen 2600ms cubic-bezier(.18,.76,.18,1) 650ms both;
-      }
-
-      .right-cover {
-        animation: archiveRightOpen 2600ms cubic-bezier(.18,.76,.18,1) 650ms both;
-      }
-
-      .archive-copy {
-        position: absolute;
-        inset: 0;
-        z-index: 5;
-        display: grid;
-        place-items: center;
-        text-align: center;
-        pointer-events: none;
-        animation: archiveCopyOut 900ms ease 2200ms both;
-      }
-
-      .archive-copy h1 {
-        margin: 0;
-        color: #fff;
-        font-size: clamp(3rem, 9vw, 8rem);
-        font-weight: 950;
-        line-height: .9;
-        letter-spacing: 0;
-      }
-
-      .archive-copy p {
-        margin: 18px 0 0;
-        color: rgba(255,255,255,.64);
-        font-size: clamp(.9rem, 1.7vw, 1.1rem);
-      }
-
-      .archive-dashboard-hint {
-        position: absolute;
-        inset: clamp(28px, 5vw, 64px);
-        z-index: 0;
-        border: 1px solid rgba(255,255,255,.1);
-        border-radius: 14px;
-        background:
-          linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px),
-          linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-          rgba(255,255,255,.04);
-        background-size: 92px 92px;
-        animation: hintIn 1500ms ease 800ms both;
+        animation: dashboardIn 620ms cubic-bezier(.2,.8,.2,1) both;
       }
 
 
@@ -749,16 +325,18 @@
       .shell {
         min-height: 100vh;
         display: grid;
-        grid-template-columns: 314px minmax(0, 1fr);
+        grid-template-columns: 320px minmax(0, 1fr);
       }
 
       aside {
         position: sticky;
         top: 0;
         height: 100vh;
-        padding: 24px;
+        padding: 22px;
         overflow: auto;
-        background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02)),
+          rgba(6,7,9,.34);
         border-right: 1px solid var(--line);
         backdrop-filter: blur(20px);
       }
@@ -768,17 +346,18 @@
         align-items: center;
       }
 
-      .brand { gap: 12px; margin-bottom: 24px; }
+      .brand { gap: 12px; margin-bottom: 22px; }
       .mark {
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
         display: grid;
         place-items: center;
         border-radius: 8px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,.08);
+        border: 1px solid var(--line-strong);
+        background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.055));
         color: #fff;
         font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 16px 36px rgba(0,0,0,.22);
       }
 
       h1, h2, h3, p { margin-top: 0; }
@@ -799,6 +378,78 @@
         gap: 8px;
       }
 
+      .mode-toggle {
+        display: grid;
+        gap: 8px;
+        margin: 14px 0 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255,255,255,.045);
+      }
+
+      .mode-toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .mode-copy strong {
+        display: block;
+        color: #fff;
+        font-size: .86rem;
+      }
+
+      .mode-copy span {
+        color: var(--muted);
+        font-size: .78rem;
+      }
+
+      .switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+        flex: 0 0 auto;
+      }
+
+      .switch input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      .switch-slider {
+        position: absolute;
+        inset: 0;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        background: rgba(255,255,255,.08);
+        transition: background 180ms ease, border-color 180ms ease;
+      }
+
+      .switch-slider::before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: 3px;
+        top: 3px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 8px 16px rgba(0,0,0,.32);
+        transition: transform 180ms ease;
+      }
+
+      .switch input:checked + .switch-slider {
+        border-color: rgba(102,210,200,.42);
+        background: rgba(102,210,200,.18);
+      }
+
+      .switch input:checked + .switch-slider::before {
+        transform: translateX(22px);
+      }
+
       .company-form input {
         min-width: 0;
         height: 44px;
@@ -807,7 +458,7 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         color: var(--text);
-        background: rgba(255,255,255,.07);
+        background: rgba(255,255,255,.065);
       }
 
       .search-input {
@@ -818,17 +469,25 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         color: var(--text);
-        background: rgba(255,255,255,.06);
+        background: rgba(255,255,255,.055);
       }
 
-      .company-form input::placeholder, textarea::placeholder { color: rgba(246,246,243,.42); }
+      .company-form input:focus,
+      .search-input:focus {
+        border-color: rgba(255,255,255,.34);
+        background: rgba(255,255,255,.09);
+        box-shadow: 0 0 0 4px rgba(255,255,255,.08);
+      }
+
+      .company-form input::placeholder, textarea::placeholder, .search-input::placeholder { color: rgba(246,246,243,.46); }
       .icon-button {
         width: 44px;
         min-height: 44px;
         border-radius: 8px;
-        color: #050505;
-        background: #fff;
+        color: #08090b;
+        background: linear-gradient(135deg, #fff, #dfe4e8);
         font-weight: 900;
+        box-shadow: 0 12px 28px rgba(0,0,0,.24);
       }
 
       .companies, .source-list, .editor, .review, .stack { display: grid; gap: 10px; }
@@ -841,18 +500,23 @@
         gap: 12px;
         padding: 10px 11px;
         color: var(--text);
-        background: transparent;
+        background: rgba(255,255,255,.025);
+        border: 1px solid transparent;
         border-radius: 8px;
         text-align: left;
-        transition: transform 180ms ease, background 180ms ease;
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
       }
 
       .company:hover, .company.active {
         transform: translateX(3px);
         background: rgba(255,255,255,.08);
+        border-color: var(--line);
       }
 
-      .company.active { outline: 1px solid rgba(255,255,255,.18); }
+      .company.active {
+        background: linear-gradient(135deg, rgba(255,255,255,.11), rgba(102,210,200,.08));
+        border-color: rgba(255,255,255,.22);
+      }
       .company strong { display: block; font-size: .96rem; }
       .mini-delete {
         width: 34px;
@@ -874,8 +538,8 @@
         width: 9px;
         height: 9px;
         border-radius: 99px;
-        background: #fff;
-        box-shadow: 0 0 22px rgba(255,255,255,.9);
+        background: var(--aqua);
+        box-shadow: 0 0 22px rgba(102,210,200,.72);
         animation: breathe 2.8s ease-in-out infinite;
       }
 
@@ -885,21 +549,21 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         color: var(--muted);
-        background: rgba(255,255,255,.05);
+        background: rgba(255,255,255,.045);
         font-size: .88rem;
         line-height: 1.48;
       }
 
-      main { padding: 30px; }
+      main { padding: 28px; }
       .topbar {
         justify-content: space-between;
         gap: 22px;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
       }
 
       .eyebrow {
         margin: 0 0 10px;
-        color: #fff;
+        color: rgba(255,255,255,.88);
         font-size: .78rem;
         font-weight: 950;
         letter-spacing: .13em;
@@ -913,7 +577,7 @@
         border: 0;
         color: #fff;
         background: transparent;
-        font-size: clamp(2.1rem, 5vw, 4.2rem);
+        font-size: clamp(2rem, 4.8vw, 4rem);
         font-weight: 900;
         line-height: .95;
         letter-spacing: 0;
@@ -924,6 +588,38 @@
         max-width: 74ch;
         color: var(--muted);
         line-height: 1.55;
+      }
+
+      .workflow-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin: 0 0 16px;
+      }
+
+      .workflow-step {
+        min-height: 74px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255,255,255,.045);
+      }
+
+      .workflow-step span {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--muted2);
+        font-size: .7rem;
+        font-weight: 950;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .workflow-step strong {
+        display: block;
+        color: #fff;
+        font-size: .92rem;
+        line-height: 1.25;
       }
 
       .button-row { justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
@@ -941,10 +637,10 @@
         position: relative;
         padding: 0 13px;
         color: #fff;
-        background: #050505;
+        background: #08090b;
         isolation: isolate;
         overflow: hidden;
-        box-shadow: 0 18px 42px rgba(0,0,0,.45);
+        box-shadow: 0 16px 34px rgba(0,0,0,.42);
       }
 
       .glow-button::before {
@@ -952,8 +648,8 @@
         position: absolute;
         inset: -2px;
         z-index: -2;
-        background: conic-gradient(from var(--spin), transparent 0deg, transparent 82deg, rgba(255,255,255,.98) 105deg, transparent 142deg, transparent 360deg);
-        animation: spin 2.6s linear infinite;
+        background: conic-gradient(from var(--spin), transparent 0deg, transparent 86deg, rgba(102,210,200,.88) 108deg, rgba(215,183,96,.85) 126deg, transparent 150deg, transparent 360deg);
+        animation: spin 3.4s linear infinite;
       }
 
       .glow-button::after {
@@ -962,14 +658,14 @@
         inset: 2px;
         z-index: -1;
         border-radius: 6px;
-        background: linear-gradient(135deg, #050505, #1a1b1f);
+        background: linear-gradient(135deg, #07080a, #171a20);
       }
 
       .glass-button, .small-button {
         padding: 0 12px;
         color: #fff;
         border: 1px solid var(--line);
-        background: rgba(255,255,255,.08);
+        background: rgba(255,255,255,.075);
         backdrop-filter: blur(18px);
       }
 
@@ -984,13 +680,15 @@
         display: grid;
         grid-template-columns: repeat(4, minmax(126px, 1fr));
         gap: 12px;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
       }
 
       .stat, .panel {
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: var(--panel);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)),
+          var(--panel);
         box-shadow: var(--shadow);
         backdrop-filter: blur(20px);
       }
@@ -1007,7 +705,7 @@
         position: absolute;
         inset: auto 14px 0;
         height: 3px;
-        background: linear-gradient(90deg, #fff, var(--gold), var(--teal));
+        background: linear-gradient(90deg, rgba(255,255,255,.9), var(--amber), var(--aqua));
         opacity: .74;
       }
 
@@ -1023,14 +721,14 @@
         display: block;
         margin-top: 10px;
         color: #fff;
-        font-size: 1.82rem;
+        font-size: 1.74rem;
         line-height: 1;
       }
 
       .workspace {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(360px, .86fr);
-        gap: 18px;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, .84fr);
+        gap: 16px;
         align-items: start;
       }
 
@@ -1046,7 +744,7 @@
         inset: 0;
         pointer-events: none;
         opacity: 0;
-        background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.16), transparent 34%);
+        background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.13), transparent 34%);
         transition: opacity 180ms ease;
       }
 
@@ -1055,17 +753,17 @@
         opacity: 1;
       }
       .panel-header {
-        min-height: 66px;
-        padding: 16px 18px;
+        min-height: 64px;
+        padding: 15px 18px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
         border-bottom: 1px solid var(--line);
-        background: rgba(255,255,255,.05);
+        background: rgba(255,255,255,.045);
       }
 
-      .editor, .review, .source-body, .strategy-body { padding: 18px; }
+      .editor, .review, .source-body, .strategy-body { padding: 16px; }
       .editor {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1118,23 +816,31 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         color: var(--text);
-        background: rgba(255,255,255,.07);
+        background: rgba(7,8,10,.38);
         line-height: 1.55;
         transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
       }
 
       textarea:focus {
-        border-color: rgba(255,255,255,.44);
-        background: rgba(255,255,255,.1);
-        box-shadow: 0 0 0 4px rgba(255,255,255,.1);
+        border-color: rgba(102,210,200,.48);
+        background: rgba(255,255,255,.08);
+        box-shadow: 0 0 0 4px rgba(102,210,200,.1);
       }
 
       .editor label:first-child {
         grid-column: 1 / -1;
       }
 
+      .docs-mode .editor {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-mode textarea {
+        min-height: 180px;
+      }
+
       textarea {
-        min-height: 142px;
+        min-height: 136px;
       }
 
       .strategy-grid {
@@ -1148,7 +854,7 @@
         padding: 14px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.06);
+        background: rgba(255,255,255,.045);
         overflow: hidden;
       }
 
@@ -1194,7 +900,7 @@
         width: var(--w);
         height: 100%;
         border-radius: inherit;
-        background: linear-gradient(90deg, #fff, var(--gold), var(--teal));
+        background: linear-gradient(90deg, rgba(255,255,255,.95), var(--amber), var(--aqua));
         animation: loadbar 2.8s ease-in-out infinite alternate;
       }
 
@@ -1229,8 +935,8 @@
       }
 
       .matrix-dot:nth-child(1) { left: 18%; top: 56%; }
-      .matrix-dot:nth-child(2) { left: 58%; top: 28%; animation-delay: .4s; background: var(--gold); }
-      .matrix-dot:nth-child(3) { left: 76%; top: 48%; animation-delay: .8s; background: var(--teal); }
+      .matrix-dot:nth-child(2) { left: 58%; top: 28%; animation-delay: .4s; background: var(--amber); }
+      .matrix-dot:nth-child(3) { left: 76%; top: 48%; animation-delay: .8s; background: var(--aqua); }
 
       .source-card {
         justify-content: space-between;
@@ -1238,7 +944,7 @@
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.06);
+        background: rgba(255,255,255,.045);
       }
 
       .source-card strong { display: block; color: #fff; font-size: .9rem; }
@@ -1248,6 +954,7 @@
         padding: 0 10px;
         color: var(--danger);
         background: rgba(255,179,168,.1);
+        border: 1px solid rgba(255,179,168,.18);
       }
 
       .review-section {
@@ -1273,6 +980,12 @@
         line-height: 1.62;
       }
 
+      .docs-mode .workflow-step,
+      .docs-mode .signal-card,
+      .docs-mode .review-section {
+        background: rgba(255,255,255,.038);
+      }
+
       .empty { color: var(--muted) !important; font-style: italic; }
       .hidden-file, .hidden { display: none; }
 
@@ -1292,7 +1005,7 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         overflow: hidden;
-        background: #15161a;
+        background: #14161b;
         box-shadow: 0 32px 90px rgba(0,0,0,.56);
       }
 
@@ -1302,7 +1015,7 @@
         justify-content: space-between;
         gap: 12px;
         border-bottom: 1px solid var(--line);
-        background: rgba(255,255,255,.06);
+        background: rgba(255,255,255,.055);
       }
 
       .report-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -1312,18 +1025,20 @@
         margin: 24px auto;
         padding: clamp(30px, 6vw, 60px);
         color: var(--paperText);
-        background: var(--paper);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,0) 180px),
+          var(--paper);
         box-shadow: 0 20px 60px rgba(0,0,0,.3);
       }
 
       .report-cover {
         padding-bottom: 22px;
         margin-bottom: 26px;
-        border-bottom: 3px solid #111;
+        border-bottom: 3px solid #151821;
       }
 
       .report-cover span {
-        color: #5d6470;
+        color: #5d6570;
         font-weight: 950;
         letter-spacing: .12em;
         text-transform: uppercase;
@@ -1332,7 +1047,7 @@
 
       .report-cover h1 {
         margin: 12px 0;
-        color: #111;
+        color: #11151c;
         font-size: clamp(2.1rem, 6vw, 4rem);
         line-height: .98;
         letter-spacing: 0;
@@ -1340,7 +1055,7 @@
 
       .report-paper h2 {
         margin: 28px 0 10px;
-        color: #111;
+        color: #11151c;
         font-size: 1.18rem;
         letter-spacing: 0;
       }
@@ -1348,7 +1063,7 @@
       .report-paper blockquote {
         margin: 18px 0 0;
         padding: 14px 16px;
-        border-left: 4px solid #111;
+        border-left: 4px solid #11151c;
         background: #f0f1ee;
         color: #3b4048;
       }
@@ -1375,7 +1090,7 @@
 
       .report-paper [contenteditable="true"]:focus {
         background: #fffdf3;
-        box-shadow: 0 0 0 4px rgba(216,184,111,.22);
+        box-shadow: 0 0 0 4px rgba(215,183,96,.22);
       }
 
       .source-list-report { margin: 0; padding-left: 18px; line-height: 1.7; }
@@ -1398,66 +1113,9 @@
       @keyframes loadbar { to { filter: brightness(1.35); transform: translateX(8px); } }
       @keyframes floatdot { 50% { transform: translate3d(6px, -7px, 0); } }
       @keyframes orbit { to { transform: rotate(360deg); } }
-      @keyframes bookRise {
-        from { opacity: 0; transform: translateY(32px) rotateX(10deg) scale(.94); }
-        to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
-      }
-      @keyframes openLeftCover {
-        0% { transform: rotateY(0deg) translateZ(22px); }
-        58% { transform: rotateY(-118deg) translateZ(22px); }
-        100% { transform: rotateY(-146deg) translateZ(22px); }
-      }
-      @keyframes openRightCover {
-        0% { transform: rotateY(0deg) translateZ(22px); }
-        58% { transform: rotateY(118deg) translateZ(22px); }
-        100% { transform: rotateY(146deg) translateZ(22px); }
-      }
-      @keyframes revealLeftPage {
-        0% { transform: rotateY(0deg); filter: brightness(.72); }
-        100% { transform: rotateY(-7deg); filter: brightness(1); }
-      }
-      @keyframes revealRightPage {
-        0% { transform: rotateY(0deg); filter: brightness(.72); }
-        100% { transform: rotateY(7deg); filter: brightness(1); }
-      }
-      @keyframes sheen {
-        55%, 100% { transform: translateX(120%); }
-      }
       @keyframes dashboardIn {
         from { opacity: 0; transform: translateY(18px) scale(.985); }
         to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-      @keyframes dossierLoad {
-        from { transform: translateX(-100%); }
-        to { transform: translateX(0); }
-      }
-      @keyframes nodePulse {
-        50% { transform: scale(1.25); filter: brightness(1.15); }
-      }
-      @keyframes archiveLeftOpen {
-        0% { transform: rotateY(0deg) translateX(0) translateZ(18px); }
-        62% { transform: rotateY(-74deg) translateX(-14vw) translateZ(18px); }
-        100% { transform: rotateY(-82deg) translateX(-54vw) translateZ(18px); }
-      }
-      @keyframes archiveRightOpen {
-        0% { transform: rotateY(0deg) translateX(0) translateZ(18px); }
-        62% { transform: rotateY(74deg) translateX(14vw) translateZ(18px); }
-        100% { transform: rotateY(82deg) translateX(54vw) translateZ(18px); }
-      }
-      @keyframes spineFade {
-        to { opacity: 0; transform: translateX(-50%) scaleY(.82); }
-      }
-      @keyframes archiveCopyOut {
-        to { opacity: 0; transform: translateY(-14px) scale(.97); }
-      }
-      @keyframes hintIn {
-        from { opacity: 0; transform: scale(.96); }
-        to { opacity: 1; transform: scale(1); }
-      }
-      @keyframes streakOut {
-        0% { opacity: 0; transform: translate(-50%, -50%) scaleX(.08); }
-        40% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
-        100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1.18); }
       }
       @keyframes blockAssemble {
         to { transform: translate(0, 0) rotate(0); }
@@ -1481,6 +1139,9 @@
       @keyframes insightFade {
         80%, 100% { opacity: .72; }
       }
+      @keyframes introLoad {
+        to { transform: translateX(0); }
+      }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -1497,7 +1158,7 @@
       }
 
       @media (max-width: 1080px) {
-        .shell, .workspace, .stats { grid-template-columns: 1fr; }
+        .shell, .workspace, .stats, .workflow-strip { grid-template-columns: 1fr; }
         aside { position: static; height: auto; }
       }
 
@@ -1515,7 +1176,7 @@
     <div class="cursor-ring" id="cursorRing"></div>
     <div class="light-orbit one" aria-hidden="true"></div>
     <div class="light-orbit two" aria-hidden="true"></div>
-    <section class="welcome insight-entry" id="welcome" aria-label="Business Analyst insight blocks intro">
+    <section class="welcome insight-entry" id="welcome" aria-label="Inscrbe intro">
       <button class="skip-intro" id="skipIntroBtn">Skip</button>
       <div class="insight-stage">
         <div class="insight-blocks" aria-hidden="true">
@@ -1528,21 +1189,22 @@
         <div class="insight-wordmark">
           <div class="flow-words">
             <span>Research</span>
-            <span>Insight</span>
-            <span>Action</span>
+            <span>Draft</span>
+            <span>Decision</span>
           </div>
-          <h1>Business<br>Analyst</h1>
-          <p>Structured reports for founders, developers, and teams that need clear decisions.</p>
+          <h1>Inscrbe</h1>
+          <p>Research to Reality</p>
+          <div class="intro-meter" aria-hidden="true"></div>
         </div>
       </div>
     </section>
     <div class="shell">
       <aside>
         <div class="brand">
-          <div class="mark">MA</div>
+          <div class="mark">IN</div>
           <div>
-            <h1>Manish Analysis</h1>
-            <span>Premium research reports</span>
+            <h1>Inscrbe</h1>
+            <span>Research to Reality</span>
           </div>
         </div>
 
@@ -1550,22 +1212,34 @@
           <input id="companyName" aria-label="Report name" placeholder="New report/company">
           <button class="icon-button" title="Add report" aria-label="Add report">+</button>
         </form>
+        <div class="mode-toggle">
+          <div class="mode-toggle-row">
+            <div class="mode-copy">
+              <strong id="modeTitle">Analyst Reports</strong>
+              <span id="modeHint">Company research and founder handoffs</span>
+            </div>
+            <label class="switch" title="Switch workspace mode">
+              <input id="modeSwitch" type="checkbox" aria-label="Switch to documentation mode">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
         <input class="search-input" id="reportSearch" aria-label="Search reports" placeholder="Search reports">
 
         <span class="section-label">Reports</span>
         <div class="companies" id="companies"></div>
 
         <div class="sidebar-note">
-          Build company dossiers, attach source documents, delete old reports, and edit in a full document view.
+          Inscrbe keeps research, drafts, source files, and decisions in one clear workspace.
         </div>
       </aside>
 
       <main>
         <div class="topbar">
           <div>
-            <p class="eyebrow">Analyst handoff report</p>
+            <p class="eyebrow" id="workspaceEyebrow">Analyst handoff report</p>
             <input class="title-input" id="pageTitle" aria-label="Report title" value="Company X">
-            <p>Simple workspace for turning company research into a clear founder and development-team action brief.</p>
+            <p id="workspaceDescription">Structured workspace for storing company research, evidence, opportunities, and practical next steps for founders and teams.</p>
           </div>
           <div class="button-row">
             <button class="glass-button" id="viewReportBtn">View/Edit Report</button>
@@ -1575,9 +1249,16 @@
           </div>
         </div>
 
+        <section class="workflow-strip" id="workflowStrip" aria-label="Workspace workflow">
+          <div class="workflow-step"><span>01 Capture</span><strong>Store notes and source files</strong></div>
+          <div class="workflow-step"><span>02 Interpret</span><strong>Extract lessons and gaps</strong></div>
+          <div class="workflow-step"><span>03 Decide</span><strong>Map actions for teams</strong></div>
+          <div class="workflow-step"><span>04 Explain</span><strong>Share clear founder handoffs</strong></div>
+        </section>
+
         <section class="stats">
-          <div class="stat"><span>Reports</span><strong id="companyCount">0</strong></div>
-          <div class="stat"><span>Report Words</span><strong id="wordCount">0</strong></div>
+          <div class="stat"><span id="countLabel">Reports</span><strong id="companyCount">0</strong></div>
+          <div class="stat"><span id="wordsLabel">Report Words</span><strong id="wordCount">0</strong></div>
           <div class="stat"><span>Sources</span><strong id="sourceCount">0</strong></div>
           <div class="stat"><span>Saved</span><strong id="lastSaved">Now</strong></div>
         </section>
@@ -1587,8 +1268,8 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h3>Analysis Builder</h3>
-                  <span>Four brief sections for easy founder/dev handoff</span>
+                  <h3 id="builderTitle">Analysis Builder</h3>
+                  <span id="builderHint">Four brief sections for easy founder/dev handoff</span>
                 </div>
                 <span class="status" id="saveStatus">Saved</span>
               </div>
@@ -1598,8 +1279,8 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h3>Handoff Signals</h3>
-                  <span>Evidence, opportunity, and action readiness</span>
+                  <h3 id="signalsTitle">Handoff Signals</h3>
+                  <span id="signalsHint">Evidence, opportunity, and action readiness</span>
                 </div>
                 <span class="status">Live graphic</span>
               </div>
@@ -1628,8 +1309,8 @@
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title">
-                <h3>Founder/Dev Preview</h3>
-                <span>Plain-language report view</span>
+                  <h3 id="previewTitle">Founder/Dev Preview</h3>
+                  <span id="previewHint">Plain-language report view</span>
               </div>
               <button class="small-button" id="previewReportBtn">Open</button>
             </div>
@@ -1639,10 +1320,10 @@
       </main>
     </div>
 
-    <div class="report-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-label="Editable business analysis report">
+    <div class="report-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-label="Editable Inscrbe document">
       <div class="report-window">
         <div class="report-toolbar">
-          <strong id="reportToolbarTitle">Business Analysis Report</strong>
+          <strong id="reportToolbarTitle">Inscrbe Document</strong>
           <div class="report-actions">
             <button class="glass-button" id="saveReportBtn">Save & Apply</button>
             <button class="glow-button" id="closeReportBtn">Back to Dashboard</button>
@@ -1653,16 +1334,68 @@
     </div>
 
     <script>
-      const storageKey = "manish-analysis:v5";
-      const legacyKeys = ["manish-analysis:v4", "manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
-      const fields = [
-        ["learned", "What We Learned", "Explain the company in plain words, why it matters, and the main lesson for our team.", "Main lesson"],
-        ["opportunity", "Opportunity For Us", "Convert their strengths, weaknesses, mistakes, or ignored users into opportunities for our company.", "Opportunity"],
-        ["actionPlan", "Actions For Team", "Write the exact product, growth, operations, or development changes the founder and development team should take next.", "Actions"],
-        ["evidence", "Evidence & Notes", "Add imported document excerpts, research notes, examples, and proof behind the recommendation.", "Evidence"]
-      ].map(([key, label, placeholder, short]) => ({ key, label, placeholder, short }));
+      const storageKey = "inscrbe:v1";
+      const legacyKeys = ["manish-analysis:v5", "manish-analysis:v4", "manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
+      const modeFields = {
+        analysis: [
+          ["learned", "What We Learned", "Explain the company in plain words, why it matters, and the main lesson for our team.", "Main lesson"],
+          ["opportunity", "Opportunity For Us", "Convert their strengths, weaknesses, mistakes, or ignored users into opportunities for our company.", "Opportunity"],
+          ["actionPlan", "Actions For Team", "Write the exact product, growth, operations, or development changes the founder and development team should take next.", "Actions"],
+          ["evidence", "Evidence & Notes", "Add imported document excerpts, research notes, examples, and proof behind the recommendation.", "Evidence"]
+        ],
+        docs: [
+          ["draft", "Document Draft", "Write freely: ideas, paragraphs, meeting notes, product thoughts, outlines, or any working draft.", "Draft"],
+          ["ideas", "Ideas & Fragments", "Capture loose bullets, rough thinking, links, examples, and points to revisit.", "Ideas"],
+          ["notes", "Supporting Notes", "Add context, references, decisions, or extra details for this document.", "Notes"]
+        ]
+      };
+      Object.keys(modeFields).forEach((mode) => {
+        modeFields[mode] = modeFields[mode].map(([key, label, placeholder, short]) => ({ key, label, placeholder, short }));
+      });
+
+      const modeCopy = {
+        analysis: {
+          modeTitle: "Analyst Reports",
+          modeHint: "Company research and founder handoffs",
+          itemPlaceholder: "New report/company",
+          searchPlaceholder: "Search reports",
+          sectionLabel: "Reports",
+          eyebrow: "Analyst handoff report",
+          description: "Structured workspace for storing company research, evidence, opportunities, and practical next steps for founders and teams.",
+          builderTitle: "Analysis Builder",
+          builderHint: "Four brief sections for easy founder/dev handoff",
+          signalsTitle: "Handoff Signals",
+          signalsHint: "Evidence, opportunity, and action readiness",
+          previewTitle: "Founder/Dev Preview",
+          previewHint: "Plain-language report view",
+          workflow: [["01 Capture", "Store notes and source files"], ["02 Interpret", "Extract lessons and gaps"], ["03 Decide", "Map actions for teams"], ["04 Explain", "Share clear founder handoffs"]],
+          reportLabel: "Inscrbe Analyst Handoff",
+          structureLabel: "Handoff Structure",
+          emptyName: "Untitled Report"
+        },
+        docs: {
+          modeTitle: "Documentation",
+          modeHint: "Freeform notes, drafts, and ideas",
+          itemPlaceholder: "New document/draft",
+          searchPlaceholder: "Search documents",
+          sectionLabel: "Documents",
+          eyebrow: "Documentation workspace",
+          description: "A clean writing space for ideas, notes, paragraphs, drafts, meeting thoughts, and reusable documents.",
+          builderTitle: "Document Editor",
+          builderHint: "Freeform writing blocks for drafts and ideas",
+          signalsTitle: "Document Signals",
+          signalsHint: "Draft depth, notes, and source support",
+          previewTitle: "Document Preview",
+          previewHint: "Readable draft view",
+          workflow: [["01 Write", "Capture ideas and paragraphs"], ["02 Shape", "Organize rough thinking"], ["03 Support", "Attach useful references"], ["04 Reuse", "Keep drafts ready to share"]],
+          reportLabel: "Inscrbe Document",
+          structureLabel: "Document Structure",
+          emptyName: "Untitled Document"
+        }
+      };
 
       const defaultData = {
+        mode: "analysis",
         activeId: "company-x",
         companies: [
           {
@@ -1671,11 +1404,14 @@
             updatedAt: Date.now(),
             documents: [],
             analysis: {
-              summary: "Company X is a sample business analysis report. Replace this with the central analyst thesis.",
+              summary: "Company X is a sample analyst report. Replace this with the central thesis.",
               learned: "Company X is a sample company. Replace this with the main lesson a founder or development team should understand.",
               opportunity: "Turn their strengths and weak points into opportunities: product gaps, pricing gaps, ignored users, slow workflows, or poor UX.",
               actionPlan: "Write clear actions for the founder and dev team: what to build, test, improve, or avoid next.",
-              evidence: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
+              evidence: "Import a Word file, Google Docs export, markdown file, or text writeup into this section.",
+              draft: "Start a freeform document here when using Documentation mode.",
+              ideas: "",
+              notes: ""
             }
           }
         ]
@@ -1701,10 +1437,15 @@
       const competitionSignal = $("competitionSignal");
       const welcome = $("welcome");
       const reportSearch = $("reportSearch");
+      const modeSwitch = $("modeSwitch");
       let searchTerm = "";
 
+      function fieldsForMode(mode = state?.mode || "analysis") {
+        return modeFields[mode] || modeFields.analysis;
+      }
+
       function emptyAnalysis() {
-        return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
+        return Object.values(modeFields).flat().reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
       }
 
       function load() {
@@ -1712,6 +1453,7 @@
           const raw = localStorage.getItem(storageKey) || legacyKeys.map((key) => localStorage.getItem(key)).find(Boolean);
           const saved = raw ? JSON.parse(raw) : null;
           if (!saved || !Array.isArray(saved.companies)) return structuredClone(defaultData);
+          saved.mode = saved.mode === "docs" ? "docs" : "analysis";
           saved.companies.forEach((company) => {
             company.analysis = migrateAnalysis(company.analysis || {});
             company.documents = Array.isArray(company.documents) ? company.documents : [];
@@ -1719,7 +1461,7 @@
           });
           saved.companies = saved.companies.filter((company) => {
             const isOldDefault = company.id === `company-${"y"}` && company.name === `Company ${"Y"}`;
-            const hasContent = fields.some((field) => (company.analysis[field.key] || "").trim()) || company.documents.length;
+            const hasContent = Object.values(modeFields).flat().some((field) => (company.analysis[field.key] || "").trim()) || company.documents.length;
             return !isOldDefault || hasContent;
           });
           if (!saved.companies.length) return structuredClone(defaultData);
@@ -1736,6 +1478,7 @@
         if (!migrated.opportunity) migrated.opportunity = [analysis.growthModel, analysis.competitiveIntel, analysis.weaknessToAdvantage, analysis.strengths, analysis.risks].filter(Boolean).join("\n\n");
         if (!migrated.actionPlan) migrated.actionPlan = [analysis.executionPlan, analysis.recommendation].filter(Boolean).join("\n\n");
         if (!migrated.evidence) migrated.evidence = [analysis.sourceNotes, analysis.notes].filter(Boolean).join("\n\n");
+        if (!migrated.draft) migrated.draft = [analysis.draft, analysis.notes, analysis.summary].filter(Boolean).join("\n\n");
         return migrated;
       }
 
@@ -1760,6 +1503,7 @@
       function render() {
         const company = activeCompany();
         if (!company) return;
+        updateChrome();
         pageTitle.value = company.name;
         renderCompanies(company);
         renderEditor(company);
@@ -1767,6 +1511,32 @@
         renderSignals(company);
         renderSources(company);
         renderPreview(company);
+      }
+
+      function updateChrome() {
+        const copy = modeCopy[state.mode] || modeCopy.analysis;
+        document.body.classList.toggle("docs-mode", state.mode === "docs");
+        modeSwitch.checked = state.mode === "docs";
+        modeSwitch.setAttribute("aria-label", state.mode === "docs" ? "Switch to analyst report mode" : "Switch to documentation mode");
+        $("modeTitle").textContent = copy.modeTitle;
+        $("modeHint").textContent = copy.modeHint;
+        companyName.placeholder = copy.itemPlaceholder;
+        reportSearch.placeholder = copy.searchPlaceholder;
+        document.querySelector(".section-label").textContent = copy.sectionLabel;
+        $("workspaceEyebrow").textContent = copy.eyebrow;
+        $("workspaceDescription").textContent = copy.description;
+        $("builderTitle").textContent = copy.builderTitle;
+        $("builderHint").textContent = copy.builderHint;
+        $("signalsTitle").textContent = copy.signalsTitle;
+        $("signalsHint").textContent = copy.signalsHint;
+        $("previewTitle").textContent = copy.previewTitle;
+        $("previewHint").textContent = copy.previewHint;
+        $("viewReportBtn").textContent = state.mode === "docs" ? "View/Edit Document" : "View/Edit Report";
+        $("deleteReportBtn").textContent = state.mode === "docs" ? "Delete Document" : "Delete Report";
+        $("previewReportBtn").textContent = state.mode === "docs" ? "Open Document" : "Open";
+        $("countLabel").textContent = state.mode === "docs" ? "Documents" : "Reports";
+        $("wordsLabel").textContent = state.mode === "docs" ? "Document Words" : "Report Words";
+        $("workflowStrip").innerHTML = copy.workflow.map(([step, label]) => `<div class="workflow-step"><span>${step}</span><strong>${label}</strong></div>`).join("");
       }
 
       function renderCompanies(active) {
@@ -1777,13 +1547,13 @@
               <span><strong>${esc(item.name)}</strong><small>${relativeTime(item.updatedAt)}</small></span>
               <span class="pulse" aria-hidden="true"></span>
             </button>
-            <button class="mini-delete" type="button" title="Delete report" aria-label="Delete report" data-delete-report="${item.id}">×</button>
+            <button class="mini-delete" type="button" title="Delete item" aria-label="Delete item" data-delete-report="${item.id}">&times;</button>
           </div>
-        `).join("") : `<p class="empty">No matching reports.</p>`;
+        `).join("") : `<p class="empty">No matching ${state.mode === "docs" ? "documents" : "reports"}.</p>`;
       }
 
       function renderEditor(company) {
-        form.innerHTML = fields.map((field) => `
+        form.innerHTML = fieldsForMode().map((field) => `
           <label>${field.label}
             <textarea name="${field.key}" data-field="${field.key}" placeholder="${field.placeholder}">${esc(company.analysis[field.key] || "")}</textarea>
           </label>
@@ -1791,7 +1561,7 @@
       }
 
       function renderStats(company) {
-        const reportText = fields.map((field) => company.analysis[field.key] || "").join(" ");
+        const reportText = fieldsForMode().map((field) => company.analysis[field.key] || "").join(" ");
         $("companyCount").textContent = state.companies.length;
         $("wordCount").textContent = countWords(reportText);
         $("sourceCount").textContent = company.documents.length;
@@ -1799,13 +1569,39 @@
       }
 
       function renderSignals(company) {
+        const fields = fieldsForMode();
         const totalFields = fields.length;
         const filledFields = fields.filter((field) => (company.analysis[field.key] || "").trim()).length;
         const completion = Math.round((filledFields / totalFields) * 100);
         const evidence = Math.min(100, company.documents.length * 28 + Math.min(44, countWords(company.analysis.evidence || "") / 8));
-        const weakness = Math.min(100, Math.max(8, countWords(company.analysis.opportunity || "") * 2.6));
-        const action = Math.min(100, Math.max(8, countWords(company.analysis.actionPlan || "") * 2.4));
-        const competitive = Math.min(100, Math.max(12, countWords(company.analysis.learned || "") * 2.1));
+        const ideaDepth = Math.min(100, Math.max(8, countWords((company.analysis.opportunity || company.analysis.ideas || "")) * 2.6));
+        const action = Math.min(100, Math.max(8, countWords((company.analysis.actionPlan || company.analysis.draft || "")) * 2.4));
+        const clarity = Math.min(100, Math.max(12, countWords((company.analysis.learned || company.analysis.notes || "")) * 2.1));
+
+        if (state.mode === "docs") {
+          growthSignal.innerHTML = `
+            <span>Document Depth</span>
+            <strong>${completion}% shaped</strong>
+            <div class="bars">
+              ${bar("Draft", Math.min(100, countWords(company.analysis.draft || "") * 1.8))}
+              ${bar("Ideas", Math.min(100, countWords(company.analysis.ideas || "") * 2.4))}
+              ${bar("Notes", Math.min(100, countWords(company.analysis.notes || "") * 2.1))}
+            </div>
+            <p>Tracks how much useful writing, rough thinking, and support exists in this document.</p>
+          `;
+
+          competitionSignal.innerHTML = `
+            <span>Draft Readiness</span>
+            <strong>${Math.round((clarity + ideaDepth + action) / 3)}% ready</strong>
+            <div class="matrix" aria-hidden="true">
+              <i class="matrix-dot" style="left:${Math.max(12, clarity * .76)}%; top:${Math.max(18, 76 - ideaDepth * .48)}%"></i>
+              <i class="matrix-dot" style="left:${Math.max(18, action * .74)}%; top:${Math.max(22, 78 - action * .52)}%"></i>
+              <i class="matrix-dot" style="left:${Math.max(20, evidence * .72)}%; top:${Math.max(20, 80 - completion * .46)}%"></i>
+            </div>
+            <p>Moves as the draft becomes clearer, more complete, and easier to reuse.</p>
+          `;
+          return;
+        }
 
         growthSignal.innerHTML = `
           <span>Report Readiness</span>
@@ -1813,16 +1609,16 @@
           <div class="bars">
             ${bar("Evidence", evidence)}
             ${bar("Action", action)}
-            ${bar("Weakness", weakness)}
+            ${bar("Opportunity", ideaDepth)}
           </div>
           <p>Shows whether the handoff has enough evidence, useful opportunity insight, and clear next actions.</p>
         `;
 
         competitionSignal.innerHTML = `
           <span>Founder/Dev Clarity</span>
-          <strong>${Math.round((competitive + weakness + action) / 3)}% mapped</strong>
+          <strong>${Math.round((clarity + ideaDepth + action) / 3)}% mapped</strong>
           <div class="matrix" aria-hidden="true">
-            <i class="matrix-dot" style="left:${Math.max(12, competitive * .76)}%; top:${Math.max(18, 76 - weakness * .48)}%"></i>
+            <i class="matrix-dot" style="left:${Math.max(12, clarity * .76)}%; top:${Math.max(18, 76 - ideaDepth * .48)}%"></i>
             <i class="matrix-dot" style="left:${Math.max(18, action * .74)}%; top:${Math.max(22, 78 - action * .52)}%"></i>
             <i class="matrix-dot" style="left:${Math.max(20, evidence * .72)}%; top:${Math.max(20, 80 - completion * .46)}%"></i>
           </div>
@@ -1844,7 +1640,7 @@
       }
 
       function renderPreview(company) {
-        review.innerHTML = fields.map((field, i) => `
+        review.innerHTML = fieldsForMode().map((field, i) => `
           <div class="review-section">
             <span>${String(i + 1).padStart(2, "0")} · ${field.label}</span>
             <p class="${company.analysis[field.key] ? "" : "empty"}">${esc(company.analysis[field.key] || "No content added yet.")}</p>
@@ -1853,6 +1649,8 @@
       }
 
       function buildReport(company) {
+        const fields = fieldsForMode();
+        const copy = modeCopy[state.mode] || modeCopy.analysis;
         const sourcesHtml = company.documents.length
           ? company.documents.map((doc) => `<li>${esc(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
           : "<li>No source documents attached.</li>";
@@ -1865,11 +1663,11 @@
         `).join("");
         return `
           <div class="report-cover">
-            <span>Business Analyst Handoff Report</span>
+            <span>${copy.reportLabel}</span>
             <h1 contenteditable="true" data-company-name>${esc(company.name)}</h1>
-            <p>Prepared in Manish Analysis · Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
+            <p>Prepared in Inscrbe &middot; Research to Reality &middot; Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
           </div>
-          <h3>Simple Handoff Structure</h3>
+          <h3>${copy.structureLabel}</h3>
           <ol class="source-list-report">${fields.map((field) => `<li>${esc(field.label)}</li>`).join("")}<li>Source Documents</li></ol>
           ${fields.map((field, index) => `
             <section>
@@ -1887,7 +1685,7 @@
 
       function openReport() {
         const company = activeCompany();
-        $("reportToolbarTitle").textContent = `${company.name} · Editable Report`;
+        $("reportToolbarTitle").textContent = `${company.name} - ${state.mode === "docs" ? "Editable Document" : "Editable Report"}`;
         reportPaper.innerHTML = buildReport(company);
         reportModal.classList.remove("hidden");
         document.body.classList.add("report-mode");
@@ -1916,20 +1714,20 @@
       }
 
       function deleteReportById(reportId = state.activeId) {
-        if (!confirm("Delete this report from this browser? This removes the current report, imported documents, and saved analysis.")) return;
+        if (!confirm(`Delete this ${state.mode === "docs" ? "document" : "report"} from this browser? This removes saved writing, imported documents, and notes.`)) return;
         if (state.companies.length === 1) {
           updateCompany((company) => {
             company.documents = [];
             company.analysis = emptyAnalysis();
           });
-          docStatus.textContent = "Report cleared";
+          docStatus.textContent = state.mode === "docs" ? "Document cleared" : "Report cleared";
           return;
         }
         state.companies = state.companies.filter((company) => company.id !== reportId);
         if (state.activeId === reportId) state.activeId = state.companies[0].id;
         persist();
         render();
-        docStatus.textContent = "Report deleted";
+        docStatus.textContent = state.mode === "docs" ? "Document deleted" : "Report deleted";
       }
 
       async function readDocument(file) {
@@ -1947,6 +1745,11 @@
         const doc = { id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, name: fileName, text, createdAt: Date.now() };
         company.documents.push(doc);
         const block = `Source: ${fileName}\n${text}`;
+        if (state.mode === "docs") {
+          company.analysis.notes = `${company.analysis.notes ? `${company.analysis.notes}\n\n` : ""}${block}`;
+          if (!company.analysis.draft) company.analysis.draft = text.split(/\n\s*\n/)[0].slice(0, 760);
+          return;
+        }
         company.analysis.evidence = `${company.analysis.evidence ? `${company.analysis.evidence}\n\n` : ""}${block}`;
         if (!company.analysis.learned) company.analysis.learned = text.split(/\n\s*\n/)[0].slice(0, 760);
       }
@@ -1956,6 +1759,7 @@
         if (!doc) return;
         company.documents = company.documents.filter((item) => item.id !== id);
         company.analysis.evidence = company.analysis.evidence.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
+        company.analysis.notes = company.analysis.notes.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
       }
 
       function countWords(text = "") { return text.trim() ? text.trim().split(/\s+/).length : 0; }
@@ -1971,7 +1775,8 @@
         return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
       }
       function slug(name) {
-        return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `report-${Date.now()}`;
+        const fallback = state.mode === "docs" ? "document" : "report";
+        return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `${fallback}-${Date.now()}`;
       }
 
       companiesEl.addEventListener("click", (event) => {
@@ -2000,7 +1805,7 @@
       });
       pageTitle.addEventListener("input", () => {
         const company = activeCompany();
-        company.name = pageTitle.value.trim() || "Untitled Report";
+        company.name = pageTitle.value.trim() || modeCopy[state.mode].emptyName;
         company.updatedAt = Date.now();
         persist();
         renderCompanies(company);
@@ -2015,6 +1820,11 @@
         state.companies.push({ id, name, updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() });
         state.activeId = id;
         companyName.value = "";
+        persist();
+        render();
+      });
+      modeSwitch.addEventListener("change", () => {
+        state.mode = modeSwitch.checked ? "docs" : "analysis";
         persist();
         render();
       });
@@ -2048,12 +1858,12 @@
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
       function finishIntro() {
         welcome.classList.add("opening");
-        setTimeout(() => welcome.classList.add("hide"), 720);
+        setTimeout(() => welcome.classList.add("hide"), 520);
       }
 
       $("skipIntroBtn").addEventListener("click", () => welcome.classList.add("hide"));
       window.addEventListener("load", () => {
-        setTimeout(finishIntro, 2500);
+        setTimeout(finishIntro, 1550);
       });
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
