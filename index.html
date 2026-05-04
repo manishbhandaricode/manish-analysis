@@ -808,6 +808,47 @@
         font-weight: 950;
       }
 
+      .editor-card {
+        min-height: 118px;
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        background: rgba(7,8,10,.34);
+        text-align: left;
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .editor-card:hover {
+        transform: translateY(-1px);
+        border-color: rgba(102,210,200,.42);
+        background: rgba(255,255,255,.07);
+      }
+
+      .editor-card strong {
+        color: #fff;
+        font-size: .9rem;
+      }
+
+      .editor-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: .86rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .editor-card span {
+        color: var(--muted2);
+        font-size: .72rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
       textarea {
         width: 100%;
         min-height: 94px;
@@ -1106,6 +1147,127 @@
         border-radius: 0;
       }
 
+      .focus-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 12;
+        padding: 22px;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(255,255,255,.08), transparent 26%),
+          rgba(3,4,6,.9);
+        backdrop-filter: blur(18px);
+      }
+
+      .focus-window {
+        width: min(1180px, 100%);
+        min-height: calc(100vh - 44px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #121419;
+        box-shadow: 0 32px 90px rgba(0,0,0,.58);
+        overflow: hidden;
+      }
+
+      .focus-toolbar {
+        min-height: 66px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255,255,255,.055);
+      }
+
+      .focus-toolbar h2 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(1.25rem, 3vw, 2rem);
+        line-height: 1;
+      }
+
+      .focus-toolbar span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: .82rem;
+      }
+
+      .focus-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .focus-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 0;
+        min-height: 0;
+      }
+
+      .focus-editor {
+        width: 100%;
+        min-height: 100%;
+        padding: clamp(20px, 4vw, 42px);
+        border: 0;
+        border-radius: 0;
+        color: var(--text);
+        background: rgba(7,8,10,.42);
+        font-size: clamp(1rem, 1.5vw, 1.18rem);
+        line-height: 1.72;
+        resize: none;
+      }
+
+      .focus-editor:focus {
+        box-shadow: inset 0 0 0 1px rgba(102,210,200,.34);
+      }
+
+      .focus-meta {
+        padding: 20px;
+        border-left: 1px solid var(--line);
+        background: rgba(255,255,255,.035);
+      }
+
+      .focus-meta strong {
+        display: block;
+        color: #fff;
+        font-size: .82rem;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .focus-meta p {
+        margin: 10px 0 18px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .focus-count {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .focus-count span {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--muted);
+        background: rgba(255,255,255,.04);
+      }
+
+      .focus-count b {
+        display: block;
+        margin-top: 4px;
+        color: #fff;
+        font-size: 1.35rem;
+      }
+
       @property --spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
       @keyframes spin { to { --spin: 360deg; } }
       @keyframes ambient { to { transform: translate3d(2%, -1%, 0) scale(1.03); } }
@@ -1160,14 +1322,17 @@
       @media (max-width: 1080px) {
         .shell, .workspace, .stats, .workflow-strip { grid-template-columns: 1fr; }
         aside { position: static; height: auto; }
+        .focus-body { grid-template-columns: 1fr; }
+        .focus-meta { border-left: 0; border-top: 1px solid var(--line); }
       }
 
       @media (max-width: 680px) {
-        main, aside, .report-modal { padding: 18px; }
-        .topbar, .report-toolbar { flex-direction: column; align-items: stretch; }
-        .button-row, .report-actions { justify-content: stretch; }
-        .button-row button, .report-actions button { flex: 1 1 160px; }
+        main, aside, .report-modal, .focus-modal { padding: 18px; }
+        .topbar, .report-toolbar, .focus-toolbar { flex-direction: column; align-items: stretch; }
+        .button-row, .report-actions, .focus-actions { justify-content: stretch; }
+        .button-row button, .report-actions button, .focus-actions button { flex: 1 1 160px; }
         .editor { grid-template-columns: 1fr; }
+        .focus-window { min-height: calc(100vh - 36px); }
       }
     </style>
   </head>
@@ -1333,6 +1498,32 @@
       </div>
     </div>
 
+    <div class="focus-modal hidden" id="focusModal" role="dialog" aria-modal="true" aria-label="Focused section editor">
+      <div class="focus-window">
+        <div class="focus-toolbar">
+          <div>
+            <h2 id="focusTitle">Section</h2>
+            <span id="focusHint">Write with more room and less dashboard noise.</span>
+          </div>
+          <div class="focus-actions">
+            <button class="glass-button" id="closeFocusBtn">Back</button>
+            <button class="glow-button" id="saveFocusBtn">Save Section</button>
+          </div>
+        </div>
+        <div class="focus-body">
+          <textarea class="focus-editor" id="focusEditor"></textarea>
+          <aside class="focus-meta">
+            <strong id="focusModeLabel">Focused writing</strong>
+            <p id="focusPrompt">Use this space to write clearly. Save when done; your preview and signals update immediately.</p>
+            <div class="focus-count">
+              <span>Words <b id="focusWords">0</b></span>
+              <span>Characters <b id="focusChars">0</b></span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
     <script>
       const storageKey = "inscrbe:v1";
       const legacyKeys = ["manish-analysis:v5", "manish-analysis:v4", "manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
@@ -1431,6 +1622,8 @@
       const docFile = $("docFile");
       const reportModal = $("reportModal");
       const reportPaper = $("reportPaper");
+      const focusModal = $("focusModal");
+      const focusEditor = $("focusEditor");
       const cursorDot = $("cursorDot");
       const cursorRing = $("cursorRing");
       const growthSignal = $("growthSignal");
@@ -1439,6 +1632,7 @@
       const reportSearch = $("reportSearch");
       const modeSwitch = $("modeSwitch");
       let searchTerm = "";
+      let activeFocusField = null;
 
       function fieldsForMode(mode = state?.mode || "analysis") {
         return modeFields[mode] || modeFields.analysis;
@@ -1554,9 +1748,11 @@
 
       function renderEditor(company) {
         form.innerHTML = fieldsForMode().map((field) => `
-          <label>${field.label}
-            <textarea name="${field.key}" data-field="${field.key}" placeholder="${field.placeholder}">${esc(company.analysis[field.key] || "")}</textarea>
-          </label>
+          <button class="editor-card" type="button" data-edit-field="${field.key}">
+            <span>${field.short} · ${countWords(company.analysis[field.key] || "")} words</span>
+            <strong>${field.label}</strong>
+            <p class="${company.analysis[field.key] ? "" : "empty"}">${esc(previewText(company.analysis[field.key] || field.placeholder, 180))}</p>
+          </button>
         `).join("");
       }
 
@@ -1713,6 +1909,43 @@
         render();
       }
 
+      function openFocusEditor(fieldKey) {
+        const field = fieldsForMode().find((item) => item.key === fieldKey);
+        const company = activeCompany();
+        if (!field || !company) return;
+        activeFocusField = field.key;
+        $("focusTitle").textContent = field.label;
+        $("focusHint").textContent = state.mode === "docs" ? "Write freely in a clean document space." : "Expand this section into a clear analyst handoff.";
+        $("focusModeLabel").textContent = state.mode === "docs" ? "Document mode" : "Analyst report mode";
+        $("focusPrompt").textContent = field.placeholder;
+        focusEditor.value = company.analysis[field.key] || "";
+        updateFocusStats();
+        focusModal.classList.remove("hidden");
+        document.body.classList.add("focus-mode");
+        setTimeout(() => focusEditor.focus(), 40);
+      }
+
+      function updateFocusStats() {
+        $("focusWords").textContent = countWords(focusEditor.value);
+        $("focusChars").textContent = focusEditor.value.length;
+      }
+
+      function saveFocusEditor({ close = true } = {}) {
+        if (!activeFocusField) return;
+        updateCompany((company) => {
+          company.analysis[activeFocusField] = focusEditor.value;
+        });
+        docStatus.textContent = "Section saved";
+        if (close) closeFocusEditor();
+      }
+
+      function closeFocusEditor() {
+        focusModal.classList.add("hidden");
+        document.body.classList.remove("focus-mode");
+        activeFocusField = null;
+        render();
+      }
+
       function deleteReportById(reportId = state.activeId) {
         if (!confirm(`Delete this ${state.mode === "docs" ? "document" : "report"} from this browser? This removes saved writing, imported documents, and notes.`)) return;
         if (state.companies.length === 1) {
@@ -1763,6 +1996,10 @@
       }
 
       function countWords(text = "") { return text.trim() ? text.trim().split(/\s+/).length : 0; }
+      function previewText(text = "", limit = 180) {
+        const clean = String(text).replace(/\s+/g, " ").trim();
+        return clean.length > limit ? `${clean.slice(0, limit - 1)}...` : clean;
+      }
       function relativeTime(time) {
         const diff = Math.max(0, Date.now() - time);
         const mins = Math.floor(diff / 60000), hrs = Math.floor(mins / 60), days = Math.floor(hrs / 24);
@@ -1802,6 +2039,11 @@
         renderStats(company);
         renderSignals(company);
         renderPreview(company);
+      });
+      form.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-edit-field]");
+        if (!button) return;
+        openFocusEditor(button.dataset.editField);
       });
       pageTitle.addEventListener("input", () => {
         const company = activeCompany();
@@ -1855,7 +2097,17 @@
       $("previewReportBtn").addEventListener("click", openReport);
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
-      window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
+      $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
+      $("closeFocusBtn").addEventListener("click", closeFocusEditor);
+      focusEditor.addEventListener("input", updateFocusStats);
+      window.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        if (!focusModal.classList.contains("hidden")) {
+          closeFocusEditor();
+          return;
+        }
+        if (!reportModal.classList.contains("hidden")) closeReport();
+      });
       function finishIntro() {
         welcome.classList.add("opening");
         setTimeout(() => welcome.classList.add("hide"), 520);
@@ -1874,7 +2126,7 @@
         if (!cursorDot || !cursorRing) return;
         cursorDot.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
         cursorRing.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
-        const target = event.target.closest("button, .company, .panel, .stat, [contenteditable='true']");
+        const target = event.target.closest("button, .company, .editor-card, .panel, .stat, [contenteditable='true']");
         document.body.classList.toggle("cursor-active", Boolean(target));
       });
 
