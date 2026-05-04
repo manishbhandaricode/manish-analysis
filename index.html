@@ -45,22 +45,22 @@
       }
 
       .cursor-dot {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
         background: #fff;
         box-shadow: 0 0 18px rgba(255,255,255,.9);
       }
 
       .cursor-ring {
-        width: 34px;
-        height: 34px;
+        width: 22px;
+        height: 22px;
         border: 1px solid rgba(255,255,255,.52);
         transition: width 160ms ease, height 160ms ease, border-color 160ms ease, background 160ms ease;
       }
 
       .cursor-active .cursor-ring {
-        width: 52px;
-        height: 52px;
+        width: 34px;
+        height: 34px;
         border-color: rgba(255,255,255,.92);
         background: rgba(255,255,255,.06);
       }
@@ -809,9 +809,9 @@
       <main>
         <div class="topbar">
           <div>
-            <p class="eyebrow">Business analyst report</p>
+            <p class="eyebrow">Analyst handoff report</p>
             <h2 id="pageTitle">Company X</h2>
-            <p>Premium report workspace for thesis, market context, financial logic, risks, source documents, and final analyst recommendations.</p>
+            <p>Simple workspace for turning company research into a clear founder and development-team action brief.</p>
           </div>
           <div class="button-row">
             <button class="glass-button" id="viewReportBtn">View/Edit Report</button>
@@ -833,8 +833,8 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h3>Focused Report Builder</h3>
-                  <span>Pick one compact analyst section at a time</span>
+                  <h3>Analysis Builder</h3>
+                  <span>Write one clear handoff section at a time</span>
                 </div>
                 <span class="status" id="saveStatus">Saved</span>
               </div>
@@ -844,8 +844,8 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <h3>Strategy Signals</h3>
-                  <span>Growth, weakness conversion, and competitive motion</span>
+                  <h3>Handoff Signals</h3>
+                  <span>Evidence, opportunity, and action readiness</span>
                 </div>
                 <span class="status">Live graphic</span>
               </div>
@@ -874,8 +874,8 @@
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title">
-                <h3>Live Report Preview</h3>
-                <span>Professional read mode</span>
+                <h3>Founder/Dev Preview</h3>
+                <span>Plain-language report view</span>
               </div>
               <button class="small-button" id="previewReportBtn">Open</button>
             </div>
@@ -902,12 +902,12 @@
       const storageKey = "manish-analysis:v5";
       const legacyKeys = ["manish-analysis:v4", "manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
       const fields = [
-        ["thesis", "Analyst Thesis", "Executive view: what this company is, why it matters, and what can be learned from it.", "Core view"],
-        ["growthModel", "Growth Model", "How this business grows: acquisition, retention, monetization, expansion, operations, and scale loops.", "How it grows"],
-        ["competitiveIntel", "Competitive Intelligence", "Competitors, positioning, differentiation, customer pull, weak spots, and where this company wins or loses.", "Market fight"],
-        ["weaknessToAdvantage", "Weakness To Advantage", "Convert observed weaknesses into your company's strengths: gaps, mistakes, ignored segments, bad UX, pricing openings.", "Exploit gaps"],
-        ["executionPlan", "Action Plan", "What to implement: strategic moves, product changes, GTM experiments, risks, owners, and next research steps.", "Do next"],
-        ["sourceNotes", "Source Notes", "Imported document excerpts, rough notes, reference findings, and evidence behind the report.", "Evidence"]
+        ["thesis", "What We Learned", "Explain the company in plain words, why it matters, and the main lesson for our team.", "Main lesson"],
+        ["growthModel", "How They Grow", "Describe how this company gets users, keeps them, makes money, and scales.", "Growth"],
+        ["competitiveIntel", "Where They Win / Lose", "Show what they do well, where they are weak, and how customers compare them to others.", "Competition"],
+        ["weaknessToAdvantage", "Opportunity For Us", "Turn their weakness, mistakes, gaps, or ignored customers into opportunities for our company.", "Opportunity"],
+        ["executionPlan", "Actions For Founder & Dev Team", "Write the concrete changes, product ideas, experiments, and next steps the team should take.", "Actions"],
+        ["sourceNotes", "Evidence & Notes", "Add imported document excerpts, research notes, examples, and proof behind the recommendations.", "Evidence"]
       ].map(([key, label, placeholder, short]) => ({ key, label, placeholder, short }));
       let activeSectionKey = fields[0].key;
 
@@ -921,11 +921,11 @@
             documents: [],
             analysis: {
               summary: "Company X is a sample business analysis report. Replace this with the central analyst thesis.",
-              thesis: "Company X is a sample target. Replace this with the central analyst thesis and strategic reason to study it.",
-              growthModel: "Map growth loops, acquisition channels, retention hooks, monetization, and operational scale advantages.",
-              competitiveIntel: "Track competitors, positioning, differentiation, customer pull, and where Company X is vulnerable.",
-              weaknessToAdvantage: "Turn Company X weaknesses into your company's opportunities: product gaps, pricing openings, ignored customers, slow operations, or poor UX.",
-              executionPlan: "List concrete moves your company can implement to overtake competition: product bets, GTM tests, process changes, and next research.",
+              thesis: "Company X is a sample company. Replace this with the main lesson a founder or development team should understand.",
+              growthModel: "Explain how the company attracts users, keeps them, earns revenue, and scales operations.",
+              competitiveIntel: "List what they do better than others, what they do poorly, and where customers may be unhappy.",
+              weaknessToAdvantage: "Turn their weak points into opportunities: product gaps, pricing gaps, ignored users, slow workflows, or poor UX.",
+              executionPlan: "Write clear actions for the founder and dev team: what to build, test, improve, or avoid next.",
               sourceNotes: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
             }
           }
@@ -1067,18 +1067,18 @@
             ${bar("Action", action)}
             ${bar("Weakness", weakness)}
           </div>
-          <p>Tracks whether research has enough source evidence, weakness conversion, and concrete implementation moves.</p>
+          <p>Shows whether the handoff has enough evidence, useful opportunity insight, and clear next actions.</p>
         `;
 
         competitionSignal.innerHTML = `
-          <span>Competition Logic</span>
+          <span>Founder/Dev Clarity</span>
           <strong>${Math.round((competitive + weakness + action) / 3)}% mapped</strong>
           <div class="matrix" aria-hidden="true">
             <i class="matrix-dot" style="left:${Math.max(12, competitive * .76)}%; top:${Math.max(18, 76 - weakness * .48)}%"></i>
             <i class="matrix-dot" style="left:${Math.max(18, action * .74)}%; top:${Math.max(22, 78 - action * .52)}%"></i>
             <i class="matrix-dot" style="left:${Math.max(20, evidence * .72)}%; top:${Math.max(20, 80 - completion * .46)}%"></i>
           </div>
-          <p>Dots shift as you add competitor insights, exploitable weaknesses, evidence, and action plans.</p>
+          <p>Moves as the report becomes easier for founders and developers to understand and act on.</p>
         `;
       }
 
@@ -1117,11 +1117,11 @@
         `).join("");
         return `
           <div class="report-cover">
-            <span>Confidential Business Analysis Report</span>
+            <span>Business Analyst Handoff Report</span>
             <h1 contenteditable="true" data-company-name>${esc(company.name)}</h1>
             <p>Prepared in Manish Analysis · Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
           </div>
-          <h3>Report Contents</h3>
+          <h3>Simple Handoff Structure</h3>
           <ol class="source-list-report">${fields.map((field) => `<li>${esc(field.label)}</li>`).join("")}<li>Source Documents</li></ol>
           ${fields.map((field, index) => `
             <section>
