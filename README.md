@@ -8,6 +8,8 @@ Minimal business analysis documentation tool.
 - Save/load in browser storage
 - Review panel beside editor
 - Word, markdown, and text document import
+- Source document list with delete controls
+- Full-screen business analysis report view
 - Static Vercel deployment
 
 ## Local

@@ -8,22 +8,22 @@
     <style>
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #17201c;
-        background: #e7ebe4;
-        --ink: #17201c;
-        --ink-2: #27342e;
-        --muted: #66746d;
-        --soft: #eef1eb;
-        --line: #d8ded5;
-        --panel: rgba(255, 255, 255, 0.84);
-        --panel-solid: #fbfcf9;
-        --dark: #111713;
-        --dark-2: #17211c;
-        --dark-line: rgba(255, 255, 255, 0.12);
-        --accent: #1e7a61;
-        --accent-2: #c7f2dc;
-        --white-glow: rgba(255, 255, 255, 0.86);
-        --shadow: 0 24px 70px rgba(23, 32, 28, 0.14);
+        --ink: #111827;
+        --navy: #111f36;
+        --navy-2: #182b49;
+        --slate: #536173;
+        --line: #d9e0ea;
+        --paper: #fbfcff;
+        --panel: rgba(255, 255, 255, 0.82);
+        --gold: #b88935;
+        --gold-soft: #f3e6c8;
+        --teal: #0f766e;
+        --cyan: #d7f8f4;
+        --danger: #9f3a2f;
+        --glow: rgba(255, 255, 255, 0.92);
+        --shadow: 0 28px 80px rgba(17, 31, 54, 0.16);
+        color: var(--ink);
+        background: #edf2f7;
       }
 
       * {
@@ -39,12 +39,13 @@
       body::before {
         content: "";
         position: fixed;
-        inset: -20%;
+        inset: -24%;
         z-index: -2;
         background:
-          radial-gradient(circle at 20% 10%, rgba(199, 242, 220, 0.55), transparent 28%),
-          radial-gradient(circle at 86% 18%, rgba(255, 255, 255, 0.78), transparent 24%),
-          linear-gradient(135deg, #e2e8df, #f5f2eb 46%, #dce7df);
+          radial-gradient(circle at 15% 10%, rgba(215, 248, 244, 0.75), transparent 28%),
+          radial-gradient(circle at 82% 8%, rgba(243, 230, 200, 0.8), transparent 24%),
+          linear-gradient(135deg, #e5edf5 0%, #f8faf7 46%, #e0e8f0 100%);
+        animation: drift 16s ease-in-out infinite alternate;
       }
 
       body::after {
@@ -52,11 +53,12 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        opacity: 0.32;
-        background-image: linear-gradient(rgba(23, 32, 28, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(23, 32, 28, 0.05) 1px, transparent 1px);
-        background-size: 44px 44px;
-        mask-image: linear-gradient(to bottom, black, transparent 74%);
+        opacity: 0.22;
+        background-image:
+          linear-gradient(rgba(17, 31, 54, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(17, 31, 54, 0.08) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
 
       button,
@@ -73,7 +75,7 @@
       .shell {
         min-height: 100vh;
         display: grid;
-        grid-template-columns: 304px minmax(0, 1fr);
+        grid-template-columns: 312px minmax(0, 1fr);
       }
 
       aside {
@@ -82,45 +84,48 @@
         height: 100vh;
         padding: 24px;
         overflow: auto;
-        color: #f4f7f1;
-        background: linear-gradient(180deg, var(--dark), var(--dark-2));
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        color: #f7fbff;
+        background:
+          linear-gradient(160deg, rgba(184, 137, 53, 0.13), transparent 28%),
+          linear-gradient(180deg, var(--navy), var(--navy-2));
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .brand {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
       }
 
       .mark {
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         display: grid;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.08);
-        font-weight: 850;
+        color: var(--gold-soft);
+        font-weight: 900;
       }
 
       .brand h1,
-      .panel-title h3,
-      .company strong {
+      .company strong,
+      .panel-title h3 {
         margin: 0;
         letter-spacing: 0;
       }
 
       .brand h1 {
-        font-size: 1.03rem;
+        font-size: 1.04rem;
         line-height: 1.05;
       }
 
       .brand span,
       .section-label,
       .company small {
-        color: rgba(244, 247, 241, 0.62);
+        color: rgba(247, 251, 255, 0.64);
         font-size: 0.78rem;
       }
 
@@ -128,8 +133,8 @@
         display: block;
         margin: 24px 0 10px;
         text-transform: uppercase;
-        letter-spacing: 0.09em;
-        font-weight: 800;
+        letter-spacing: 0.1em;
+        font-weight: 850;
       }
 
       .company-form {
@@ -149,16 +154,26 @@
         min-width: 0;
         height: 44px;
         padding: 0 12px;
-        border: 1px solid var(--dark-line);
-        color: #f7faf4;
-        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .company-form input::placeholder {
-        color: rgba(244, 247, 241, 0.44);
+        color: rgba(247, 251, 255, 0.48);
       }
 
-      .companies {
+      .icon-button {
+        width: 44px;
+        min-height: 44px;
+        border-radius: 8px;
+        color: var(--navy);
+        background: var(--gold-soft);
+        font-weight: 900;
+      }
+
+      .companies,
+      .source-list {
         display: grid;
         gap: 8px;
       }
@@ -172,25 +187,20 @@
         align-items: center;
         gap: 12px;
         border-radius: 8px;
-        color: #f4f7f1;
+        color: #f7fbff;
         background: transparent;
         text-align: left;
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+        transition: transform 180ms ease, background 180ms ease;
       }
 
       .company:hover,
       .company.active {
-        transform: translateX(2px);
+        transform: translateX(3px);
         background: rgba(255, 255, 255, 0.09);
       }
 
       .company.active {
-        outline: 1px solid rgba(255, 255, 255, 0.18);
-      }
-
-      .company strong {
-        display: block;
-        font-size: 0.96rem;
+        outline: 1px solid rgba(243, 230, 200, 0.36);
       }
 
       .pulse {
@@ -198,17 +208,18 @@
         height: 9px;
         flex: 0 0 auto;
         border-radius: 99px;
-        background: var(--accent-2);
-        box-shadow: 0 0 18px rgba(199, 242, 220, 0.8);
+        background: var(--gold-soft);
+        box-shadow: 0 0 20px rgba(243, 230, 200, 0.86);
+        animation: breathe 2.8s ease-in-out infinite;
       }
 
       .sidebar-note {
         margin-top: 24px;
         padding: 14px;
-        border: 1px solid var(--dark-line);
+        border: 1px solid rgba(255, 255, 255, 0.13);
         border-radius: 8px;
-        color: rgba(244, 247, 241, 0.72);
-        background: rgba(255, 255, 255, 0.05);
+        color: rgba(247, 251, 255, 0.74);
+        background: rgba(255, 255, 255, 0.06);
         font-size: 0.88rem;
         line-height: 1.45;
       }
@@ -227,16 +238,16 @@
 
       .eyebrow {
         margin: 0 0 10px;
-        color: var(--accent);
+        color: var(--gold);
         font-size: 0.78rem;
-        font-weight: 850;
-        letter-spacing: 0.12em;
+        font-weight: 900;
+        letter-spacing: 0.13em;
         text-transform: uppercase;
       }
 
       .topbar h2 {
         margin: 0;
-        color: var(--ink);
+        color: var(--navy);
         font-size: clamp(2rem, 5vw, 4rem);
         line-height: 0.95;
         letter-spacing: 0;
@@ -244,8 +255,8 @@
 
       .topbar p {
         margin: 10px 0 0;
-        max-width: 64ch;
-        color: var(--muted);
+        max-width: 70ch;
+        color: var(--slate);
         line-height: 1.55;
       }
 
@@ -258,24 +269,26 @@
       }
 
       .glow-button,
-      .icon-button {
+      .secondary-button,
+      .small-button,
+      .danger-link {
         min-height: 42px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-weight: 800;
-        position: relative;
+        font-weight: 850;
       }
 
       .glow-button {
-        padding: 0 16px;
-        color: #f9fffb;
-        background: #17201c;
+        position: relative;
+        padding: 0 17px;
+        color: #fff;
+        background: var(--navy);
         isolation: isolate;
         overflow: hidden;
-        box-shadow: 0 16px 34px rgba(23, 32, 28, 0.2);
+        box-shadow: 0 18px 38px rgba(17, 31, 54, 0.24);
       }
 
       .glow-button::before {
@@ -283,8 +296,8 @@
         position: absolute;
         inset: -2px;
         z-index: -2;
-        background: conic-gradient(from var(--spin), transparent 0deg, transparent 88deg, var(--white-glow) 112deg, transparent 140deg, transparent 360deg);
-        animation: spin 2.6s linear infinite;
+        background: conic-gradient(from var(--spin), transparent 0deg, transparent 82deg, var(--glow) 104deg, var(--gold-soft) 118deg, transparent 146deg, transparent 360deg);
+        animation: spin 2.7s linear infinite;
       }
 
       .glow-button::after {
@@ -293,13 +306,14 @@
         inset: 2px;
         z-index: -1;
         border-radius: 6px;
-        background: linear-gradient(135deg, #17201c, #22332c);
+        background: linear-gradient(135deg, var(--navy), #1c355a);
       }
 
-      .icon-button {
-        width: 44px;
-        color: #17201c;
-        background: var(--accent-2);
+      .secondary-button {
+        padding: 0 15px;
+        border: 1px solid rgba(17, 31, 54, 0.12);
+        color: var(--navy);
+        background: rgba(255, 255, 255, 0.62);
       }
 
       .stats {
@@ -311,22 +325,33 @@
 
       .stat,
       .panel {
-        border: 1px solid rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.72);
         background: var(--panel);
         box-shadow: var(--shadow);
         backdrop-filter: blur(18px);
       }
 
       .stat {
-        min-height: 98px;
+        min-height: 100px;
         padding: 16px;
         border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat::after {
+        content: "";
+        position: absolute;
+        inset: auto 14px 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--teal), var(--gold));
+        opacity: 0.7;
       }
 
       .stat span {
-        color: var(--muted);
+        color: var(--slate);
         font-size: 0.75rem;
-        font-weight: 850;
+        font-weight: 900;
         letter-spacing: 0.08em;
         text-transform: uppercase;
       }
@@ -334,16 +359,21 @@
       .stat strong {
         display: block;
         margin-top: 10px;
-        color: var(--ink);
-        font-size: 1.85rem;
+        color: var(--navy);
+        font-size: 1.82rem;
         line-height: 1;
       }
 
       .workspace {
         display: grid;
-        grid-template-columns: minmax(0, 1.06fr) minmax(330px, 0.94fr);
+        grid-template-columns: minmax(0, 1.08fr) minmax(350px, 0.92fr);
         gap: 18px;
         align-items: start;
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
       }
 
       .panel {
@@ -352,29 +382,30 @@
       }
 
       .panel-header {
-        min-height: 64px;
+        min-height: 66px;
         padding: 16px 18px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
         border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.48);
+        background: rgba(255, 255, 255, 0.54);
       }
 
       .panel-title h3 {
-        color: var(--ink);
+        color: var(--navy);
         font-size: 1rem;
       }
 
       .panel-title span,
       .status {
-        color: var(--muted);
+        color: var(--slate);
         font-size: 0.82rem;
       }
 
       .editor,
-      .review {
+      .review,
+      .source-body {
         padding: 18px;
         display: grid;
         gap: 14px;
@@ -383,9 +414,9 @@
       label {
         display: grid;
         gap: 8px;
-        color: var(--ink-2);
+        color: var(--navy);
         font-size: 0.82rem;
-        font-weight: 850;
+        font-weight: 900;
       }
 
       textarea {
@@ -394,23 +425,59 @@
         padding: 13px;
         border: 1px solid var(--line);
         color: var(--ink);
-        background: rgba(255, 255, 255, 0.82);
+        background: rgba(255, 255, 255, 0.86);
         line-height: 1.55;
         transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
       }
 
       textarea:focus {
-        border-color: rgba(30, 122, 97, 0.46);
+        border-color: rgba(15, 118, 110, 0.42);
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(30, 122, 97, 0.1);
+        box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
       }
 
       textarea[name="summary"] {
         min-height: 124px;
       }
 
+      .source-card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.74);
+      }
+
+      .source-card strong {
+        display: block;
+        color: var(--navy);
+        font-size: 0.9rem;
+      }
+
+      .source-card span {
+        color: var(--slate);
+        font-size: 0.78rem;
+      }
+
+      .danger-link {
+        min-height: 34px;
+        padding: 0 10px;
+        color: var(--danger);
+        background: #f9e9e5;
+      }
+
+      .small-button {
+        min-height: 34px;
+        padding: 0 10px;
+        color: var(--navy);
+        background: var(--gold-soft);
+      }
+
       .review-section {
-        padding: 0 0 15px;
+        padding: 0 0 16px;
         border-bottom: 1px solid var(--line);
       }
 
@@ -422,9 +489,9 @@
       .review-section span {
         display: block;
         margin-bottom: 8px;
-        color: var(--accent);
+        color: var(--gold);
         font-size: 0.76rem;
-        font-weight: 900;
+        font-weight: 950;
         letter-spacing: 0.08em;
         text-transform: uppercase;
       }
@@ -433,16 +500,98 @@
         margin: 0;
         color: var(--ink);
         white-space: pre-wrap;
-        line-height: 1.6;
+        line-height: 1.62;
       }
 
       .empty {
-        color: var(--muted) !important;
+        color: var(--slate) !important;
         font-style: italic;
       }
 
-      .hidden-file {
+      .hidden-file,
+      .hidden {
         display: none;
+      }
+
+      .report-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        padding: 28px;
+        background: rgba(8, 16, 28, 0.72);
+        backdrop-filter: blur(14px);
+        overflow: auto;
+      }
+
+      .report-window {
+        width: min(980px, 100%);
+        margin: 0 auto;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f4f6f8;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+      }
+
+      .report-toolbar {
+        min-height: 58px;
+        padding: 10px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid #d8dee8;
+        background: #fff;
+      }
+
+      .report-paper {
+        width: min(820px, calc(100% - 32px));
+        min-height: 1040px;
+        margin: 22px auto;
+        padding: clamp(28px, 6vw, 58px);
+        color: #151923;
+        background: var(--paper);
+        box-shadow: 0 18px 50px rgba(17, 31, 54, 0.14);
+      }
+
+      .report-cover {
+        padding-bottom: 22px;
+        margin-bottom: 26px;
+        border-bottom: 3px solid var(--navy);
+      }
+
+      .report-cover span {
+        color: var(--gold);
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      .report-cover h1 {
+        margin: 12px 0;
+        color: var(--navy);
+        font-size: clamp(2.1rem, 6vw, 4rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .report-paper h2 {
+        margin: 28px 0 10px;
+        color: var(--navy);
+        font-size: 1.18rem;
+        letter-spacing: 0;
+      }
+
+      .report-paper p {
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.72;
+      }
+
+      .source-list-report {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.7;
       }
 
       @property --spin {
@@ -457,6 +606,19 @@
         }
       }
 
+      @keyframes drift {
+        to {
+          transform: translate3d(2%, -1%, 0) scale(1.03);
+        }
+      }
+
+      @keyframes breathe {
+        50% {
+          transform: scale(1.28);
+          opacity: 0.72;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -468,7 +630,7 @@
         }
       }
 
-      @media (max-width: 1020px) {
+      @media (max-width: 1080px) {
         .shell {
           grid-template-columns: 1fr;
         }
@@ -484,13 +646,15 @@
         }
       }
 
-      @media (max-width: 660px) {
+      @media (max-width: 680px) {
         main,
-        aside {
+        aside,
+        .report-modal {
           padding: 18px;
         }
 
-        .topbar {
+        .topbar,
+        .report-toolbar {
           flex-direction: column;
           align-items: stretch;
         }
@@ -512,7 +676,7 @@
           <div class="mark">MA</div>
           <div>
             <h1>Manish Analysis</h1>
-            <span>Business analysis vault</span>
+            <span>Research report desk</span>
           </div>
         </div>
 
@@ -525,18 +689,19 @@
         <div class="companies" id="companies"></div>
 
         <div class="sidebar-note">
-          Save company-wise analysis, import writeups, then review clean output from one screen.
+          Build company dossiers, manage source documents, and open a finished analyst-style report.
         </div>
       </aside>
 
       <main>
         <div class="topbar">
           <div>
-            <p class="eyebrow">Company dossier</p>
+            <p class="eyebrow">Business analysis report</p>
             <h2 id="pageTitle">Company X</h2>
-            <p id="pageSubtitle">A focused workspace for business model notes, risks, strengths, and imported research writeups.</p>
+            <p>Capture research in analyst-grade sections, attach source documents, then review the complete report in a focused document view.</p>
           </div>
           <div class="button-row">
+            <button class="secondary-button" id="viewReportBtn">View Full Report</button>
             <button class="glow-button" id="importDocBtn">Import Document</button>
             <input class="hidden-file" id="docFile" type="file" accept=".txt,.md,.markdown,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown">
           </div>
@@ -548,12 +713,12 @@
             <strong id="companyCount">0</strong>
           </div>
           <div class="stat">
-            <span>Words</span>
+            <span>Report Words</span>
             <strong id="wordCount">0</strong>
           </div>
           <div class="stat">
-            <span>Sections</span>
-            <strong id="sectionCount">0</strong>
+            <span>Sources</span>
+            <strong id="sourceCount">0</strong>
           </div>
           <div class="stat">
             <span>Saved</span>
@@ -562,45 +727,39 @@
         </section>
 
         <section class="workspace">
-          <div class="panel">
-            <div class="panel-header">
-              <div class="panel-title">
-                <h3>Analysis Editor</h3>
-                <span>Autosaves to this browser</span>
+          <div class="stack">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <h3>Report Builder</h3>
+                  <span>Structured business research sections</span>
+                </div>
+                <span class="status" id="saveStatus">Saved</span>
               </div>
-              <span class="status" id="saveStatus">Saved</span>
+              <form class="editor" id="analysisForm"></form>
             </div>
-            <form class="editor" id="analysisForm">
-              <label>
-                Summary
-                <textarea name="summary" placeholder="What does this company do, and why does it matter?"></textarea>
-              </label>
-              <label>
-                Business Model
-                <textarea name="businessModel" placeholder="Revenue streams, customer segments, pricing, distribution."></textarea>
-              </label>
-              <label>
-                Strengths
-                <textarea name="strengths" placeholder="Moats, advantages, founder insight, execution quality."></textarea>
-              </label>
-              <label>
-                Risks
-                <textarea name="risks" placeholder="Market risk, competition, regulation, concentration, weak signals."></textarea>
-              </label>
-              <label>
-                Notes
-                <textarea name="notes" placeholder="Imported documents and loose observations appear here."></textarea>
-              </label>
-            </form>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <h3>Source Documents</h3>
+                  <span>Imported files attached to active company</span>
+                </div>
+                <span class="status" id="docStatus">Ready</span>
+              </div>
+              <div class="source-body">
+                <div class="source-list" id="sources"></div>
+              </div>
+            </div>
           </div>
 
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title">
-                <h3>Review</h3>
-                <span>Clean read mode</span>
+                <h3>Report Preview</h3>
+                <span>Live read mode</span>
               </div>
-              <span class="status" id="docStatus">Ready</span>
+              <button class="small-button" id="previewReportBtn">Open</button>
             </div>
             <div class="review" id="review"></div>
           </div>
@@ -608,16 +767,30 @@
       </main>
     </div>
 
+    <div class="report-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-label="Full business analysis report">
+      <div class="report-window">
+        <div class="report-toolbar">
+          <strong id="reportToolbarTitle">Business Analysis Report</strong>
+          <button class="secondary-button" id="closeReportBtn">Close Report</button>
+        </div>
+        <article class="report-paper" id="reportPaper"></article>
+      </div>
+    </div>
+
     <script>
-      const storageKey = "manish-analysis:v2";
-      const fields = ["summary", "businessModel", "strengths", "risks", "notes"];
-      const labels = {
-        summary: "Summary",
-        businessModel: "Business Model",
-        strengths: "Strengths",
-        risks: "Risks",
-        notes: "Notes"
-      };
+      const storageKey = "manish-analysis:v3";
+      const legacyKeys = ["manish-analysis:v2", "manish-analysis:v1"];
+      const fields = [
+        { key: "summary", label: "Executive Summary", placeholder: "A concise view of what the company does, why it matters, and the current analyst position." },
+        { key: "companyOverview", label: "Company Overview", placeholder: "Products, customer segment, geography, lifecycle stage, management/founder notes." },
+        { key: "market", label: "Market Context", placeholder: "Market size, category growth, customer behavior, timing, and macro drivers." },
+        { key: "businessModel", label: "Business Model", placeholder: "Revenue streams, pricing, margin logic, distribution, acquisition, and retention." },
+        { key: "competitivePosition", label: "Competitive Position", placeholder: "Competitors, differentiation, switching costs, defensibility, and substitutes." },
+        { key: "strengths", label: "Key Strengths", placeholder: "Moats, execution strengths, product quality, network effects, or operating leverage." },
+        { key: "risks", label: "Principal Risks", placeholder: "Market risk, competition, regulation, concentration, capital needs, weak signals." },
+        { key: "recommendation", label: "Analyst View", placeholder: "Final view, open questions, conviction level, and next diligence steps." },
+        { key: "notes", label: "Research Notes", placeholder: "Imported source text and loose observations appear here." }
+      ];
 
       const defaultData = {
         activeId: "company-x",
@@ -626,11 +799,16 @@
             id: "company-x",
             name: "Company X",
             updatedAt: Date.now(),
+            documents: [],
             analysis: {
-              summary: "A sample company profile. Replace this with your own business analysis.",
-              businessModel: "Describe how revenue is created, captured, and scaled.",
+              summary: "Company X is a sample research profile. Replace this with a clear investment or business-analysis thesis.",
+              companyOverview: "Describe core product, customer, geography, operating stage, and leadership context.",
+              market: "Frame the category, demand drivers, market maturity, and timing.",
+              businessModel: "Explain how value is created, captured, retained, and scaled.",
+              competitivePosition: "Map direct competitors, substitutes, differentiation, and defensibility.",
               strengths: "Add durable advantages, distribution strengths, or product quality.",
               risks: "List uncertainty, constraints, and watchpoints.",
+              recommendation: "Summarize analyst view, confidence, and next diligence steps.",
               notes: "Import a Google Docs export, Word file, markdown file, or text writeup into this section."
             }
           },
@@ -638,6 +816,7 @@
             id: "company-y",
             name: "Company Y",
             updatedAt: Date.now(),
+            documents: [],
             analysis: emptyAnalysis()
           }
         ]
@@ -652,29 +831,47 @@
       const saveStatus = document.querySelector("#saveStatus");
       const docStatus = document.querySelector("#docStatus");
       const review = document.querySelector("#review");
+      const sources = document.querySelector("#sources");
       const companyCount = document.querySelector("#companyCount");
       const wordCount = document.querySelector("#wordCount");
-      const sectionCount = document.querySelector("#sectionCount");
+      const sourceCount = document.querySelector("#sourceCount");
       const lastSaved = document.querySelector("#lastSaved");
       const importDocBtn = document.querySelector("#importDocBtn");
+      const viewReportBtn = document.querySelector("#viewReportBtn");
+      const previewReportBtn = document.querySelector("#previewReportBtn");
       const docFile = document.querySelector("#docFile");
+      const reportModal = document.querySelector("#reportModal");
+      const reportPaper = document.querySelector("#reportPaper");
+      const reportToolbarTitle = document.querySelector("#reportToolbarTitle");
+      const closeReportBtn = document.querySelector("#closeReportBtn");
 
       function emptyAnalysis() {
-        return fields.reduce((acc, key) => ({ ...acc, [key]: "" }), {});
+        return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
       }
 
       function load() {
         try {
-          const saved = JSON.parse(localStorage.getItem(storageKey)) || JSON.parse(localStorage.getItem("manish-analysis:v1"));
+          const raw = localStorage.getItem(storageKey) || legacyKeys.map((key) => localStorage.getItem(key)).find(Boolean);
+          const saved = raw ? JSON.parse(raw) : null;
           if (!saved || !Array.isArray(saved.companies)) return structuredClone(defaultData);
           saved.companies.forEach((company) => {
-            company.analysis = { ...emptyAnalysis(), ...(company.analysis || {}) };
+            company.analysis = migrateAnalysis(company.analysis || {});
+            company.documents = Array.isArray(company.documents) ? company.documents : [];
             company.updatedAt = company.updatedAt || Date.now();
           });
           return saved;
         } catch {
           return structuredClone(defaultData);
         }
+      }
+
+      function migrateAnalysis(analysis) {
+        const migrated = { ...emptyAnalysis(), ...analysis };
+        if (!migrated.companyOverview && analysis.summary) migrated.companyOverview = "";
+        if (!migrated.market) migrated.market = "";
+        if (!migrated.competitivePosition) migrated.competitivePosition = "";
+        if (!migrated.recommendation) migrated.recommendation = "";
+        return migrated;
       }
 
       function persist() {
@@ -695,10 +892,18 @@
         if (!company) return;
 
         pageTitle.textContent = company.name;
+        renderCompanies(company.id);
+        renderEditor(company);
+        renderStats(company);
+        renderSources(company);
+        renderPreview(company);
+      }
+
+      function renderCompanies(activeId) {
         companiesEl.innerHTML = "";
         state.companies.forEach((item) => {
           const button = document.createElement("button");
-          button.className = `company${item.id === company.id ? " active" : ""}`;
+          button.className = `company${item.id === activeId ? " active" : ""}`;
           button.type = "button";
           button.innerHTML = `
             <span>
@@ -714,21 +919,46 @@
           });
           companiesEl.appendChild(button);
         });
+      }
 
-        fields.forEach((field) => {
-          form.elements[field].value = company.analysis[field] || "";
-        });
+      function renderEditor(company) {
+        form.innerHTML = fields.map((field) => `
+          <label>
+            ${field.label}
+            <textarea name="${field.key}" placeholder="${field.placeholder}">${escapeHtml(company.analysis[field.key] || "")}</textarea>
+          </label>
+        `).join("");
+      }
 
-        const filled = fields.filter((field) => (company.analysis[field] || "").trim());
+      function renderStats(company) {
+        const text = fields.map((field) => company.analysis[field.key] || "").join(" ");
         companyCount.textContent = state.companies.length;
-        wordCount.textContent = fields.reduce((sum, field) => sum + countWords(company.analysis[field]), 0);
-        sectionCount.textContent = filled.length;
+        wordCount.textContent = countWords(text);
+        sourceCount.textContent = company.documents.length;
         lastSaved.textContent = relativeTime(company.updatedAt).replace(" ago", "");
+      }
 
+      function renderSources(company) {
+        if (!company.documents.length) {
+          sources.innerHTML = `<p class="empty">No source documents imported yet.</p>`;
+          return;
+        }
+        sources.innerHTML = company.documents.map((doc) => `
+          <div class="source-card">
+            <div>
+              <strong>${escapeHtml(doc.name)}</strong>
+              <span>${countWords(doc.text)} words · ${new Date(doc.createdAt).toLocaleDateString()}</span>
+            </div>
+            <button class="danger-link" data-delete-doc="${doc.id}">Delete</button>
+          </div>
+        `).join("");
+      }
+
+      function renderPreview(company) {
         review.innerHTML = fields.map((field) => `
           <div class="review-section">
-            <span>${labels[field]}</span>
-            <p class="${company.analysis[field] ? "" : "empty"}">${escapeHtml(company.analysis[field] || "No notes yet.")}</p>
+            <span>${field.label}</span>
+            <p class="${company.analysis[field.key] ? "" : "empty"}">${escapeHtml(company.analysis[field.key] || "No notes yet.")}</p>
           </div>
         `).join("");
       }
@@ -777,14 +1007,77 @@
         return (await file.text()).trim();
       }
 
-      function mergeDocumentText(fileName, text) {
+      function mergeDocument(fileName, text) {
         const company = activeCompany();
-        const divider = `Imported from ${fileName}`;
+        const documentRecord = {
+          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          name: fileName,
+          text,
+          createdAt: Date.now()
+        };
+        company.documents.push(documentRecord);
+        const divider = `Source: ${fileName}`;
         const existing = company.analysis.notes ? `${company.analysis.notes}\n\n` : "";
         company.analysis.notes = `${existing}${divider}\n${text}`;
         if (!company.analysis.summary) {
-          company.analysis.summary = text.split(/\n\s*\n/)[0].slice(0, 640);
+          company.analysis.summary = text.split(/\n\s*\n/)[0].slice(0, 720);
         }
+      }
+
+      function removeDocument(company, id) {
+        const doc = company.documents.find((item) => item.id === id);
+        if (!doc) return;
+        const block = `Source: ${doc.name}\n${doc.text}`;
+        company.documents = company.documents.filter((item) => item.id !== id);
+        company.analysis.notes = company.analysis.notes
+          .replace(block, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      }
+
+      function buildReport(company) {
+        const sourceItems = company.documents.length
+          ? company.documents.map((doc) => `<li>${escapeHtml(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
+          : "<li>No source documents attached.</li>";
+        const sourceAppendix = company.documents.length
+          ? company.documents.map((doc, index) => `
+            <section>
+              <h2>Appendix ${index + 1}. ${escapeHtml(doc.name)}</h2>
+              <p>${escapeHtml(doc.text)}</p>
+            </section>
+          `).join("")
+          : "";
+        return `
+          <div class="report-cover">
+            <span>Business Analysis Report</span>
+            <h1>${escapeHtml(company.name)}</h1>
+            <p>Prepared in Manish Analysis · Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
+          </div>
+          ${fields.map((field, index) => `
+            <section>
+              <h2>${index + 1}. ${field.label}</h2>
+              <p>${escapeHtml(company.analysis[field.key] || "No content added yet.")}</p>
+            </section>
+          `).join("")}
+          <section>
+            <h2>${fields.length + 1}. Source Documents</h2>
+            <ul class="source-list-report">${sourceItems}</ul>
+          </section>
+          ${sourceAppendix}
+        `;
+      }
+
+      function openReport() {
+        const company = activeCompany();
+        reportToolbarTitle.textContent = `${company.name} · Business Analysis Report`;
+        reportPaper.innerHTML = buildReport(company);
+        reportModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeReport() {
+        reportModal.classList.add("hidden");
+        document.body.style.overflow = "";
       }
 
       form.addEventListener("input", (event) => {
@@ -804,7 +1097,7 @@
           id = `${idBase}-${i}`;
           i += 1;
         }
-        state.companies.push({ id, name, updatedAt: Date.now(), analysis: emptyAnalysis() });
+        state.companies.push({ id, name, updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() });
         state.activeId = id;
         companyName.value = "";
         persist();
@@ -819,13 +1112,32 @@
         try {
           const text = await readDocument(file);
           if (!text) throw new Error("Document has no readable text.");
-          updateCompany(() => mergeDocumentText(file.name, text));
+          updateCompany(() => mergeDocument(file.name, text));
           docStatus.textContent = "Imported";
         } catch (error) {
           docStatus.textContent = error.message;
         } finally {
           docFile.value = "";
         }
+      });
+
+      sources.addEventListener("click", (event) => {
+        const id = event.target.dataset.deleteDoc;
+        if (!id) return;
+        updateCompany((company) => {
+          removeDocument(company, id);
+        });
+        docStatus.textContent = "Deleted";
+      });
+
+      viewReportBtn.addEventListener("click", openReport);
+      previewReportBtn.addEventListener("click", openReport);
+      closeReportBtn.addEventListener("click", closeReport);
+      reportModal.addEventListener("click", (event) => {
+        if (event.target === reportModal) closeReport();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport();
       });
 
       render();
