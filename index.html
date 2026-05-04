@@ -137,7 +137,7 @@
 
       .skip-intro {
         position: fixed;
-        top: 18px;
+        bottom: clamp(14px, 3vw, 30px);
         right: 18px;
         z-index: 22;
         min-height: 32px;
@@ -148,6 +148,164 @@
         border: 1px solid rgba(255,255,255,.12);
         font-size: .78rem;
         font-weight: 800;
+      }
+
+      .museum-entry {
+        display: grid;
+        place-items: center;
+        perspective: 1400px;
+        isolation: isolate;
+        overflow: hidden;
+      }
+
+      .museum-entry::before,
+      .museum-entry::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+      }
+
+      .museum-entry::before {
+        z-index: 3;
+        inset: 0;
+        opacity: .76;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(255,255,255,.16), transparent 24%),
+          radial-gradient(circle at 18% 18%, rgba(255,255,255,.18) 0 1px, transparent 2px) 0 0/26px 26px,
+          radial-gradient(circle at 82% 82%, rgba(216,184,111,.18) 0 1px, transparent 2px) 0 0/34px 34px,
+          linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
+        transition: opacity .72s .32s;
+      }
+
+      .museum-entry::after {
+        z-index: 4;
+        inset: 7vh 9vw;
+        opacity: .7;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 999px;
+        transform: scaleX(.72);
+        box-shadow: inset 0 0 0 16px rgba(255,255,255,.03), 0 0 0 1px rgba(216,184,111,.16);
+        transition: opacity .72s .32s;
+      }
+
+      .museum-entry.opening::before,
+      .museum-entry.opening::after {
+        opacity: 0;
+      }
+
+      .museum-entry-panel {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        bottom: 0;
+        width: calc(50% + 1px);
+        will-change: transform;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.12), transparent 16%, rgba(0,0,0,.22) 82%),
+          repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 42px),
+          repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 68px),
+          linear-gradient(135deg, #17191d, #090a0c 54%, #25282e);
+        box-shadow: inset 0 0 70px rgba(0,0,0,.42), 0 0 58px rgba(0,0,0,.5);
+        transition: transform 1.9s cubic-bezier(.76,.02,.14,1), opacity .78s 1.35s;
+      }
+
+      .museum-entry-panel::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        aspect-ratio: 1;
+        width: clamp(34px, 5vw, 58px);
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,.38);
+        background: radial-gradient(circle, transparent 42%, rgba(216,184,111,.28) 44% 49%, transparent 51%), rgba(255,255,255,.06);
+        transform: translateY(-50%);
+        box-shadow: inset 0 0 0 5px rgba(255,255,255,.04), 0 14px 30px rgba(0,0,0,.36);
+      }
+
+      .museum-entry-left {
+        left: 0;
+        border-right: 1px solid rgba(255,255,255,.16);
+        transform-origin: 0;
+      }
+
+      .museum-entry-left::after {
+        right: clamp(28px, 5vw, 76px);
+      }
+
+      .museum-entry-right {
+        right: 0;
+        border-left: 1px solid rgba(255,255,255,.16);
+        transform-origin: 100%;
+      }
+
+      .museum-entry-right::after {
+        left: clamp(28px, 5vw, 76px);
+      }
+
+      .museum-entry.opening .museum-entry-left {
+        opacity: .94;
+        transform: perspective(1400px) rotateY(-86deg) translate(-18vw);
+      }
+
+      .museum-entry.opening .museum-entry-right {
+        opacity: .94;
+        transform: perspective(1400px) rotateY(86deg) translate(18vw);
+      }
+
+      .museum-entry-lattice {
+        position: absolute;
+        inset: clamp(22px, 5vw, 68px);
+        border: 1px solid rgba(255,255,255,.2);
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.13) 1px, transparent 1px) 0 0/clamp(32px,5vw,58px) 100%,
+          linear-gradient(0deg, rgba(255,255,255,.1) 1px, transparent 1px) 0 0/100% clamp(42px,7vw,72px),
+          radial-gradient(circle, rgba(255,255,255,.12), transparent 44%);
+        box-shadow: inset 0 0 0 8px rgba(0,0,0,.08);
+      }
+
+      .museum-entry-center {
+        z-index: 5;
+        position: relative;
+        display: grid;
+        place-items: center;
+        gap: 10px;
+        width: min(72vw, 440px);
+        padding: clamp(24px, 5vw, 46px);
+        text-align: center;
+        text-shadow: 0 2px 20px rgba(0,0,0,.42);
+        background: linear-gradient(rgba(255,255,255,.13), rgba(255,255,255,.06)), rgba(0,0,0,.38);
+        border: 1px solid rgba(255,255,255,.24);
+        border-radius: 8px;
+        transition: opacity .52s .52s, transform .52s .52s;
+      }
+
+      .museum-entry.opening .museum-entry-center {
+        opacity: 0;
+        transform: translateY(-18px) scale(.96);
+      }
+
+      .museum-entry-seal {
+        width: clamp(58px, 12vw, 92px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        color: #08090a;
+        background: radial-gradient(circle, rgba(255,255,255,.96), rgba(216,184,111,.8));
+        border: 1px solid rgba(255,255,255,.5);
+        border-radius: 50%;
+        font-size: clamp(28px, 6vw, 48px);
+        font-weight: 950;
+        box-shadow: inset 0 0 0 5px rgba(0,0,0,.06), 0 24px 58px rgba(0,0,0,.38);
+      }
+
+      .museum-entry-center strong {
+        font-size: clamp(28px, 6vw, 52px);
+        line-height: 1.02;
+      }
+
+      .museum-entry-center small {
+        color: rgba(255,255,255,.82);
+        font-size: clamp(14px, 2.3vw, 18px);
       }
 
       .book-stage {
@@ -1176,42 +1334,18 @@
     <div class="cursor-ring" id="cursorRing"></div>
     <div class="light-orbit one" aria-hidden="true"></div>
     <div class="light-orbit two" aria-hidden="true"></div>
-    <section class="welcome" id="welcome" aria-label="Business Analyst welcome">
+    <section class="welcome museum-entry" id="welcome" aria-label="Opening the Business Analyst archive">
       <button class="skip-intro" id="skipIntroBtn">Skip</button>
-      <div class="book-stage">
-        <div class="book" aria-hidden="true">
-          <div class="archive-dashboard-hint"></div>
-          <div class="archive-copy">
-            <div>
-              <h1>Business<br>Analyst</h1>
-              <p>Opening the archive doors</p>
-            </div>
-          </div>
-          <div class="inside-page left-inside">
-            <p>Global workspace for competitor research, company analysis, and founder handoff reports.</p>
-            <div class="dossier-lines">
-              <div class="dossier-line" style="--w: 74%"></div>
-              <div class="dossier-line" style="--w: 52%"></div>
-              <div class="dossier-line" style="--w: 88%"></div>
-            </div>
-          </div>
-          <div class="inside-page right-inside">
-            <h1>Business<br>Analyst</h1>
-            <p>Turn research into clear decisions for teams that build.</p>
-            <div class="insight-map">
-              <i class="insight-node"></i>
-              <i class="insight-node"></i>
-              <i class="insight-node"></i>
-            </div>
-          </div>
-          <div class="cover left-cover">
-            <div class="cover-title">Business</div>
-          </div>
-          <div class="cover right-cover">
-            <div class="cover-title">Analyst</div>
-          </div>
-          <div class="book-spine"></div>
-        </div>
+      <div class="museum-entry-panel museum-entry-left" aria-hidden="true">
+        <div class="museum-entry-lattice"></div>
+      </div>
+      <div class="museum-entry-panel museum-entry-right" aria-hidden="true">
+        <div class="museum-entry-lattice"></div>
+      </div>
+      <div class="museum-entry-center">
+        <span class="museum-entry-seal">BA</span>
+        <strong>Business Analyst</strong>
+        <small>Opening the archive doors</small>
       </div>
     </section>
     <div class="shell">
@@ -1725,12 +1859,13 @@
       $("closeReportBtn").addEventListener("click", closeReport);
       window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
       function finishIntro() {
-        welcome.classList.add("hide");
+        welcome.classList.add("opening");
+        setTimeout(() => welcome.classList.add("hide"), 1900);
       }
 
-      $("skipIntroBtn").addEventListener("click", finishIntro);
+      $("skipIntroBtn").addEventListener("click", () => welcome.classList.add("hide"));
       window.addEventListener("load", () => {
-        setTimeout(finishIntro, 3900);
+        setTimeout(finishIntro, 900);
       });
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
