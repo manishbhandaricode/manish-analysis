@@ -1094,6 +1094,33 @@
         letter-spacing: 0;
       }
 
+      .report-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 22px 0 0;
+      }
+
+      .report-meta span {
+        display: block;
+        padding: 11px 12px;
+        border: 1px solid #d8dcd7;
+        border-radius: 8px;
+        color: #4b535d;
+        background: #f4f5f0;
+        font-size: .82rem;
+        line-height: 1.35;
+      }
+
+      .report-meta b {
+        display: block;
+        margin-bottom: 3px;
+        color: #11151c;
+        font-size: .72rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
       .report-paper h2 {
         margin: 28px 0 10px;
         color: #11151c;
@@ -1135,6 +1162,16 @@
       }
 
       .source-list-report { margin: 0; padding-left: 18px; line-height: 1.7; }
+      .report-footer {
+        margin-top: 44px;
+        padding-top: 16px;
+        border-top: 1px solid #d8dcd7;
+        color: #626a74;
+        font-size: .82rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+      }
       .report-mode .shell { display: none; }
       .report-mode .report-modal {
         display: block;
@@ -1145,6 +1182,80 @@
         width: 100%;
         min-height: 100vh;
         border-radius: 0;
+      }
+
+      .print-mode .report-toolbar {
+        display: none;
+      }
+
+      .print-mode .report-modal {
+        position: static;
+        padding: 0;
+        background: #fff;
+      }
+
+      .print-mode .report-window {
+        width: 100%;
+        min-height: auto;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+      }
+
+      .print-mode .report-paper {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        box-shadow: none;
+      }
+
+      @media print {
+        @page { margin: .65in; }
+        body {
+          background: #fff !important;
+          color: #11151c !important;
+        }
+        body::before,
+        body::after,
+        .cursor-dot,
+        .cursor-ring,
+        .light-orbit,
+        .welcome,
+        .shell,
+        .report-toolbar,
+        .focus-modal {
+          display: none !important;
+        }
+        .report-modal {
+          position: static !important;
+          display: block !important;
+          padding: 0 !important;
+          overflow: visible !important;
+          background: #fff !important;
+          backdrop-filter: none !important;
+        }
+        .report-window,
+        .report-paper {
+          width: 100% !important;
+          min-height: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          background: #fff !important;
+        }
+        .report-paper section {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        .report-cover h1 {
+          font-size: 42px !important;
+        }
+        .report-meta {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
 
       .focus-modal {
@@ -1408,6 +1519,7 @@
           </div>
           <div class="button-row">
             <button class="glass-button" id="viewReportBtn">View/Edit Report</button>
+            <button class="glass-button" id="exportReportBtn">Share / Export</button>
             <button class="glow-button" id="importDocBtn">Import Document</button>
             <button class="delete-button" id="deleteReportBtn">Delete Report</button>
             <input class="hidden-file" id="docFile" type="file" accept=".txt,.md,.markdown,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown">
@@ -1490,6 +1602,8 @@
         <div class="report-toolbar">
           <strong id="reportToolbarTitle">Inscrbe Document</strong>
           <div class="report-actions">
+            <button class="glass-button" id="copyReportBtn">Copy Text</button>
+            <button class="glass-button" id="printReportBtn">Export PDF</button>
             <button class="glass-button" id="saveReportBtn">Save & Apply</button>
             <button class="glow-button" id="closeReportBtn">Back to Dashboard</button>
           </div>
@@ -1726,6 +1840,7 @@
         $("previewTitle").textContent = copy.previewTitle;
         $("previewHint").textContent = copy.previewHint;
         $("viewReportBtn").textContent = state.mode === "docs" ? "View/Edit Document" : "View/Edit Report";
+        $("exportReportBtn").textContent = state.mode === "docs" ? "Share / Export Doc" : "Share / Export Report";
         $("deleteReportBtn").textContent = state.mode === "docs" ? "Delete Document" : "Delete Report";
         $("previewReportBtn").textContent = state.mode === "docs" ? "Open Document" : "Open";
         $("countLabel").textContent = state.mode === "docs" ? "Documents" : "Reports";
@@ -1847,6 +1962,7 @@
       function buildReport(company) {
         const fields = fieldsForMode();
         const copy = modeCopy[state.mode] || modeCopy.analysis;
+        const reportText = fields.map((field) => company.analysis[field.key] || "").join(" ");
         const sourcesHtml = company.documents.length
           ? company.documents.map((doc) => `<li>${esc(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
           : "<li>No source documents attached.</li>";
@@ -1862,6 +1978,11 @@
             <span>${copy.reportLabel}</span>
             <h1 contenteditable="true" data-company-name>${esc(company.name)}</h1>
             <p>Prepared in Inscrbe &middot; Research to Reality &middot; Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
+            <div class="report-meta">
+              <span><b>Workspace</b>${state.mode === "docs" ? "Documentation" : "Analyst Report"}</span>
+              <span><b>Words</b>${countWords(reportText)}</span>
+              <span><b>Sources</b>${company.documents.length}</span>
+            </div>
           </div>
           <h3>${copy.structureLabel}</h3>
           <ol class="source-list-report">${fields.map((field) => `<li>${esc(field.label)}</li>`).join("")}<li>Source Documents</li></ol>
@@ -1876,6 +1997,10 @@
             <ul class="source-list-report">${sourcesHtml}</ul>
           </section>
           ${appendix}
+          <footer class="report-footer">
+            <span>Inscrbe</span>
+            <span>Research to Reality</span>
+          </footer>
         `;
       }
 
@@ -1885,6 +2010,25 @@
         reportPaper.innerHTML = buildReport(company);
         reportModal.classList.remove("hidden");
         document.body.classList.add("report-mode");
+      }
+
+      function exportReport() {
+        openReport();
+        document.body.classList.add("print-mode");
+        setTimeout(() => window.print(), 80);
+      }
+
+      async function copyReportText() {
+        const text = reportPaper.innerText.trim();
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          $("copyReportBtn").textContent = "Copied";
+          setTimeout(() => $("copyReportBtn").textContent = "Copy Text", 1200);
+        } catch {
+          $("copyReportBtn").textContent = "Copy failed";
+          setTimeout(() => $("copyReportBtn").textContent = "Copy Text", 1200);
+        }
       }
 
       function saveReportEdits() {
@@ -1904,6 +2048,7 @@
       }
 
       function closeReport() {
+        document.body.classList.remove("print-mode");
         reportModal.classList.add("hidden");
         document.body.classList.remove("report-mode");
         render();
@@ -2094,9 +2239,13 @@
       });
       $("deleteReportBtn").addEventListener("click", () => deleteReportById());
       $("viewReportBtn").addEventListener("click", openReport);
+      $("exportReportBtn").addEventListener("click", exportReport);
       $("previewReportBtn").addEventListener("click", openReport);
+      $("printReportBtn").addEventListener("click", exportReport);
+      $("copyReportBtn").addEventListener("click", copyReportText);
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
+      window.addEventListener("afterprint", () => document.body.classList.remove("print-mode"));
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", closeFocusEditor);
       focusEditor.addEventListener("input", updateFocusStats);
