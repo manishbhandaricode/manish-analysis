@@ -13,6 +13,8 @@ Minimal business analysis documentation tool.
 - Entire report delete/clear action
 - Compact section-tab report builder
 - Custom cursor, reactive glass panels, and animated strategy graphics
+- Animated book-style welcome screen
+- Report search for larger workspaces
 - Static Vercel deployment
 
 ## Local
