@@ -91,6 +91,32 @@
         mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
 
+      .light-orbit {
+        position: fixed;
+        z-index: -1;
+        width: 220px;
+        height: 220px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 999px;
+        filter: blur(.2px);
+        animation: orbit 22s linear infinite;
+      }
+
+      .light-orbit.one { left: 42%; top: 12%; }
+      .light-orbit.two { right: 10%; bottom: 12%; width: 300px; height: 300px; animation-duration: 28s; animation-direction: reverse; }
+
+      .light-orbit::before {
+        content: "";
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        left: 50%;
+        top: -5px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 24px rgba(255,255,255,.9);
+      }
+
       button, input, textarea { font: inherit; }
       button { border: 0; cursor: pointer; }
       input, textarea { outline: 0; }
@@ -112,7 +138,7 @@
         backdrop-filter: blur(20px);
       }
 
-      .brand, .topbar, .report-toolbar, .source-card, .company, .button-row {
+      .brand, .topbar, .report-toolbar, .source-card, .company, .company-row, .button-row {
         display: flex;
         align-items: center;
       }
@@ -170,8 +196,10 @@
       }
 
       .companies, .source-list, .editor, .review, .stack { display: grid; gap: 10px; }
+      .company-row { gap: 8px; }
       .company {
-        width: 100%;
+        flex: 1;
+        min-width: 0;
         min-height: 58px;
         justify-content: space-between;
         gap: 12px;
@@ -190,6 +218,22 @@
 
       .company.active { outline: 1px solid rgba(255,255,255,.18); }
       .company strong { display: block; font-size: .96rem; }
+      .mini-delete {
+        width: 34px;
+        min-height: 34px;
+        flex: 0 0 auto;
+        border-radius: 8px;
+        color: var(--danger);
+        background: rgba(255,179,168,.1);
+        border: 1px solid rgba(255,179,168,.2);
+        opacity: .7;
+        transition: opacity 160ms ease, background 160ms ease;
+      }
+
+      .company-row:hover .mini-delete,
+      .company.active + .mini-delete {
+        opacity: 1;
+      }
       .pulse {
         width: 9px;
         height: 9px;
@@ -243,7 +287,7 @@
 
       .button-row { justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
       .glow-button, .glass-button, .delete-button, .small-button, .danger-link {
-        min-height: 42px;
+        min-height: 36px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
@@ -254,7 +298,7 @@
 
       .glow-button {
         position: relative;
-        padding: 0 17px;
+        padding: 0 13px;
         color: #fff;
         background: #050505;
         isolation: isolate;
@@ -281,7 +325,7 @@
       }
 
       .glass-button, .small-button {
-        padding: 0 15px;
+        padding: 0 12px;
         color: #fff;
         border: 1px solid var(--line);
         background: rgba(255,255,255,.08);
@@ -289,7 +333,7 @@
       }
 
       .delete-button {
-        padding: 0 15px;
+        padding: 0 12px;
         color: var(--danger);
         border: 1px solid rgba(255,179,168,.24);
         background: rgba(255,179,168,.09);
@@ -470,6 +514,20 @@
         text-transform: uppercase;
       }
 
+      .signal-card strong {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 1.25rem;
+        color: #fff;
+      }
+
+      .signal-card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: .82rem;
+        line-height: 1.45;
+      }
+
       .bars {
         display: grid;
         gap: 8px;
@@ -490,6 +548,15 @@
         border-radius: inherit;
         background: linear-gradient(90deg, #fff, var(--gold), var(--teal));
         animation: loadbar 2.8s ease-in-out infinite alternate;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: .76rem;
       }
 
       .matrix {
@@ -682,6 +749,7 @@
       @keyframes breathe { 50% { transform: scale(1.28); opacity: .72; } }
       @keyframes loadbar { to { filter: brightness(1.35); transform: translateX(8px); } }
       @keyframes floatdot { 50% { transform: translate3d(6px, -7px, 0); } }
+      @keyframes orbit { to { transform: rotate(360deg); } }
 
       @media (pointer: fine) {
         body, button { cursor: none; }
@@ -713,6 +781,8 @@
   <body>
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
+    <div class="light-orbit one" aria-hidden="true"></div>
+    <div class="light-orbit two" aria-hidden="true"></div>
     <div class="shell">
       <aside>
         <div class="brand">
@@ -744,7 +814,7 @@
             <p>Premium report workspace for thesis, market context, financial logic, risks, source documents, and final analyst recommendations.</p>
           </div>
           <div class="button-row">
-            <button class="glass-button" id="viewReportBtn">Document View</button>
+            <button class="glass-button" id="viewReportBtn">View/Edit Report</button>
             <button class="glow-button" id="importDocBtn">Import Document</button>
             <button class="delete-button" id="deleteReportBtn">Delete Report</button>
             <input class="hidden-file" id="docFile" type="file" accept=".txt,.md,.markdown,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown">
@@ -781,22 +851,8 @@
               </div>
               <div class="strategy-body">
                 <div class="strategy-grid">
-                  <div class="signal-card">
-                    <span>Growth Levers</span>
-                    <div class="bars">
-                      <div class="bar" style="--w: 72%"></div>
-                      <div class="bar" style="--w: 54%"></div>
-                      <div class="bar" style="--w: 86%"></div>
-                    </div>
-                  </div>
-                  <div class="signal-card">
-                    <span>Competitive Map</span>
-                    <div class="matrix" aria-hidden="true">
-                      <i class="matrix-dot"></i>
-                      <i class="matrix-dot"></i>
-                      <i class="matrix-dot"></i>
-                    </div>
-                  </div>
+                  <div class="signal-card" id="growthSignal"></div>
+                  <div class="signal-card" id="competitionSignal"></div>
                 </div>
               </div>
             </div>
@@ -834,7 +890,7 @@
         <div class="report-toolbar">
           <strong id="reportToolbarTitle">Business Analysis Report</strong>
           <div class="report-actions">
-            <button class="glass-button" id="saveReportBtn">Save Edits</button>
+            <button class="glass-button" id="saveReportBtn">Save & Apply</button>
             <button class="glow-button" id="closeReportBtn">Back to Dashboard</button>
           </div>
         </div>
@@ -872,8 +928,7 @@
               executionPlan: "List concrete moves your company can implement to overtake competition: product bets, GTM tests, process changes, and next research.",
               sourceNotes: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
             }
-          },
-          { id: "company-y", name: "Company Y", updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() }
+          }
         ]
       };
 
@@ -893,6 +948,8 @@
       const reportPaper = $("reportPaper");
       const cursorDot = $("cursorDot");
       const cursorRing = $("cursorRing");
+      const growthSignal = $("growthSignal");
+      const competitionSignal = $("competitionSignal");
 
       function emptyAnalysis() {
         return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
@@ -950,16 +1007,20 @@
         renderCompanies(company);
         renderEditor(company);
         renderStats(company);
+        renderSignals(company);
         renderSources(company);
         renderPreview(company);
       }
 
       function renderCompanies(active) {
         companiesEl.innerHTML = state.companies.map((item) => `
-          <button class="company${item.id === active.id ? " active" : ""}" type="button" data-company="${item.id}">
-            <span><strong>${esc(item.name)}</strong><small>${relativeTime(item.updatedAt)}</small></span>
-            <span class="pulse" aria-hidden="true"></span>
-          </button>
+          <div class="company-row">
+            <button class="company${item.id === active.id ? " active" : ""}" type="button" data-company="${item.id}">
+              <span><strong>${esc(item.name)}</strong><small>${relativeTime(item.updatedAt)}</small></span>
+              <span class="pulse" aria-hidden="true"></span>
+            </button>
+            <button class="mini-delete" type="button" title="Delete report" aria-label="Delete report" data-delete-report="${item.id}">×</button>
+          </div>
         `).join("");
       }
 
@@ -987,6 +1048,42 @@
         $("wordCount").textContent = countWords(reportText);
         $("sourceCount").textContent = company.documents.length;
         $("lastSaved").textContent = relativeTime(company.updatedAt).replace(" ago", "");
+      }
+
+      function renderSignals(company) {
+        const totalFields = fields.length;
+        const filledFields = fields.filter((field) => (company.analysis[field.key] || "").trim()).length;
+        const completion = Math.round((filledFields / totalFields) * 100);
+        const evidence = Math.min(100, company.documents.length * 28 + Math.min(44, countWords(company.analysis.sourceNotes || "") / 8));
+        const weakness = Math.min(100, Math.max(8, countWords(company.analysis.weaknessToAdvantage || "") * 2.6));
+        const action = Math.min(100, Math.max(8, countWords(company.analysis.executionPlan || "") * 2.4));
+        const competitive = Math.min(100, Math.max(12, countWords(company.analysis.competitiveIntel || "") * 2.1));
+
+        growthSignal.innerHTML = `
+          <span>Report Readiness</span>
+          <strong>${completion}% complete</strong>
+          <div class="bars">
+            ${bar("Evidence", evidence)}
+            ${bar("Action", action)}
+            ${bar("Weakness", weakness)}
+          </div>
+          <p>Tracks whether research has enough source evidence, weakness conversion, and concrete implementation moves.</p>
+        `;
+
+        competitionSignal.innerHTML = `
+          <span>Competition Logic</span>
+          <strong>${Math.round((competitive + weakness + action) / 3)}% mapped</strong>
+          <div class="matrix" aria-hidden="true">
+            <i class="matrix-dot" style="left:${Math.max(12, competitive * .76)}%; top:${Math.max(18, 76 - weakness * .48)}%"></i>
+            <i class="matrix-dot" style="left:${Math.max(18, action * .74)}%; top:${Math.max(22, 78 - action * .52)}%"></i>
+            <i class="matrix-dot" style="left:${Math.max(20, evidence * .72)}%; top:${Math.max(20, 80 - completion * .46)}%"></i>
+          </div>
+          <p>Dots shift as you add competitor insights, exploitable weaknesses, evidence, and action plans.</p>
+        `;
+      }
+
+      function bar(label, value) {
+        return `<div class="bar-row"><span>${label}</span><div class="bar" style="--w:${Math.max(6, Math.min(100, value))}%"></div></div>`;
       }
 
       function renderSources(company) {
@@ -1070,7 +1167,7 @@
         render();
       }
 
-      function deleteActiveReport() {
+      function deleteReportById(reportId = state.activeId) {
         if (!confirm("Delete this report from this browser? This removes the current report, imported documents, and saved analysis.")) return;
         if (state.companies.length === 1) {
           updateCompany((company) => {
@@ -1080,9 +1177,8 @@
           docStatus.textContent = "Report cleared";
           return;
         }
-        const current = activeCompany();
-        state.companies = state.companies.filter((company) => company.id !== current.id);
-        state.activeId = state.companies[0].id;
+        state.companies = state.companies.filter((company) => company.id !== reportId);
+        if (state.activeId === reportId) state.activeId = state.companies[0].id;
         persist();
         render();
         docStatus.textContent = "Report deleted";
@@ -1131,6 +1227,11 @@
       }
 
       companiesEl.addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-delete-report]");
+        if (deleteButton) {
+          deleteReportById(deleteButton.dataset.deleteReport);
+          return;
+        }
         const button = event.target.closest("[data-company]");
         if (!button) return;
         state.activeId = button.dataset.company;
@@ -1182,7 +1283,7 @@
         updateCompany((company) => removeDocument(company, id));
         docStatus.textContent = "Document deleted";
       });
-      $("deleteReportBtn").addEventListener("click", deleteActiveReport);
+      $("deleteReportBtn").addEventListener("click", () => deleteReportById());
       $("viewReportBtn").addEventListener("click", openReport);
       $("previewReportBtn").addEventListener("click", openReport);
       $("saveReportBtn").addEventListener("click", saveReportEdits);
