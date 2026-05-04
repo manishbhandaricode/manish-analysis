@@ -121,9 +121,8 @@
         position: fixed;
         inset: 0;
         z-index: 20;
-        display: grid;
-        place-items: center;
-        padding: 28px;
+        display: block;
+        padding: 0;
         background:
           radial-gradient(circle at 50% 12%, rgba(255,255,255,.18), transparent 24%),
           radial-gradient(circle at 78% 72%, rgba(216,184,111,.14), transparent 28%),
@@ -152,25 +151,23 @@
       }
 
       .book-stage {
-        width: min(1120px, 96vw);
-        min-height: min(720px, 86vh);
-        display: grid;
-        place-items: center;
-        perspective: 2200px;
+        position: absolute;
+        inset: 0;
+        perspective: 2600px;
+        overflow: hidden;
       }
 
       .book {
         position: relative;
-        width: min(920px, 92vw);
-        height: min(600px, 76vh);
+        width: 100vw;
+        height: 100vh;
         transform-style: preserve-3d;
-        animation: bookRise 1000ms cubic-bezier(.2,.8,.2,1) both;
       }
 
       .book::before {
         content: "";
         position: absolute;
-        inset: 8% 4% -10%;
+        inset: 18% 12% -16%;
         border-radius: 50%;
         background: rgba(255,255,255,.16);
         filter: blur(46px);
@@ -180,9 +177,9 @@
       .book-spine {
         position: absolute;
         left: 50%;
-        top: 3%;
-        bottom: 3%;
-        width: 18px;
+        top: 0;
+        bottom: 0;
+        width: 22px;
         z-index: 4;
         transform: translateX(-50%);
         border-radius: 999px;
@@ -200,15 +197,15 @@
       }
 
       .inside-page {
-        top: 4%;
-        height: 92%;
+        top: 0;
+        height: 100%;
         padding: clamp(24px, 4vw, 50px);
         color: #111;
         background:
           linear-gradient(90deg, rgba(0,0,0,.08), transparent 12%, transparent 88%, rgba(0,0,0,.08)),
           linear-gradient(135deg, rgba(255,255,255,.98), rgba(226,228,225,.96));
         border: 1px solid rgba(255,255,255,.38);
-        box-shadow: inset 0 0 38px rgba(0,0,0,.08);
+        box-shadow: inset 0 0 90px rgba(0,0,0,.12);
       }
 
       .cover {
@@ -216,17 +213,18 @@
         height: 100%;
         border: 1px solid rgba(255,255,255,.18);
         background:
+          radial-gradient(circle at 50% 40%, rgba(255,255,255,.12), transparent 24%),
           linear-gradient(135deg, rgba(255,255,255,.1), transparent 34%),
-          linear-gradient(180deg, #090a0c, #17191d);
+          linear-gradient(180deg, #050505, #181a1f);
         box-shadow: 0 28px 80px rgba(0,0,0,.48);
       }
 
       .cover::before {
         content: "";
         position: absolute;
-        inset: 18px;
+        inset: 34px;
         border: 1px solid rgba(255,255,255,.16);
-        border-radius: 10px;
+        border-radius: 14px;
       }
 
       .cover::after,
@@ -242,13 +240,13 @@
       .left-cover,
       .left-inside {
         left: 0;
-        border-radius: 12px 0 0 12px;
+        border-radius: 0;
       }
 
       .right-cover,
       .right-inside {
         right: 0;
-        border-radius: 0 12px 12px 0;
+        border-radius: 0;
       }
 
       .left-cover {
@@ -275,7 +273,7 @@
 
       .cover-title {
         position: absolute;
-        inset: auto 26px 34px;
+        inset: auto clamp(28px, 6vw, 86px) clamp(34px, 8vh, 86px);
         color: #fff;
         font-size: clamp(2rem, 6vw, 4.8rem);
         font-weight: 950;
@@ -1012,14 +1010,14 @@
         to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
       }
       @keyframes openLeftCover {
-        0% { transform: rotateY(0deg) translateZ(16px); }
-        55% { transform: rotateY(-132deg) translateZ(16px); }
-        100% { transform: rotateY(-154deg) translateZ(16px); }
+        0% { transform: rotateY(0deg) translateZ(22px); }
+        58% { transform: rotateY(-118deg) translateZ(22px); }
+        100% { transform: rotateY(-146deg) translateZ(22px); }
       }
       @keyframes openRightCover {
-        0% { transform: rotateY(0deg) translateZ(16px); }
-        55% { transform: rotateY(132deg) translateZ(16px); }
-        100% { transform: rotateY(154deg) translateZ(16px); }
+        0% { transform: rotateY(0deg) translateZ(22px); }
+        58% { transform: rotateY(118deg) translateZ(22px); }
+        100% { transform: rotateY(146deg) translateZ(22px); }
       }
       @keyframes revealLeftPage {
         0% { transform: rotateY(0deg); filter: brightness(.72); }
