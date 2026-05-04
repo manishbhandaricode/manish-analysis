@@ -849,6 +849,91 @@
         text-transform: uppercase;
       }
 
+      .section-card {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        min-height: 132px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(7,8,10,.34);
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .section-card:hover {
+        transform: translateY(-1px);
+        border-color: rgba(102,210,200,.42);
+        background: rgba(255,255,255,.07);
+      }
+
+      .section-card-body {
+        min-width: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .section-title-input {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        color: #fff;
+        background: transparent;
+        font-size: .95rem;
+        font-weight: 950;
+      }
+
+      .section-open {
+        display: block;
+        width: 100%;
+        padding: 0;
+        color: var(--text);
+        background: transparent;
+        text-align: left;
+      }
+
+      .section-open p {
+        margin: 0;
+        color: var(--muted);
+        font-size: .86rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .section-card span {
+        color: var(--muted2);
+        font-size: .72rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .section-actions {
+        display: grid;
+        gap: 6px;
+        align-content: start;
+      }
+
+      .section-delete,
+      .section-move {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.055);
+      }
+
+      .section-move {
+        color: var(--muted);
+      }
+
+      .section-delete {
+        color: var(--danger);
+        border-color: rgba(255,179,168,.2);
+        background: rgba(255,179,168,.1);
+      }
+
       textarea {
         width: 100%;
         min-height: 94px;
@@ -1548,7 +1633,10 @@
                   <h3 id="builderTitle">Analysis Builder</h3>
                   <span id="builderHint">Four brief sections for easy founder/dev handoff</span>
                 </div>
-                <span class="status" id="saveStatus">Saved</span>
+                <div class="report-actions">
+                  <span class="status" id="saveStatus">Saved</span>
+                  <button class="small-button" id="addSectionBtn" type="button">Add Section</button>
+                </div>
               </div>
               <form class="editor" id="analysisForm"></form>
             </div>
@@ -1717,6 +1805,19 @@
               draft: "Start a freeform document here when using Documentation mode.",
               ideas: "",
               notes: ""
+            },
+            sections: {
+              analysis: [
+                { id: "learned", title: "What We Learned", body: "Company X is a sample company. Replace this with the main lesson a founder or development team should understand." },
+                { id: "opportunity", title: "Opportunity For Us", body: "Turn their strengths and weak points into opportunities: product gaps, pricing gaps, ignored users, slow workflows, or poor UX." },
+                { id: "actionPlan", title: "Actions For Team", body: "Write clear actions for the founder and dev team: what to build, test, improve, or avoid next." },
+                { id: "evidence", title: "Evidence & Notes", body: "Import a Word file, Google Docs export, markdown file, or text writeup into this section." }
+              ],
+              docs: [
+                { id: "draft", title: "Document Draft", body: "Start a freeform document here when using Documentation mode." },
+                { id: "ideas", title: "Ideas & Fragments", body: "" },
+                { id: "notes", title: "Supporting Notes", body: "" }
+              ]
             }
           }
         ]
@@ -1748,12 +1849,59 @@
       let searchTerm = "";
       let activeFocusField = null;
 
+      function defaultSections(mode, analysis = {}) {
+        return (modeFields[mode] || modeFields.analysis).map((field) => ({
+          id: field.key,
+          title: field.label,
+          body: analysis[field.key] || "",
+          placeholder: field.placeholder
+        }));
+      }
+
+      function sectionsForMode(company = activeCompany(), mode = state?.mode || "analysis") {
+        if (!company.sections) company.sections = {};
+        if (!Array.isArray(company.sections[mode]) || !company.sections[mode].length) {
+          company.sections[mode] = defaultSections(mode, company.analysis || {});
+        }
+        return company.sections[mode];
+      }
+
       function fieldsForMode(mode = state?.mode || "analysis") {
-        return modeFields[mode] || modeFields.analysis;
+        return sectionsForMode(activeCompany(), mode).map((section, index) => ({
+          key: section.id,
+          label: section.title || `Section ${index + 1}`,
+          placeholder: section.placeholder || "Write this section in your own structure and language.",
+          short: `Section ${index + 1}`
+        }));
       }
 
       function emptyAnalysis() {
         return Object.values(modeFields).flat().reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
+      }
+
+      function makeSectionId(title = "section") {
+        const base = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "section";
+        return `${base}-${Date.now().toString(36)}-${Math.random().toString(16).slice(2, 6)}`;
+      }
+
+      function migrateSections(company) {
+        const existing = company.sections && typeof company.sections === "object" ? company.sections : {};
+        company.sections = {
+          analysis: normalizeSections(existing.analysis, "analysis", company.analysis),
+          docs: normalizeSections(existing.docs, "docs", company.analysis)
+        };
+      }
+
+      function normalizeSections(sections, mode, analysis = {}) {
+        const fallback = defaultSections(mode, analysis);
+        const source = Array.isArray(sections) && sections.length ? sections : fallback;
+        return source.map((section, index) => {
+          const fallbackSection = fallback[index] || {};
+          const id = section.id || fallbackSection.id || makeSectionId(section.title || fallbackSection.title || "Section");
+          const title = section.title || section.label || fallbackSection.title || `Section ${index + 1}`;
+          const body = section.body ?? section.text ?? analysis[id] ?? fallbackSection.body ?? "";
+          return { id, title, body, placeholder: section.placeholder || fallbackSection.placeholder || "Write this section in your own structure and language." };
+        });
       }
 
       function load() {
@@ -1764,12 +1912,14 @@
           saved.mode = saved.mode === "docs" ? "docs" : "analysis";
           saved.companies.forEach((company) => {
             company.analysis = migrateAnalysis(company.analysis || {});
+            migrateSections(company);
             company.documents = Array.isArray(company.documents) ? company.documents : [];
             company.updatedAt = company.updatedAt || Date.now();
           });
           saved.companies = saved.companies.filter((company) => {
             const isOldDefault = company.id === `company-${"y"}` && company.name === `Company ${"Y"}`;
-            const hasContent = Object.values(modeFields).flat().some((field) => (company.analysis[field.key] || "").trim()) || company.documents.length;
+            const sectionContent = Object.values(company.sections || {}).flat().some((section) => (section.body || "").trim());
+            const hasContent = sectionContent || Object.values(modeFields).flat().some((field) => (company.analysis[field.key] || "").trim()) || company.documents.length;
             return !isOldDefault || hasContent;
           });
           if (!saved.companies.length) return structuredClone(defaultData);
@@ -1862,17 +2012,26 @@
       }
 
       function renderEditor(company) {
-        form.innerHTML = fieldsForMode().map((field) => `
-          <button class="editor-card" type="button" data-edit-field="${field.key}">
-            <span>${field.short} · ${countWords(company.analysis[field.key] || "")} words</span>
-            <strong>${field.label}</strong>
-            <p class="${company.analysis[field.key] ? "" : "empty"}">${esc(previewText(company.analysis[field.key] || field.placeholder, 180))}</p>
-          </button>
+        form.innerHTML = sectionsForMode(company).map((section, index) => `
+          <div class="section-card" data-section-card="${section.id}">
+            <div class="section-card-body">
+              <span>Section ${index + 1} &middot; ${countWords(section.body || "")} words</span>
+              <input class="section-title-input" data-section-title="${section.id}" value="${esc(section.title)}" aria-label="Section title">
+              <button class="section-open" type="button" data-edit-section="${section.id}">
+              <p class="${section.body ? "" : "empty"}">${esc(previewText(section.body || section.placeholder || "Write this section in your own structure and language.", 180))}</p>
+              </button>
+            </div>
+            <div class="section-actions">
+              <button class="section-move" type="button" title="Move section up" aria-label="Move section up" data-move-section="${section.id}" data-direction="-1">↑</button>
+              <button class="section-move" type="button" title="Move section down" aria-label="Move section down" data-move-section="${section.id}" data-direction="1">↓</button>
+              <button class="section-delete" type="button" title="Delete section" aria-label="Delete section" data-delete-section="${section.id}">&times;</button>
+            </div>
+          </div>
         `).join("");
       }
 
       function renderStats(company) {
-        const reportText = fieldsForMode().map((field) => company.analysis[field.key] || "").join(" ");
+        const reportText = sectionsForMode(company).map((section) => section.body || "").join(" ");
         $("companyCount").textContent = state.companies.length;
         $("wordCount").textContent = countWords(reportText);
         $("sourceCount").textContent = company.documents.length;
@@ -1880,23 +2039,26 @@
       }
 
       function renderSignals(company) {
-        const fields = fieldsForMode();
-        const totalFields = fields.length;
-        const filledFields = fields.filter((field) => (company.analysis[field.key] || "").trim()).length;
+        const sections = sectionsForMode(company);
+        const totalFields = sections.length || 1;
+        const filledFields = sections.filter((section) => (section.body || "").trim()).length;
         const completion = Math.round((filledFields / totalFields) * 100);
-        const evidence = Math.min(100, company.documents.length * 28 + Math.min(44, countWords(company.analysis.evidence || "") / 8));
-        const ideaDepth = Math.min(100, Math.max(8, countWords((company.analysis.opportunity || company.analysis.ideas || "")) * 2.6));
-        const action = Math.min(100, Math.max(8, countWords((company.analysis.actionPlan || company.analysis.draft || "")) * 2.4));
-        const clarity = Math.min(100, Math.max(12, countWords((company.analysis.learned || company.analysis.notes || "")) * 2.1));
+        const allText = sections.map((section) => section.body || "").join(" ");
+        const evidenceText = sections.find((section) => /evidence|source|proof|note/i.test(section.title))?.body || "";
+        const actionText = sections.find((section) => /action|next|plan|draft/i.test(section.title))?.body || "";
+        const evidence = Math.min(100, company.documents.length * 28 + Math.min(44, countWords(evidenceText) / 8));
+        const ideaDepth = Math.min(100, Math.max(8, countWords(allText) * 1.2));
+        const action = Math.min(100, Math.max(8, countWords(actionText || allText) * 1.6));
+        const clarity = Math.min(100, Math.max(12, countWords(allText) * 1.1));
 
         if (state.mode === "docs") {
           growthSignal.innerHTML = `
             <span>Document Depth</span>
             <strong>${completion}% shaped</strong>
             <div class="bars">
-              ${bar("Draft", Math.min(100, countWords(company.analysis.draft || "") * 1.8))}
-              ${bar("Ideas", Math.min(100, countWords(company.analysis.ideas || "") * 2.4))}
-              ${bar("Notes", Math.min(100, countWords(company.analysis.notes || "") * 2.1))}
+              ${bar("Draft", Math.min(100, countWords(allText) * 1.4))}
+              ${bar("Sections", completion)}
+              ${bar("Sources", evidence)}
             </div>
             <p>Tracks how much useful writing, rough thinking, and support exists in this document.</p>
           `;
@@ -1951,18 +2113,18 @@
       }
 
       function renderPreview(company) {
-        review.innerHTML = fieldsForMode().map((field, i) => `
+        review.innerHTML = sectionsForMode(company).map((section, i) => `
           <div class="review-section">
-            <span>${String(i + 1).padStart(2, "0")} · ${field.label}</span>
-            <p class="${company.analysis[field.key] ? "" : "empty"}">${esc(company.analysis[field.key] || "No content added yet.")}</p>
+            <span>${String(i + 1).padStart(2, "0")} &middot; ${section.title}</span>
+            <p class="${section.body ? "" : "empty"}">${esc(section.body || "No content added yet.")}</p>
           </div>
         `).join("");
       }
 
       function buildReport(company) {
-        const fields = fieldsForMode();
+        const sections = sectionsForMode(company);
         const copy = modeCopy[state.mode] || modeCopy.analysis;
-        const reportText = fields.map((field) => company.analysis[field.key] || "").join(" ");
+        const reportText = sections.map((section) => section.body || "").join(" ");
         const sourcesHtml = company.documents.length
           ? company.documents.map((doc) => `<li>${esc(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
           : "<li>No source documents attached.</li>";
@@ -1985,15 +2147,15 @@
             </div>
           </div>
           <h3>${copy.structureLabel}</h3>
-          <ol class="source-list-report">${fields.map((field) => `<li>${esc(field.label)}</li>`).join("")}<li>Source Documents</li></ol>
-          ${fields.map((field, index) => `
+          <ol class="source-list-report">${sections.map((section) => `<li>${esc(section.title)}</li>`).join("")}<li>Source Documents</li></ol>
+          ${sections.map((section, index) => `
             <section>
-              <h2>${index + 1}. ${field.label}</h2>
-              <p contenteditable="true" data-field="${field.key}">${esc(company.analysis[field.key] || "No content added yet.")}</p>
+              <h2>${index + 1}. ${esc(section.title)}</h2>
+              <p contenteditable="true" data-section-text="${section.id}">${esc(section.body || "No content added yet.")}</p>
             </section>
           `).join("")}
           <section>
-            <h2>${fields.length + 1}. Source Documents</h2>
+            <h2>${sections.length + 1}. Source Documents</h2>
             <ul class="source-list-report">${sourcesHtml}</ul>
           </section>
           ${appendix}
@@ -2035,8 +2197,9 @@
         updateCompany((company) => {
           const nameNode = reportPaper.querySelector("[data-company-name]");
           if (nameNode && nameNode.textContent.trim()) company.name = nameNode.textContent.trim();
-          reportPaper.querySelectorAll("[data-field]").forEach((node) => {
-            company.analysis[node.dataset.field] = node.textContent.trim();
+          reportPaper.querySelectorAll("[data-section-text]").forEach((node) => {
+            const section = sectionsForMode(company).find((item) => item.id === node.dataset.sectionText);
+            if (section) section.body = node.textContent.trim();
           });
           reportPaper.querySelectorAll("[data-doc-text]").forEach((node) => {
             const doc = company.documents.find((item) => item.id === node.dataset.docText);
@@ -2054,16 +2217,16 @@
         render();
       }
 
-      function openFocusEditor(fieldKey) {
-        const field = fieldsForMode().find((item) => item.key === fieldKey);
+      function openFocusEditor(sectionId) {
         const company = activeCompany();
-        if (!field || !company) return;
-        activeFocusField = field.key;
-        $("focusTitle").textContent = field.label;
+        const section = sectionsForMode(company).find((item) => item.id === sectionId);
+        if (!section || !company) return;
+        activeFocusField = section.id;
+        $("focusTitle").textContent = section.title;
         $("focusHint").textContent = state.mode === "docs" ? "Write freely in a clean document space." : "Expand this section into a clear analyst handoff.";
         $("focusModeLabel").textContent = state.mode === "docs" ? "Document mode" : "Analyst report mode";
-        $("focusPrompt").textContent = field.placeholder;
-        focusEditor.value = company.analysis[field.key] || "";
+        $("focusPrompt").textContent = section.placeholder || "Write this section in your own structure and language.";
+        focusEditor.value = section.body || "";
         updateFocusStats();
         focusModal.classList.remove("hidden");
         document.body.classList.add("focus-mode");
@@ -2078,7 +2241,8 @@
       function saveFocusEditor({ close = true } = {}) {
         if (!activeFocusField) return;
         updateCompany((company) => {
-          company.analysis[activeFocusField] = focusEditor.value;
+          const section = sectionsForMode(company).find((item) => item.id === activeFocusField);
+          if (section) section.body = focusEditor.value;
         });
         docStatus.textContent = "Section saved";
         if (close) closeFocusEditor();
@@ -2091,12 +2255,51 @@
         render();
       }
 
+      function addSection() {
+        updateCompany((company) => {
+          sectionsForMode(company).push({
+            id: makeSectionId("custom-section"),
+            title: "New Section",
+            body: "",
+            placeholder: "Write this section in your own structure and language."
+          });
+        });
+        docStatus.textContent = "Section added";
+      }
+
+      function deleteSection(sectionId) {
+        updateCompany((company) => {
+          const sections = sectionsForMode(company);
+          if (sections.length <= 1) {
+            const only = sections[0];
+            only.title = "Untitled Section";
+            only.body = "";
+            return;
+          }
+          company.sections[state.mode] = sections.filter((section) => section.id !== sectionId);
+        });
+        docStatus.textContent = "Section removed";
+      }
+
+      function moveSection(sectionId, direction) {
+        updateCompany((company) => {
+          const sections = sectionsForMode(company);
+          const index = sections.findIndex((section) => section.id === sectionId);
+          const nextIndex = index + direction;
+          if (index < 0 || nextIndex < 0 || nextIndex >= sections.length) return;
+          const [section] = sections.splice(index, 1);
+          sections.splice(nextIndex, 0, section);
+        });
+        docStatus.textContent = "Section moved";
+      }
+
       function deleteReportById(reportId = state.activeId) {
         if (!confirm(`Delete this ${state.mode === "docs" ? "document" : "report"} from this browser? This removes saved writing, imported documents, and notes.`)) return;
         if (state.companies.length === 1) {
           updateCompany((company) => {
             company.documents = [];
             company.analysis = emptyAnalysis();
+            company.sections = { analysis: defaultSections("analysis"), docs: defaultSections("docs") };
           });
           docStatus.textContent = state.mode === "docs" ? "Document cleared" : "Report cleared";
           return;
@@ -2124,12 +2327,16 @@
         company.documents.push(doc);
         const block = `Source: ${fileName}\n${text}`;
         if (state.mode === "docs") {
-          company.analysis.notes = `${company.analysis.notes ? `${company.analysis.notes}\n\n` : ""}${block}`;
-          if (!company.analysis.draft) company.analysis.draft = text.split(/\n\s*\n/)[0].slice(0, 760);
+          const sections = sectionsForMode(company);
+          const notes = sections.find((section) => /note|support/i.test(section.title)) || sections[sections.length - 1];
+          notes.body = `${notes.body ? `${notes.body}\n\n` : ""}${block}`;
+          if (!sections[0].body) sections[0].body = text.split(/\n\s*\n/)[0].slice(0, 760);
           return;
         }
-        company.analysis.evidence = `${company.analysis.evidence ? `${company.analysis.evidence}\n\n` : ""}${block}`;
-        if (!company.analysis.learned) company.analysis.learned = text.split(/\n\s*\n/)[0].slice(0, 760);
+        const sections = sectionsForMode(company);
+        const evidence = sections.find((section) => /evidence|source|proof|note/i.test(section.title)) || sections[sections.length - 1];
+        evidence.body = `${evidence.body ? `${evidence.body}\n\n` : ""}${block}`;
+        if (!sections[0].body) sections[0].body = text.split(/\n\s*\n/)[0].slice(0, 760);
       }
 
       function removeDocument(company, id) {
@@ -2138,6 +2345,9 @@
         company.documents = company.documents.filter((item) => item.id !== id);
         company.analysis.evidence = company.analysis.evidence.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
         company.analysis.notes = company.analysis.notes.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
+        Object.values(company.sections || {}).flat().forEach((section) => {
+          section.body = (section.body || "").replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
+        });
       }
 
       function countWords(text = "") { return text.trim() ? text.trim().split(/\s+/).length : 0; }
@@ -2174,21 +2384,33 @@
         render();
       });
       form.addEventListener("input", (event) => {
-        const field = event.target.dataset.field;
-        if (!field) return;
+        const sectionId = event.target.dataset.sectionTitle;
+        if (!sectionId) return;
         const company = activeCompany();
-        company.analysis[field] = event.target.value;
+        const section = sectionsForMode(company).find((item) => item.id === sectionId);
+        if (!section) return;
+        section.title = event.target.value.trim() || "Untitled Section";
         company.updatedAt = Date.now();
         saveStatus.textContent = "Saved";
         persist();
-        renderStats(company);
         renderSignals(company);
         renderPreview(company);
       });
       form.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-edit-field]");
+        const deleteButton = event.target.closest("[data-delete-section]");
+        if (deleteButton) {
+          deleteSection(deleteButton.dataset.deleteSection);
+          return;
+        }
+        const moveButton = event.target.closest("[data-move-section]");
+        if (moveButton) {
+          moveSection(moveButton.dataset.moveSection, Number(moveButton.dataset.direction));
+          return;
+        }
+        if (event.target.closest("[data-section-title]")) return;
+        const button = event.target.closest("[data-edit-section]");
         if (!button) return;
-        openFocusEditor(button.dataset.editField);
+        openFocusEditor(button.dataset.editSection);
       });
       pageTitle.addEventListener("input", () => {
         const company = activeCompany();
@@ -2204,7 +2426,7 @@
         if (!name) return;
         let id = slug(name), i = 2;
         while (state.companies.some((company) => company.id === id)) id = `${slug(name)}-${i++}`;
-        state.companies.push({ id, name, updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() });
+        state.companies.push({ id, name, updatedAt: Date.now(), documents: [], analysis: emptyAnalysis(), sections: { analysis: defaultSections("analysis"), docs: defaultSections("docs") } });
         state.activeId = id;
         companyName.value = "";
         persist();
@@ -2215,6 +2437,7 @@
         persist();
         render();
       });
+      $("addSectionBtn").addEventListener("click", addSection);
       $("importDocBtn").addEventListener("click", () => docFile.click());
       docFile.addEventListener("change", async () => {
         const file = docFile.files[0];
