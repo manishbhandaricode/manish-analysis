@@ -7,7 +7,7 @@ Minimal business analysis documentation tool.
 - Company-wise analysis pages
 - Save/load in browser storage
 - Review panel beside editor
-- JSON import/export
+- Word, markdown, and text document import
 - Static Vercel deployment
 
 ## Local
