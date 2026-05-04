@@ -9,7 +9,8 @@ Minimal business analysis documentation tool.
 - Review panel beside editor
 - Word, markdown, and text document import
 - Source document list with delete controls
-- Full-screen business analysis report view
+- Full-screen editable business analysis report view
+- Entire report delete/clear action
 - Static Vercel deployment
 
 ## Local

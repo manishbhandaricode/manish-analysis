@@ -8,44 +8,41 @@
     <style>
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        --ink: #111827;
-        --navy: #111f36;
-        --navy-2: #182b49;
-        --slate: #536173;
-        --line: #d9e0ea;
-        --paper: #fbfcff;
-        --panel: rgba(255, 255, 255, 0.82);
-        --gold: #b88935;
-        --gold-soft: #f3e6c8;
-        --teal: #0f766e;
-        --cyan: #d7f8f4;
-        --danger: #9f3a2f;
-        --glow: rgba(255, 255, 255, 0.92);
-        --shadow: 0 28px 80px rgba(17, 31, 54, 0.16);
-        color: var(--ink);
-        background: #edf2f7;
+        --bg: #070708;
+        --bg2: #111215;
+        --panel: rgba(22, 23, 27, 0.78);
+        --panel2: rgba(255, 255, 255, 0.07);
+        --line: rgba(255, 255, 255, 0.12);
+        --text: #f6f6f3;
+        --muted: #a5abb4;
+        --paper: #fbfbf7;
+        --paperText: #151821;
+        --gold: #d8b86f;
+        --teal: #75d7cd;
+        --danger: #ffb3a8;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
+        color: var(--text);
+        background: var(--bg);
         overflow-x: hidden;
       }
 
       body::before {
         content: "";
         position: fixed;
-        inset: -24%;
+        inset: -20%;
         z-index: -2;
         background:
-          radial-gradient(circle at 15% 10%, rgba(215, 248, 244, 0.75), transparent 28%),
-          radial-gradient(circle at 82% 8%, rgba(243, 230, 200, 0.8), transparent 24%),
-          linear-gradient(135deg, #e5edf5 0%, #f8faf7 46%, #e0e8f0 100%);
-        animation: drift 16s ease-in-out infinite alternate;
+          radial-gradient(circle at 18% 10%, rgba(255,255,255,.16), transparent 24%),
+          radial-gradient(circle at 76% 8%, rgba(216,184,111,.18), transparent 25%),
+          radial-gradient(circle at 72% 72%, rgba(117,215,205,.13), transparent 28%),
+          linear-gradient(135deg, #050505, #111215 52%, #1c1e22);
+        animation: ambient 18s ease-in-out infinite alternate;
       }
 
       body::after {
@@ -53,29 +50,22 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        opacity: 0.22;
+        opacity: .16;
         background-image:
-          linear-gradient(rgba(17, 31, 54, 0.08) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(17, 31, 54, 0.08) 1px, transparent 1px);
-        background-size: 48px 48px;
+          linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+        background-size: 46px 46px;
         mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
 
-      button,
-      input,
-      textarea {
-        font: inherit;
-      }
-
-      button {
-        border: 0;
-        cursor: pointer;
-      }
+      button, input, textarea { font: inherit; }
+      button { border: 0; cursor: pointer; }
+      input, textarea { outline: 0; }
 
       .shell {
         min-height: 100vh;
         display: grid;
-        grid-template-columns: 312px minmax(0, 1fr);
+        grid-template-columns: 314px minmax(0, 1fr);
       }
 
       aside {
@@ -84,57 +74,39 @@
         height: 100vh;
         padding: 24px;
         overflow: auto;
-        color: #f7fbff;
-        background:
-          linear-gradient(160deg, rgba(184, 137, 53, 0.13), transparent 28%),
-          linear-gradient(180deg, var(--navy), var(--navy-2));
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+        border-right: 1px solid var(--line);
+        backdrop-filter: blur(20px);
       }
 
-      .brand {
+      .brand, .topbar, .report-toolbar, .source-card, .company, .button-row {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 24px;
       }
 
+      .brand { gap: 12px; margin-bottom: 24px; }
       .mark {
         width: 44px;
         height: 44px;
         display: grid;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--gold-soft);
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.08);
+        color: #fff;
         font-weight: 900;
       }
 
-      .brand h1,
-      .company strong,
-      .panel-title h3 {
-        margin: 0;
-        letter-spacing: 0;
-      }
-
-      .brand h1 {
-        font-size: 1.04rem;
-        line-height: 1.05;
-      }
-
-      .brand span,
-      .section-label,
-      .company small {
-        color: rgba(247, 251, 255, 0.64);
-        font-size: 0.78rem;
-      }
-
+      h1, h2, h3, p { margin-top: 0; }
+      .brand h1, .panel-title h3, .company strong { margin: 0; letter-spacing: 0; }
+      .brand h1 { font-size: 1.04rem; line-height: 1.05; }
+      .brand span, .section-label, .company small, .panel-title span, .status { color: var(--muted); font-size: .8rem; }
       .section-label {
         display: block;
         margin: 24px 0 10px;
+        font-weight: 900;
+        letter-spacing: .11em;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-weight: 850;
       }
 
       .company-form {
@@ -143,152 +115,118 @@
         gap: 8px;
       }
 
-      input,
-      textarea {
-        width: 100%;
-        border-radius: 8px;
-        outline: 0;
-      }
-
       .company-form input {
         min-width: 0;
         height: 44px;
+        width: 100%;
         padding: 0 12px;
-        border: 1px solid rgba(255, 255, 255, 0.13);
-        color: #fff;
-        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        background: rgba(255,255,255,.07);
       }
 
-      .company-form input::placeholder {
-        color: rgba(247, 251, 255, 0.48);
-      }
-
+      .company-form input::placeholder, textarea::placeholder { color: rgba(246,246,243,.42); }
       .icon-button {
         width: 44px;
         min-height: 44px;
         border-radius: 8px;
-        color: var(--navy);
-        background: var(--gold-soft);
+        color: #050505;
+        background: #fff;
         font-weight: 900;
       }
 
-      .companies,
-      .source-list {
-        display: grid;
-        gap: 8px;
-      }
-
+      .companies, .source-list, .editor, .review, .stack { display: grid; gap: 10px; }
       .company {
         width: 100%;
         min-height: 58px;
-        padding: 10px 11px;
-        display: flex;
         justify-content: space-between;
-        align-items: center;
         gap: 12px;
-        border-radius: 8px;
-        color: #f7fbff;
+        padding: 10px 11px;
+        color: var(--text);
         background: transparent;
+        border-radius: 8px;
         text-align: left;
         transition: transform 180ms ease, background 180ms ease;
       }
 
-      .company:hover,
-      .company.active {
+      .company:hover, .company.active {
         transform: translateX(3px);
-        background: rgba(255, 255, 255, 0.09);
+        background: rgba(255,255,255,.08);
       }
 
-      .company.active {
-        outline: 1px solid rgba(243, 230, 200, 0.36);
-      }
-
+      .company.active { outline: 1px solid rgba(255,255,255,.18); }
+      .company strong { display: block; font-size: .96rem; }
       .pulse {
         width: 9px;
         height: 9px;
-        flex: 0 0 auto;
         border-radius: 99px;
-        background: var(--gold-soft);
-        box-shadow: 0 0 20px rgba(243, 230, 200, 0.86);
+        background: #fff;
+        box-shadow: 0 0 22px rgba(255,255,255,.9);
         animation: breathe 2.8s ease-in-out infinite;
       }
 
       .sidebar-note {
         margin-top: 24px;
         padding: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.13);
+        border: 1px solid var(--line);
         border-radius: 8px;
-        color: rgba(247, 251, 255, 0.74);
-        background: rgba(255, 255, 255, 0.06);
-        font-size: 0.88rem;
-        line-height: 1.45;
+        color: var(--muted);
+        background: rgba(255,255,255,.05);
+        font-size: .88rem;
+        line-height: 1.48;
       }
 
-      main {
-        padding: 30px;
-      }
-
+      main { padding: 30px; }
       .topbar {
-        display: flex;
         justify-content: space-between;
-        align-items: center;
-        gap: 20px;
+        gap: 22px;
         margin-bottom: 22px;
       }
 
       .eyebrow {
         margin: 0 0 10px;
-        color: var(--gold);
-        font-size: 0.78rem;
-        font-weight: 900;
-        letter-spacing: 0.13em;
+        color: #fff;
+        font-size: .78rem;
+        font-weight: 950;
+        letter-spacing: .13em;
         text-transform: uppercase;
       }
 
       .topbar h2 {
         margin: 0;
-        color: var(--navy);
-        font-size: clamp(2rem, 5vw, 4rem);
-        line-height: 0.95;
+        color: #fff;
+        font-size: clamp(2.1rem, 5vw, 4.2rem);
+        line-height: .95;
         letter-spacing: 0;
       }
 
       .topbar p {
         margin: 10px 0 0;
-        max-width: 70ch;
-        color: var(--slate);
+        max-width: 74ch;
+        color: var(--muted);
         line-height: 1.55;
       }
 
-      .button-row {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .glow-button,
-      .secondary-button,
-      .small-button,
-      .danger-link {
+      .button-row { justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+      .glow-button, .glass-button, .delete-button, .small-button, .danger-link {
         min-height: 42px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-weight: 850;
+        font-weight: 900;
       }
 
       .glow-button {
         position: relative;
         padding: 0 17px;
         color: #fff;
-        background: var(--navy);
+        background: #050505;
         isolation: isolate;
         overflow: hidden;
-        box-shadow: 0 18px 38px rgba(17, 31, 54, 0.24);
+        box-shadow: 0 18px 42px rgba(0,0,0,.45);
       }
 
       .glow-button::before {
@@ -296,8 +234,8 @@
         position: absolute;
         inset: -2px;
         z-index: -2;
-        background: conic-gradient(from var(--spin), transparent 0deg, transparent 82deg, var(--glow) 104deg, var(--gold-soft) 118deg, transparent 146deg, transparent 360deg);
-        animation: spin 2.7s linear infinite;
+        background: conic-gradient(from var(--spin), transparent 0deg, transparent 82deg, rgba(255,255,255,.98) 105deg, transparent 142deg, transparent 360deg);
+        animation: spin 2.6s linear infinite;
       }
 
       .glow-button::after {
@@ -306,14 +244,22 @@
         inset: 2px;
         z-index: -1;
         border-radius: 6px;
-        background: linear-gradient(135deg, var(--navy), #1c355a);
+        background: linear-gradient(135deg, #050505, #1a1b1f);
       }
 
-      .secondary-button {
+      .glass-button, .small-button {
         padding: 0 15px;
-        border: 1px solid rgba(17, 31, 54, 0.12);
-        color: var(--navy);
-        background: rgba(255, 255, 255, 0.62);
+        color: #fff;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .delete-button {
+        padding: 0 15px;
+        color: var(--danger);
+        border: 1px solid rgba(255,179,168,.24);
+        background: rgba(255,179,168,.09);
       }
 
       .stats {
@@ -323,18 +269,17 @@
         margin-bottom: 18px;
       }
 
-      .stat,
-      .panel {
-        border: 1px solid rgba(255, 255, 255, 0.72);
+      .stat, .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
         background: var(--panel);
         box-shadow: var(--shadow);
-        backdrop-filter: blur(18px);
+        backdrop-filter: blur(20px);
       }
 
       .stat {
         min-height: 100px;
         padding: 16px;
-        border-radius: 8px;
         position: relative;
         overflow: hidden;
       }
@@ -344,43 +289,34 @@
         position: absolute;
         inset: auto 14px 0;
         height: 3px;
-        background: linear-gradient(90deg, var(--teal), var(--gold));
-        opacity: 0.7;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--teal));
+        opacity: .74;
       }
 
       .stat span {
-        color: var(--slate);
-        font-size: 0.75rem;
-        font-weight: 900;
-        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-size: .75rem;
+        font-weight: 950;
+        letter-spacing: .08em;
         text-transform: uppercase;
       }
 
       .stat strong {
         display: block;
         margin-top: 10px;
-        color: var(--navy);
+        color: #fff;
         font-size: 1.82rem;
         line-height: 1;
       }
 
       .workspace {
         display: grid;
-        grid-template-columns: minmax(0, 1.08fr) minmax(350px, 0.92fr);
+        grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
         gap: 18px;
         align-items: start;
       }
 
-      .stack {
-        display: grid;
-        gap: 18px;
-      }
-
-      .panel {
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
+      .panel { overflow: hidden; }
       .panel-header {
         min-height: 66px;
         padding: 16px 18px;
@@ -389,91 +325,54 @@
         align-items: center;
         gap: 12px;
         border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.54);
+        background: rgba(255,255,255,.05);
       }
 
-      .panel-title h3 {
-        color: var(--navy);
-        font-size: 1rem;
-      }
-
-      .panel-title span,
-      .status {
-        color: var(--slate);
-        font-size: 0.82rem;
-      }
-
-      .editor,
-      .review,
-      .source-body {
-        padding: 18px;
-        display: grid;
-        gap: 14px;
-      }
-
+      .editor, .review, .source-body { padding: 18px; }
       label {
         display: grid;
         gap: 8px;
-        color: var(--navy);
-        font-size: 0.82rem;
-        font-weight: 900;
+        color: #fff;
+        font-size: .82rem;
+        font-weight: 950;
       }
 
       textarea {
+        width: 100%;
         min-height: 94px;
         resize: vertical;
         padding: 13px;
         border: 1px solid var(--line);
-        color: var(--ink);
-        background: rgba(255, 255, 255, 0.86);
+        border-radius: 8px;
+        color: var(--text);
+        background: rgba(255,255,255,.07);
         line-height: 1.55;
         transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
       }
 
       textarea:focus {
-        border-color: rgba(15, 118, 110, 0.42);
-        background: #fff;
-        box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
+        border-color: rgba(255,255,255,.44);
+        background: rgba(255,255,255,.1);
+        box-shadow: 0 0 0 4px rgba(255,255,255,.1);
       }
 
-      textarea[name="summary"] {
-        min-height: 124px;
-      }
-
+      textarea[name="summary"] { min-height: 124px; }
       .source-card {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
+        justify-content: space-between;
         gap: 10px;
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.74);
+        background: rgba(255,255,255,.06);
       }
 
-      .source-card strong {
-        display: block;
-        color: var(--navy);
-        font-size: 0.9rem;
-      }
-
-      .source-card span {
-        color: var(--slate);
-        font-size: 0.78rem;
-      }
-
+      .source-card strong { display: block; color: #fff; font-size: .9rem; }
+      .source-card span { color: var(--muted); font-size: .78rem; }
       .danger-link {
         min-height: 34px;
         padding: 0 10px;
         color: var(--danger);
-        background: #f9e9e5;
-      }
-
-      .small-button {
-        min-height: 34px;
-        padding: 0 10px;
-        color: var(--navy);
-        background: var(--gold-soft);
+        background: rgba(255,179,168,.1);
       }
 
       .review-section {
@@ -481,105 +380,102 @@
         border-bottom: 1px solid var(--line);
       }
 
-      .review-section:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
-      }
-
+      .review-section:last-child { border-bottom: 0; padding-bottom: 0; }
       .review-section span {
         display: block;
         margin-bottom: 8px;
-        color: var(--gold);
-        font-size: 0.76rem;
+        color: #fff;
+        font-size: .76rem;
         font-weight: 950;
-        letter-spacing: 0.08em;
+        letter-spacing: .08em;
         text-transform: uppercase;
       }
 
       .review-section p {
         margin: 0;
-        color: var(--ink);
+        color: var(--text);
         white-space: pre-wrap;
         line-height: 1.62;
       }
 
-      .empty {
-        color: var(--slate) !important;
-        font-style: italic;
-      }
-
-      .hidden-file,
-      .hidden {
-        display: none;
-      }
+      .empty { color: var(--muted) !important; font-style: italic; }
+      .hidden-file, .hidden { display: none; }
 
       .report-modal {
         position: fixed;
         inset: 0;
         z-index: 10;
         padding: 28px;
-        background: rgba(8, 16, 28, 0.72);
-        backdrop-filter: blur(14px);
+        background: rgba(0,0,0,.78);
+        backdrop-filter: blur(16px);
         overflow: auto;
       }
 
       .report-window {
-        width: min(980px, 100%);
+        width: min(1040px, 100%);
         margin: 0 auto;
+        border: 1px solid var(--line);
         border-radius: 8px;
         overflow: hidden;
-        background: #f4f6f8;
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+        background: #15161a;
+        box-shadow: 0 32px 90px rgba(0,0,0,.56);
       }
 
       .report-toolbar {
         min-height: 58px;
         padding: 10px 14px;
-        display: flex;
         justify-content: space-between;
-        align-items: center;
         gap: 12px;
-        border-bottom: 1px solid #d8dee8;
-        background: #fff;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255,255,255,.06);
       }
 
+      .report-actions { display: flex; gap: 10px; flex-wrap: wrap; }
       .report-paper {
-        width: min(820px, calc(100% - 32px));
-        min-height: 1040px;
-        margin: 22px auto;
-        padding: clamp(28px, 6vw, 58px);
-        color: #151923;
+        width: min(840px, calc(100% - 32px));
+        min-height: 1060px;
+        margin: 24px auto;
+        padding: clamp(30px, 6vw, 60px);
+        color: var(--paperText);
         background: var(--paper);
-        box-shadow: 0 18px 50px rgba(17, 31, 54, 0.14);
+        box-shadow: 0 20px 60px rgba(0,0,0,.3);
       }
 
       .report-cover {
         padding-bottom: 22px;
         margin-bottom: 26px;
-        border-bottom: 3px solid var(--navy);
+        border-bottom: 3px solid #111;
       }
 
       .report-cover span {
-        color: var(--gold);
+        color: #5d6470;
         font-weight: 950;
-        letter-spacing: 0.12em;
+        letter-spacing: .12em;
         text-transform: uppercase;
-        font-size: 0.78rem;
+        font-size: .78rem;
       }
 
       .report-cover h1 {
         margin: 12px 0;
-        color: var(--navy);
+        color: #111;
         font-size: clamp(2.1rem, 6vw, 4rem);
-        line-height: 0.98;
+        line-height: .98;
         letter-spacing: 0;
       }
 
       .report-paper h2 {
         margin: 28px 0 10px;
-        color: var(--navy);
+        color: #111;
         font-size: 1.18rem;
         letter-spacing: 0;
+      }
+
+      .report-paper h3 {
+        margin: 18px 0 8px;
+        color: #3f4651;
+        font-size: .88rem;
+        letter-spacing: .09em;
+        text-transform: uppercase;
       }
 
       .report-paper p {
@@ -588,84 +484,53 @@
         line-height: 1.72;
       }
 
-      .source-list-report {
-        margin: 0;
-        padding-left: 18px;
-        line-height: 1.7;
+      .report-paper [contenteditable="true"] {
+        border-radius: 6px;
+        outline: 0;
+        transition: background 160ms ease, box-shadow 160ms ease;
       }
 
-      @property --spin {
-        syntax: "<angle>";
-        inherits: false;
-        initial-value: 0deg;
+      .report-paper [contenteditable="true"]:focus {
+        background: #fffdf3;
+        box-shadow: 0 0 0 4px rgba(216,184,111,.22);
       }
 
-      @keyframes spin {
-        to {
-          --spin: 360deg;
-        }
+      .source-list-report { margin: 0; padding-left: 18px; line-height: 1.7; }
+      .report-mode .shell { display: none; }
+      .report-mode .report-modal {
+        display: block;
+        padding: 0;
+        background: #111;
+      }
+      .report-mode .report-window {
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
       }
 
-      @keyframes drift {
-        to {
-          transform: translate3d(2%, -1%, 0) scale(1.03);
-        }
-      }
-
-      @keyframes breathe {
-        50% {
-          transform: scale(1.28);
-          opacity: 0.72;
-        }
-      }
+      @property --spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+      @keyframes spin { to { --spin: 360deg; } }
+      @keyframes ambient { to { transform: translate3d(2%, -1%, 0) scale(1.03); } }
+      @keyframes breathe { 50% { transform: scale(1.28); opacity: .72; } }
 
       @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
+        *, *::before, *::after {
+          animation-duration: .01ms !important;
           animation-iteration-count: 1 !important;
-          scroll-behavior: auto !important;
-          transition-duration: 0.01ms !important;
+          transition-duration: .01ms !important;
         }
       }
 
       @media (max-width: 1080px) {
-        .shell {
-          grid-template-columns: 1fr;
-        }
-
-        aside {
-          position: static;
-          height: auto;
-        }
-
-        .workspace,
-        .stats {
-          grid-template-columns: 1fr;
-        }
+        .shell, .workspace, .stats { grid-template-columns: 1fr; }
+        aside { position: static; height: auto; }
       }
 
       @media (max-width: 680px) {
-        main,
-        aside,
-        .report-modal {
-          padding: 18px;
-        }
-
-        .topbar,
-        .report-toolbar {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .button-row {
-          justify-content: stretch;
-        }
-
-        .button-row button {
-          flex: 1 1 160px;
-        }
+        main, aside, .report-modal { padding: 18px; }
+        .topbar, .report-toolbar { flex-direction: column; align-items: stretch; }
+        .button-row, .report-actions { justify-content: stretch; }
+        .button-row button, .report-actions button { flex: 1 1 160px; }
       }
     </style>
   </head>
@@ -676,54 +541,43 @@
           <div class="mark">MA</div>
           <div>
             <h1>Manish Analysis</h1>
-            <span>Research report desk</span>
+            <span>Premium research reports</span>
           </div>
         </div>
 
         <form class="company-form" id="companyForm">
-          <input id="companyName" aria-label="Company name" placeholder="New company">
-          <button class="icon-button" title="Add company" aria-label="Add company">+</button>
+          <input id="companyName" aria-label="Report name" placeholder="New report/company">
+          <button class="icon-button" title="Add report" aria-label="Add report">+</button>
         </form>
 
-        <span class="section-label">Companies</span>
+        <span class="section-label">Reports</span>
         <div class="companies" id="companies"></div>
 
         <div class="sidebar-note">
-          Build company dossiers, manage source documents, and open a finished analyst-style report.
+          Build company dossiers, attach source documents, delete old reports, and edit in a full document view.
         </div>
       </aside>
 
       <main>
         <div class="topbar">
           <div>
-            <p class="eyebrow">Business analysis report</p>
+            <p class="eyebrow">Business analyst report</p>
             <h2 id="pageTitle">Company X</h2>
-            <p>Capture research in analyst-grade sections, attach source documents, then review the complete report in a focused document view.</p>
+            <p>Premium report workspace for thesis, market context, financial logic, risks, source documents, and final analyst recommendations.</p>
           </div>
           <div class="button-row">
-            <button class="secondary-button" id="viewReportBtn">View Full Report</button>
+            <button class="glass-button" id="viewReportBtn">Document View</button>
             <button class="glow-button" id="importDocBtn">Import Document</button>
+            <button class="delete-button" id="deleteReportBtn">Delete Report</button>
             <input class="hidden-file" id="docFile" type="file" accept=".txt,.md,.markdown,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown">
           </div>
         </div>
 
         <section class="stats">
-          <div class="stat">
-            <span>Companies</span>
-            <strong id="companyCount">0</strong>
-          </div>
-          <div class="stat">
-            <span>Report Words</span>
-            <strong id="wordCount">0</strong>
-          </div>
-          <div class="stat">
-            <span>Sources</span>
-            <strong id="sourceCount">0</strong>
-          </div>
-          <div class="stat">
-            <span>Saved</span>
-            <strong id="lastSaved">Now</strong>
-          </div>
+          <div class="stat"><span>Reports</span><strong id="companyCount">0</strong></div>
+          <div class="stat"><span>Report Words</span><strong id="wordCount">0</strong></div>
+          <div class="stat"><span>Sources</span><strong id="sourceCount">0</strong></div>
+          <div class="stat"><span>Saved</span><strong id="lastSaved">Now</strong></div>
         </section>
 
         <section class="workspace">
@@ -743,7 +597,7 @@
               <div class="panel-header">
                 <div class="panel-title">
                   <h3>Source Documents</h3>
-                  <span>Imported files attached to active company</span>
+                  <span>Imported files attached to active report</span>
                 </div>
                 <span class="status" id="docStatus">Ready</span>
               </div>
@@ -756,8 +610,8 @@
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title">
-                <h3>Report Preview</h3>
-                <span>Live read mode</span>
+                <h3>Live Report Preview</h3>
+                <span>Professional read mode</span>
               </div>
               <button class="small-button" id="previewReportBtn">Open</button>
             </div>
@@ -767,30 +621,35 @@
       </main>
     </div>
 
-    <div class="report-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-label="Full business analysis report">
+    <div class="report-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-label="Editable business analysis report">
       <div class="report-window">
         <div class="report-toolbar">
           <strong id="reportToolbarTitle">Business Analysis Report</strong>
-          <button class="secondary-button" id="closeReportBtn">Close Report</button>
+          <div class="report-actions">
+            <button class="glass-button" id="saveReportBtn">Save Edits</button>
+            <button class="glow-button" id="closeReportBtn">Back to Dashboard</button>
+          </div>
         </div>
         <article class="report-paper" id="reportPaper"></article>
       </div>
     </div>
 
     <script>
-      const storageKey = "manish-analysis:v3";
-      const legacyKeys = ["manish-analysis:v2", "manish-analysis:v1"];
+      const storageKey = "manish-analysis:v4";
+      const legacyKeys = ["manish-analysis:v3", "manish-analysis:v2", "manish-analysis:v1"];
       const fields = [
-        { key: "summary", label: "Executive Summary", placeholder: "A concise view of what the company does, why it matters, and the current analyst position." },
-        { key: "companyOverview", label: "Company Overview", placeholder: "Products, customer segment, geography, lifecycle stage, management/founder notes." },
-        { key: "market", label: "Market Context", placeholder: "Market size, category growth, customer behavior, timing, and macro drivers." },
-        { key: "businessModel", label: "Business Model", placeholder: "Revenue streams, pricing, margin logic, distribution, acquisition, and retention." },
-        { key: "competitivePosition", label: "Competitive Position", placeholder: "Competitors, differentiation, switching costs, defensibility, and substitutes." },
-        { key: "strengths", label: "Key Strengths", placeholder: "Moats, execution strengths, product quality, network effects, or operating leverage." },
-        { key: "risks", label: "Principal Risks", placeholder: "Market risk, competition, regulation, concentration, capital needs, weak signals." },
-        { key: "recommendation", label: "Analyst View", placeholder: "Final view, open questions, conviction level, and next diligence steps." },
-        { key: "notes", label: "Research Notes", placeholder: "Imported source text and loose observations appear here." }
-      ];
+        ["summary", "Executive Summary", "High-level thesis, why this company matters, and key conclusion."],
+        ["companyOverview", "Company Overview", "Products, customers, geography, operating stage, leadership context."],
+        ["industryContext", "Industry & Macro Context", "Industry cycle, macro drivers, regulation, category tailwinds/headwinds."],
+        ["market", "Market Opportunity", "Market size, growth, customer demand, timing, and segmentation."],
+        ["businessModel", "Business Model & Unit Economics", "Revenue streams, pricing, margins, acquisition, retention, payback."],
+        ["competitivePosition", "Competitive Positioning", "Competitors, substitutes, differentiation, defensibility, switching costs."],
+        ["financialSignals", "Financial & Operating Signals", "Revenue quality, profitability, burn, growth efficiency, key KPIs."],
+        ["strengths", "Key Strengths", "Moats, distribution, product quality, operating leverage, team advantages."],
+        ["risks", "Principal Risks", "Market, execution, competition, capital, regulation, concentration, unknowns."],
+        ["recommendation", "Analyst Recommendation", "Final view, conviction level, next diligence steps, open questions."],
+        ["notes", "Research Notes & Source Extracts", "Imported source text and loose analyst observations."]
+      ].map(([key, label, placeholder]) => ({ key, label, placeholder }));
 
       const defaultData = {
         activeId: "company-x",
@@ -801,49 +660,37 @@
             updatedAt: Date.now(),
             documents: [],
             analysis: {
-              summary: "Company X is a sample research profile. Replace this with a clear investment or business-analysis thesis.",
-              companyOverview: "Describe core product, customer, geography, operating stage, and leadership context.",
-              market: "Frame the category, demand drivers, market maturity, and timing.",
+              summary: "Company X is a sample business analysis report. Replace this with the central analyst thesis.",
+              companyOverview: "Describe the product, customer, operating stage, geography, and leadership context.",
+              industryContext: "Frame the industry cycle, macro conditions, regulatory context, and timing.",
+              market: "Define the addressable market, growth rate, customer demand, and market segmentation.",
               businessModel: "Explain how value is created, captured, retained, and scaled.",
               competitivePosition: "Map direct competitors, substitutes, differentiation, and defensibility.",
-              strengths: "Add durable advantages, distribution strengths, or product quality.",
+              financialSignals: "Track revenue quality, margin structure, burn, efficiency, and core KPIs.",
+              strengths: "Add durable advantages, distribution strengths, product quality, or operating leverage.",
               risks: "List uncertainty, constraints, and watchpoints.",
               recommendation: "Summarize analyst view, confidence, and next diligence steps.",
-              notes: "Import a Google Docs export, Word file, markdown file, or text writeup into this section."
+              notes: "Import a Word file, Google Docs export, markdown file, or text writeup into this section."
             }
           },
-          {
-            id: "company-y",
-            name: "Company Y",
-            updatedAt: Date.now(),
-            documents: [],
-            analysis: emptyAnalysis()
-          }
+          { id: "company-y", name: "Company Y", updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() }
         ]
       };
 
       const state = load();
-      const companiesEl = document.querySelector("#companies");
-      const form = document.querySelector("#analysisForm");
-      const companyForm = document.querySelector("#companyForm");
-      const companyName = document.querySelector("#companyName");
-      const pageTitle = document.querySelector("#pageTitle");
-      const saveStatus = document.querySelector("#saveStatus");
-      const docStatus = document.querySelector("#docStatus");
-      const review = document.querySelector("#review");
-      const sources = document.querySelector("#sources");
-      const companyCount = document.querySelector("#companyCount");
-      const wordCount = document.querySelector("#wordCount");
-      const sourceCount = document.querySelector("#sourceCount");
-      const lastSaved = document.querySelector("#lastSaved");
-      const importDocBtn = document.querySelector("#importDocBtn");
-      const viewReportBtn = document.querySelector("#viewReportBtn");
-      const previewReportBtn = document.querySelector("#previewReportBtn");
-      const docFile = document.querySelector("#docFile");
-      const reportModal = document.querySelector("#reportModal");
-      const reportPaper = document.querySelector("#reportPaper");
-      const reportToolbarTitle = document.querySelector("#reportToolbarTitle");
-      const closeReportBtn = document.querySelector("#closeReportBtn");
+      const $ = (id) => document.getElementById(id);
+      const companiesEl = $("companies");
+      const form = $("analysisForm");
+      const companyForm = $("companyForm");
+      const companyName = $("companyName");
+      const pageTitle = $("pageTitle");
+      const saveStatus = $("saveStatus");
+      const docStatus = $("docStatus");
+      const review = $("review");
+      const sources = $("sources");
+      const docFile = $("docFile");
+      const reportModal = $("reportModal");
+      const reportPaper = $("reportPaper");
 
       function emptyAnalysis() {
         return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {});
@@ -855,7 +702,7 @@
           const saved = raw ? JSON.parse(raw) : null;
           if (!saved || !Array.isArray(saved.companies)) return structuredClone(defaultData);
           saved.companies.forEach((company) => {
-            company.analysis = migrateAnalysis(company.analysis || {});
+            company.analysis = { ...emptyAnalysis(), ...(company.analysis || {}) };
             company.documents = Array.isArray(company.documents) ? company.documents : [];
             company.updatedAt = company.updatedAt || Date.now();
           });
@@ -865,102 +712,13 @@
         }
       }
 
-      function migrateAnalysis(analysis) {
-        const migrated = { ...emptyAnalysis(), ...analysis };
-        if (!migrated.companyOverview && analysis.summary) migrated.companyOverview = "";
-        if (!migrated.market) migrated.market = "";
-        if (!migrated.competitivePosition) migrated.competitivePosition = "";
-        if (!migrated.recommendation) migrated.recommendation = "";
-        return migrated;
+      function activeCompany() {
+        return state.companies.find((company) => company.id === state.activeId) || state.companies[0];
       }
 
       function persist() {
         localStorage.setItem(storageKey, JSON.stringify(state));
         saveStatus.textContent = "Saved";
-      }
-
-      function activeCompany() {
-        return state.companies.find((company) => company.id === state.activeId) || state.companies[0];
-      }
-
-      function slug(name) {
-        return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `company-${Date.now()}`;
-      }
-
-      function render() {
-        const company = activeCompany();
-        if (!company) return;
-
-        pageTitle.textContent = company.name;
-        renderCompanies(company.id);
-        renderEditor(company);
-        renderStats(company);
-        renderSources(company);
-        renderPreview(company);
-      }
-
-      function renderCompanies(activeId) {
-        companiesEl.innerHTML = "";
-        state.companies.forEach((item) => {
-          const button = document.createElement("button");
-          button.className = `company${item.id === activeId ? " active" : ""}`;
-          button.type = "button";
-          button.innerHTML = `
-            <span>
-              <strong>${escapeHtml(item.name)}</strong>
-              <small>${relativeTime(item.updatedAt)}</small>
-            </span>
-            <span class="pulse" aria-hidden="true"></span>
-          `;
-          button.addEventListener("click", () => {
-            state.activeId = item.id;
-            persist();
-            render();
-          });
-          companiesEl.appendChild(button);
-        });
-      }
-
-      function renderEditor(company) {
-        form.innerHTML = fields.map((field) => `
-          <label>
-            ${field.label}
-            <textarea name="${field.key}" placeholder="${field.placeholder}">${escapeHtml(company.analysis[field.key] || "")}</textarea>
-          </label>
-        `).join("");
-      }
-
-      function renderStats(company) {
-        const text = fields.map((field) => company.analysis[field.key] || "").join(" ");
-        companyCount.textContent = state.companies.length;
-        wordCount.textContent = countWords(text);
-        sourceCount.textContent = company.documents.length;
-        lastSaved.textContent = relativeTime(company.updatedAt).replace(" ago", "");
-      }
-
-      function renderSources(company) {
-        if (!company.documents.length) {
-          sources.innerHTML = `<p class="empty">No source documents imported yet.</p>`;
-          return;
-        }
-        sources.innerHTML = company.documents.map((doc) => `
-          <div class="source-card">
-            <div>
-              <strong>${escapeHtml(doc.name)}</strong>
-              <span>${countWords(doc.text)} words · ${new Date(doc.createdAt).toLocaleDateString()}</span>
-            </div>
-            <button class="danger-link" data-delete-doc="${doc.id}">Delete</button>
-          </div>
-        `).join("");
-      }
-
-      function renderPreview(company) {
-        review.innerHTML = fields.map((field) => `
-          <div class="review-section">
-            <span>${field.label}</span>
-            <p class="${company.analysis[field.key] ? "" : "empty"}">${escapeHtml(company.analysis[field.key] || "No notes yet.")}</p>
-          </div>
-        `).join("");
       }
 
       function updateCompany(mutator) {
@@ -972,36 +730,145 @@
         render();
       }
 
-      function countWords(text = "") {
-        return text.trim() ? text.trim().split(/\s+/).length : 0;
+      function render() {
+        const company = activeCompany();
+        if (!company) return;
+        pageTitle.textContent = company.name;
+        renderCompanies(company);
+        renderEditor(company);
+        renderStats(company);
+        renderSources(company);
+        renderPreview(company);
       }
 
-      function relativeTime(time) {
-        const diff = Math.max(0, Date.now() - time);
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        if (days) return `${days}d ago`;
-        if (hours) return `${hours}h ago`;
-        if (minutes) return `${minutes}m ago`;
-        return "Now";
+      function renderCompanies(active) {
+        companiesEl.innerHTML = state.companies.map((item) => `
+          <button class="company${item.id === active.id ? " active" : ""}" type="button" data-company="${item.id}">
+            <span><strong>${esc(item.name)}</strong><small>${relativeTime(item.updatedAt)}</small></span>
+            <span class="pulse" aria-hidden="true"></span>
+          </button>
+        `).join("");
       }
 
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
+      function renderEditor(company) {
+        form.innerHTML = fields.map((field) => `
+          <label>${field.label}
+            <textarea name="${field.key}" placeholder="${field.placeholder}">${esc(company.analysis[field.key] || "")}</textarea>
+          </label>
+        `).join("");
+      }
+
+      function renderStats(company) {
+        const reportText = fields.map((field) => company.analysis[field.key] || "").join(" ");
+        $("companyCount").textContent = state.companies.length;
+        $("wordCount").textContent = countWords(reportText);
+        $("sourceCount").textContent = company.documents.length;
+        $("lastSaved").textContent = relativeTime(company.updatedAt).replace(" ago", "");
+      }
+
+      function renderSources(company) {
+        sources.innerHTML = company.documents.length ? company.documents.map((doc) => `
+          <div class="source-card">
+            <div><strong>${esc(doc.name)}</strong><span>${countWords(doc.text)} words · ${new Date(doc.createdAt).toLocaleDateString()}</span></div>
+            <button class="danger-link" data-delete-doc="${doc.id}">Delete</button>
+          </div>
+        `).join("") : `<p class="empty">No source documents imported yet.</p>`;
+      }
+
+      function renderPreview(company) {
+        review.innerHTML = fields.map((field, i) => `
+          <div class="review-section">
+            <span>${String(i + 1).padStart(2, "0")} · ${field.label}</span>
+            <p class="${company.analysis[field.key] ? "" : "empty"}">${esc(company.analysis[field.key] || "No content added yet.")}</p>
+          </div>
+        `).join("");
+      }
+
+      function buildReport(company) {
+        const sourcesHtml = company.documents.length
+          ? company.documents.map((doc) => `<li>${esc(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
+          : "<li>No source documents attached.</li>";
+        const appendix = company.documents.map((doc, index) => `
+          <section>
+            <h2>Appendix ${index + 1}. Source Document</h2>
+            <h3>${esc(doc.name)}</h3>
+            <p contenteditable="true" data-doc-text="${doc.id}">${esc(doc.text)}</p>
+          </section>
+        `).join("");
+        return `
+          <div class="report-cover">
+            <span>Confidential Business Analysis Report</span>
+            <h1 contenteditable="true" data-company-name>${esc(company.name)}</h1>
+            <p>Prepared in Manish Analysis · Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
+          </div>
+          <h3>Report Contents</h3>
+          <ol class="source-list-report">${fields.map((field) => `<li>${esc(field.label)}</li>`).join("")}<li>Source Documents</li></ol>
+          ${fields.map((field, index) => `
+            <section>
+              <h2>${index + 1}. ${field.label}</h2>
+              <p contenteditable="true" data-field="${field.key}">${esc(company.analysis[field.key] || "No content added yet.")}</p>
+            </section>
+          `).join("")}
+          <section>
+            <h2>${fields.length + 1}. Source Documents</h2>
+            <ul class="source-list-report">${sourcesHtml}</ul>
+          </section>
+          ${appendix}
+        `;
+      }
+
+      function openReport() {
+        const company = activeCompany();
+        $("reportToolbarTitle").textContent = `${company.name} · Editable Report`;
+        reportPaper.innerHTML = buildReport(company);
+        reportModal.classList.remove("hidden");
+        document.body.classList.add("report-mode");
+      }
+
+      function saveReportEdits() {
+        updateCompany((company) => {
+          const nameNode = reportPaper.querySelector("[data-company-name]");
+          if (nameNode && nameNode.textContent.trim()) company.name = nameNode.textContent.trim();
+          reportPaper.querySelectorAll("[data-field]").forEach((node) => {
+            company.analysis[node.dataset.field] = node.textContent.trim();
+          });
+          reportPaper.querySelectorAll("[data-doc-text]").forEach((node) => {
+            const doc = company.documents.find((item) => item.id === node.dataset.docText);
+            if (doc) doc.text = node.textContent.trim();
+          });
+        });
+        docStatus.textContent = "Report edits saved";
+        openReport();
+      }
+
+      function closeReport() {
+        reportModal.classList.add("hidden");
+        document.body.classList.remove("report-mode");
+        render();
+      }
+
+      function deleteActiveReport() {
+        if (state.companies.length === 1) {
+          updateCompany((company) => {
+            company.documents = [];
+            company.analysis = emptyAnalysis();
+          });
+          docStatus.textContent = "Report cleared";
+          return;
+        }
+        const current = activeCompany();
+        state.companies = state.companies.filter((company) => company.id !== current.id);
+        state.activeId = state.companies[0].id;
+        persist();
+        render();
+        docStatus.textContent = "Report deleted";
       }
 
       async function readDocument(file) {
         const extension = file.name.split(".").pop().toLowerCase();
         if (extension === "docx") {
           if (!window.mammoth) throw new Error("Word importer still loading. Try again in a moment.");
-          const buffer = await file.arrayBuffer();
-          const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
+          const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
           return result.value.trim();
         }
         return (await file.text()).trim();
@@ -1009,102 +876,57 @@
 
       function mergeDocument(fileName, text) {
         const company = activeCompany();
-        const documentRecord = {
-          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-          name: fileName,
-          text,
-          createdAt: Date.now()
-        };
-        company.documents.push(documentRecord);
-        const divider = `Source: ${fileName}`;
-        const existing = company.analysis.notes ? `${company.analysis.notes}\n\n` : "";
-        company.analysis.notes = `${existing}${divider}\n${text}`;
-        if (!company.analysis.summary) {
-          company.analysis.summary = text.split(/\n\s*\n/)[0].slice(0, 720);
-        }
+        const doc = { id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, name: fileName, text, createdAt: Date.now() };
+        company.documents.push(doc);
+        const block = `Source: ${fileName}\n${text}`;
+        company.analysis.notes = `${company.analysis.notes ? `${company.analysis.notes}\n\n` : ""}${block}`;
+        if (!company.analysis.summary) company.analysis.summary = text.split(/\n\s*\n/)[0].slice(0, 760);
       }
 
       function removeDocument(company, id) {
         const doc = company.documents.find((item) => item.id === id);
         if (!doc) return;
-        const block = `Source: ${doc.name}\n${doc.text}`;
         company.documents = company.documents.filter((item) => item.id !== id);
-        company.analysis.notes = company.analysis.notes
-          .replace(block, "")
-          .replace(/\n{3,}/g, "\n\n")
-          .trim();
+        company.analysis.notes = company.analysis.notes.replace(`Source: ${doc.name}\n${doc.text}`, "").replace(/\n{3,}/g, "\n\n").trim();
       }
 
-      function buildReport(company) {
-        const sourceItems = company.documents.length
-          ? company.documents.map((doc) => `<li>${escapeHtml(doc.name)} · ${countWords(doc.text)} words · imported ${new Date(doc.createdAt).toLocaleDateString()}</li>`).join("")
-          : "<li>No source documents attached.</li>";
-        const sourceAppendix = company.documents.length
-          ? company.documents.map((doc, index) => `
-            <section>
-              <h2>Appendix ${index + 1}. ${escapeHtml(doc.name)}</h2>
-              <p>${escapeHtml(doc.text)}</p>
-            </section>
-          `).join("")
-          : "";
-        return `
-          <div class="report-cover">
-            <span>Business Analysis Report</span>
-            <h1>${escapeHtml(company.name)}</h1>
-            <p>Prepared in Manish Analysis · Last updated ${new Date(company.updatedAt).toLocaleString()}</p>
-          </div>
-          ${fields.map((field, index) => `
-            <section>
-              <h2>${index + 1}. ${field.label}</h2>
-              <p>${escapeHtml(company.analysis[field.key] || "No content added yet.")}</p>
-            </section>
-          `).join("")}
-          <section>
-            <h2>${fields.length + 1}. Source Documents</h2>
-            <ul class="source-list-report">${sourceItems}</ul>
-          </section>
-          ${sourceAppendix}
-        `;
+      function countWords(text = "") { return text.trim() ? text.trim().split(/\s+/).length : 0; }
+      function relativeTime(time) {
+        const diff = Math.max(0, Date.now() - time);
+        const mins = Math.floor(diff / 60000), hrs = Math.floor(mins / 60), days = Math.floor(hrs / 24);
+        if (days) return `${days}d ago`;
+        if (hrs) return `${hrs}h ago`;
+        if (mins) return `${mins}m ago`;
+        return "Now";
+      }
+      function esc(value) {
+        return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      }
+      function slug(name) {
+        return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `report-${Date.now()}`;
       }
 
-      function openReport() {
-        const company = activeCompany();
-        reportToolbarTitle.textContent = `${company.name} · Business Analysis Report`;
-        reportPaper.innerHTML = buildReport(company);
-        reportModal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeReport() {
-        reportModal.classList.add("hidden");
-        document.body.style.overflow = "";
-      }
-
-      form.addEventListener("input", (event) => {
-        updateCompany((company) => {
-          company.analysis[event.target.name] = event.target.value;
-        });
+      companiesEl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-company]");
+        if (!button) return;
+        state.activeId = button.dataset.company;
+        persist();
+        render();
       });
-
+      form.addEventListener("input", (event) => updateCompany((company) => { company.analysis[event.target.name] = event.target.value; }));
       companyForm.addEventListener("submit", (event) => {
         event.preventDefault();
         const name = companyName.value.trim();
         if (!name) return;
-        const idBase = slug(name);
-        let id = idBase;
-        let i = 2;
-        while (state.companies.some((company) => company.id === id)) {
-          id = `${idBase}-${i}`;
-          i += 1;
-        }
+        let id = slug(name), i = 2;
+        while (state.companies.some((company) => company.id === id)) id = `${slug(name)}-${i++}`;
         state.companies.push({ id, name, updatedAt: Date.now(), documents: [], analysis: emptyAnalysis() });
         state.activeId = id;
         companyName.value = "";
         persist();
         render();
       });
-
-      importDocBtn.addEventListener("click", () => docFile.click());
+      $("importDocBtn").addEventListener("click", () => docFile.click());
       docFile.addEventListener("change", async () => {
         const file = docFile.files[0];
         if (!file) return;
@@ -1120,25 +942,18 @@
           docFile.value = "";
         }
       });
-
       sources.addEventListener("click", (event) => {
         const id = event.target.dataset.deleteDoc;
         if (!id) return;
-        updateCompany((company) => {
-          removeDocument(company, id);
-        });
-        docStatus.textContent = "Deleted";
+        updateCompany((company) => removeDocument(company, id));
+        docStatus.textContent = "Document deleted";
       });
-
-      viewReportBtn.addEventListener("click", openReport);
-      previewReportBtn.addEventListener("click", openReport);
-      closeReportBtn.addEventListener("click", closeReport);
-      reportModal.addEventListener("click", (event) => {
-        if (event.target === reportModal) closeReport();
-      });
-      window.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport();
-      });
+      $("deleteReportBtn").addEventListener("click", deleteActiveReport);
+      $("viewReportBtn").addEventListener("click", openReport);
+      $("previewReportBtn").addEventListener("click", openReport);
+      $("saveReportBtn").addEventListener("click", saveReportEdits);
+      $("closeReportBtn").addEventListener("click", closeReport);
+      window.addEventListener("keydown", (event) => { if (event.key === "Escape" && !reportModal.classList.contains("hidden")) closeReport(); });
 
       render();
     </script>
