@@ -1506,6 +1506,60 @@
         padding-left: 1.45rem;
       }
 
+      .focus-editor table,
+      .review-section table,
+      .report-paper table {
+        width: 100%;
+        margin: 14px 0 18px;
+        border-collapse: collapse;
+        table-layout: fixed;
+        overflow-wrap: anywhere;
+      }
+
+      .focus-editor table {
+        color: #f4f5f1;
+        background: rgba(255,255,255,.035);
+      }
+
+      .review-section table {
+        color: var(--text);
+        background: rgba(255,255,255,.032);
+      }
+
+      .report-paper table {
+        color: #151922;
+        background: #fff;
+      }
+
+      .focus-editor th,
+      .focus-editor td,
+      .review-section th,
+      .review-section td,
+      .report-paper th,
+      .report-paper td {
+        min-width: 88px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255,255,255,.18);
+        vertical-align: top;
+        line-height: 1.45;
+      }
+
+      .report-paper th,
+      .report-paper td {
+        border-color: #d6d9d2;
+      }
+
+      .focus-editor th,
+      .review-section th,
+      .report-paper th {
+        font-weight: 850;
+        background: rgba(102,210,200,.12);
+      }
+
+      .report-paper th {
+        background: #eef4f2;
+      }
+
       .focus-editor p,
       .review-section p,
       .report-paper p {
@@ -1806,6 +1860,7 @@
           <button class="format-button" type="button" title="Underline" aria-label="Underline" data-format="underline"><u>U</u></button>
           <button class="format-button wide" type="button" title="Bullet points" aria-label="Bullet points" data-format="insertUnorderedList">Bullets</button>
           <button class="format-button wide" type="button" title="Numbering" aria-label="Numbering" data-format="insertOrderedList">Numbering</button>
+          <button class="format-button wide" type="button" title="Insert table" aria-label="Insert table" id="insertTableBtn">Table</button>
           <select class="font-select" id="fontSelect" aria-label="Font family">
             <option value="Inter, Arial, sans-serif">Sans Serif</option>
             <option value="Times New Roman, Times, serif">Times New Roman</option>
@@ -2378,6 +2433,41 @@
         updateFocusStats();
       }
 
+      function insertTable() {
+        const rowValue = prompt("Rows", "3");
+        if (rowValue === null) return;
+        const columnValue = prompt("Columns", "3");
+        if (columnValue === null) return;
+        const rows = clampNumber(rowValue, 1, 12);
+        const columns = clampNumber(columnValue, 1, 8);
+        insertHtmlAtCursor(buildEmptyTable(rows, columns));
+      }
+
+      function insertHtmlAtCursor(html) {
+        focusEditor.focus();
+        restoreEditorSelection();
+        document.execCommand("insertHTML", false, sanitizeHtml(html));
+        rememberEditorSelection();
+        updateFocusStats();
+      }
+
+      function handleEditorPaste(event) {
+        const clipboard = event.clipboardData;
+        if (!clipboard) return;
+        const html = clipboard.getData("text/html");
+        const text = clipboard.getData("text/plain");
+        if (html && /<table[\s>]/i.test(html)) {
+          event.preventDefault();
+          insertHtmlAtCursor(extractTableHtml(html));
+          return;
+        }
+        const tableHtml = tableFromText(text);
+        if (tableHtml) {
+          event.preventDefault();
+          insertHtmlAtCursor(tableHtml);
+        }
+      }
+
       function closeFocusEditor() {
         focusModal.classList.add("hidden");
         document.body.classList.remove("focus-mode");
@@ -2506,7 +2596,7 @@
         const node = document.createElement("div");
         node.innerHTML = richHtml(value)
           .replace(/<br\s*\/?>/gi, " ")
-          .replace(/<\/(p|div|li|h1|h2|h3|h4|h5|h6)>/gi, " $&");
+          .replace(/<\/(p|div|li|td|th|tr|table|h1|h2|h3|h4|h5|h6)>/gi, " $&");
         return node.textContent || "";
       }
       function sanitizeHtml(html = "") {
@@ -2521,6 +2611,46 @@
           });
         });
         return template.innerHTML;
+      }
+      function clampNumber(value, min, max) {
+        const number = Number.parseInt(value, 10);
+        if (!Number.isFinite(number)) return min;
+        return Math.max(min, Math.min(max, number));
+      }
+      function buildEmptyTable(rows = 3, columns = 3) {
+        const header = `<tr>${Array.from({ length: columns }, (_, index) => `<th>Header ${index + 1}</th>`).join("")}</tr>`;
+        const body = Array.from({ length: Math.max(0, rows - 1) }, () => `<tr>${Array.from({ length: columns }, () => "<td><br></td>").join("")}</tr>`).join("");
+        return `<table>${header}${body}</table><p><br></p>`;
+      }
+      function extractTableHtml(html = "") {
+        const template = document.createElement("template");
+        template.innerHTML = html;
+        return [...template.content.querySelectorAll("table")].map((table) => table.outerHTML).join("<p><br></p>");
+      }
+      function tableFromText(text = "") {
+        const rows = String(text || "").trim().split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        if (rows.length < 2) return "";
+        const delimiter = detectTableDelimiter(rows);
+        if (!delimiter) return "";
+        const cells = rows.map((row) => splitTableRow(row, delimiter));
+        const width = Math.max(...cells.map((row) => row.length));
+        if (width < 2) return "";
+        const filled = cells.map((row) => Array.from({ length: width }, (_, index) => row[index] || ""));
+        const [head, ...body] = filled;
+        const header = `<tr>${head.map((cell) => `<th>${esc(cell)}</th>`).join("")}</tr>`;
+        const bodyRows = body.map((row) => `<tr>${row.map((cell) => `<td>${esc(cell) || "<br>"}</td>`).join("")}</tr>`).join("");
+        return `<table>${header}${bodyRows}</table><p><br></p>`;
+      }
+      function detectTableDelimiter(rows) {
+        const candidates = ["\t", "|", ","];
+        return candidates.find((delimiter) => {
+          const counts = rows.map((row) => splitTableRow(row, delimiter).length);
+          return counts.every((count) => count > 1) && Math.max(...counts) === Math.min(...counts);
+        }) || "";
+      }
+      function splitTableRow(row, delimiter) {
+        if (delimiter === "|") return row.replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim());
+        return row.split(delimiter).map((cell) => cell.trim());
       }
       function relativeTime(time) {
         const diff = Math.max(0, Date.now() - time);
@@ -2639,6 +2769,7 @@
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", closeFocusEditor);
       focusEditor.addEventListener("input", updateFocusStats);
+      focusEditor.addEventListener("paste", handleEditorPaste);
       focusEditor.addEventListener("keyup", rememberEditorSelection);
       focusEditor.addEventListener("mouseup", rememberEditorSelection);
       focusEditor.addEventListener("blur", rememberEditorSelection);
@@ -2646,6 +2777,8 @@
         button.addEventListener("mousedown", (event) => event.preventDefault());
         button.addEventListener("click", () => applyFormat(button.dataset.format));
       });
+      $("insertTableBtn").addEventListener("mousedown", (event) => event.preventDefault());
+      $("insertTableBtn").addEventListener("click", insertTable);
       $("fontSelect").addEventListener("change", (event) => applyFormat("fontName", event.target.value));
       window.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
