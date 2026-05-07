@@ -10,23 +10,24 @@
     <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
     <style>
       :root {
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        --bg: #090a0c;
-        --bg2: #111318;
-        --panel: rgba(20, 22, 27, 0.84);
-        --panel2: rgba(255, 255, 255, 0.065);
-        --line: rgba(255, 255, 255, 0.13);
-        --line-strong: rgba(255, 255, 255, 0.22);
-        --text: #f4f5f1;
-        --muted: #aeb5bf;
-        --muted2: #7f8792;
+        font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --bg: #07080a;
+        --bg2: #101217;
+        --panel: rgba(18, 20, 25, 0.88);
+        --panel2: rgba(255, 255, 255, 0.075);
+        --line: rgba(230, 235, 232, 0.13);
+        --line-strong: rgba(235, 238, 232, 0.25);
+        --text: #f6f6f2;
+        --muted: #b6bdc5;
+        --muted2: #858e99;
         --paper: #fbfbf7;
         --paperText: #141821;
-        --amber: #d7b760;
-        --aqua: #66d2c8;
-        --steel: #9fb1c9;
+        --amber: #d8bd6a;
+        --aqua: #75d8cf;
+        --steel: #a8bad4;
         --danger: #ffb6ad;
-        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        --frame: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.34);
       }
 
       * { box-sizing: border-box; }
@@ -78,11 +79,11 @@
         inset: -20%;
         z-index: -2;
         background:
-          radial-gradient(circle at 18% 8%, rgba(255,255,255,.1), transparent 21%),
-          radial-gradient(circle at 76% 10%, rgba(215,183,96,.12), transparent 22%),
-          radial-gradient(circle at 76% 70%, rgba(102,210,200,.1), transparent 26%),
-          linear-gradient(135deg, #07080a, #101218 54%, #191c22);
-        animation: ambient 18s ease-in-out infinite alternate;
+          radial-gradient(circle at 16% 8%, rgba(255,255,255,.09), transparent 21%),
+          radial-gradient(circle at 74% 9%, rgba(216,189,106,.11), transparent 22%),
+          radial-gradient(circle at 76% 72%, rgba(117,216,207,.095), transparent 26%),
+          linear-gradient(135deg, #060709, #101217 52%, #181b20);
+        animation: ambient 22s ease-in-out infinite alternate;
       }
 
       body::after {
@@ -92,9 +93,9 @@
         z-index: -1;
         opacity: .1;
         background-image:
-          linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
-        background-size: 54px 54px;
+          linear-gradient(rgba(255,255,255,.11) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.11) 1px, transparent 1px);
+        background-size: 64px 64px;
         mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
 
@@ -131,11 +132,11 @@
         display: block;
         padding: 0;
         background:
-          radial-gradient(circle at 50% 12%, rgba(255,255,255,.12), transparent 21%),
-          radial-gradient(circle at 22% 74%, rgba(102,210,200,.1), transparent 24%),
-          radial-gradient(circle at 78% 68%, rgba(215,183,96,.12), transparent 27%),
-          linear-gradient(135deg, #050607, #0f1116 56%, #181b20);
-        transition: opacity 430ms ease, visibility 430ms ease, filter 430ms ease;
+          radial-gradient(circle at 50% 10%, rgba(255,255,255,.1), transparent 20%),
+          radial-gradient(circle at 22% 74%, rgba(117,216,207,.09), transparent 24%),
+          radial-gradient(circle at 78% 68%, rgba(216,189,106,.11), transparent 27%),
+          linear-gradient(135deg, #050607, #0e1015 56%, #171a1f);
+        transition: opacity 300ms ease, visibility 300ms ease, filter 300ms ease;
         will-change: opacity, filter;
       }
 
@@ -176,7 +177,7 @@
           linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
         background-size: 68px 68px;
         mask-image: radial-gradient(circle at center, black, transparent 72%);
-        animation: gridDrift 1.35s ease-in-out both;
+        animation: gridDrift .8s ease-in-out both;
       }
 
       .insight-entry::after {
@@ -187,7 +188,7 @@
           radial-gradient(circle at 22% 28%, rgba(255,255,255,.14), transparent 18%),
           radial-gradient(circle at 78% 62%, rgba(102,210,200,.13), transparent 24%),
           radial-gradient(circle at 58% 18%, rgba(215,183,96,.14), transparent 22%);
-        animation: insightFade 2s ease both;
+        animation: insightFade .9s ease both;
       }
 
       .insight-stage {
@@ -213,7 +214,7 @@
           rgba(255,255,255,.055);
         box-shadow: 0 20px 58px rgba(0,0,0,.28);
         backdrop-filter: blur(18px);
-        animation: blockAssemble 680ms cubic-bezier(.2,.8,.2,1) both, blockBreathe 1.25s ease-in-out .72s infinite alternate;
+        animation: blockAssemble 460ms cubic-bezier(.2,.8,.2,1) both, blockBreathe 1.35s ease-in-out .55s infinite alternate;
       }
 
       .insight-block::before {
@@ -282,7 +283,7 @@
         line-height: .9;
         letter-spacing: 0;
         text-shadow: 0 20px 70px rgba(0,0,0,.48);
-        animation: titleResolve .58s cubic-bezier(.2,.8,.2,1) .28s both;
+        animation: titleResolve .42s cubic-bezier(.2,.8,.2,1) .16s both;
       }
 
       .insight-wordmark p {
@@ -290,7 +291,7 @@
         margin: 0;
         color: rgba(255,255,255,.74);
         line-height: 1.55;
-        animation: wordIn .38s ease .62s both;
+        animation: wordIn .28s ease .34s both;
       }
 
       .intro-meter {
@@ -300,7 +301,7 @@
         border-radius: 999px;
         background: rgba(255,255,255,.12);
         overflow: hidden;
-        animation: wordIn .32s ease .72s both;
+        animation: wordIn .24s ease .42s both;
       }
 
       .intro-meter::before {
@@ -311,15 +312,15 @@
         border-radius: inherit;
         background: linear-gradient(90deg, rgba(255,255,255,.95), var(--amber), var(--aqua));
         transform: translateX(-100%);
-        animation: introLoad .82s cubic-bezier(.2,.8,.2,1) .28s both;
+        animation: introLoad .52s cubic-bezier(.2,.8,.2,1) .2s both;
       }
 
       .insight-entry.opening .insight-stage {
-        animation: insightExit .38s ease both;
+        animation: insightExit .24s ease both;
       }
 
       .welcome.hide + .shell {
-        animation: dashboardIn 520ms cubic-bezier(.2,.8,.2,1) both;
+        animation: dashboardIn 420ms cubic-bezier(.2,.8,.2,1) both;
       }
 
 
@@ -343,10 +344,10 @@
         padding: 22px;
         overflow: auto;
         background:
-          linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02)),
-          rgba(6,7,9,.34);
+          linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
+          rgba(8,9,12,.48);
         border-right: 1px solid var(--line);
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(24px);
       }
 
       .brand, .topbar, .report-toolbar, .source-card, .company, .company-row, .button-row {
@@ -354,7 +355,14 @@
         align-items: center;
       }
 
-      .brand { gap: 12px; margin-bottom: 22px; }
+      .brand {
+        gap: 12px;
+        margin-bottom: 22px;
+        padding: 8px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 8px;
+        background: rgba(255,255,255,.035);
+      }
       .mark {
         width: 42px;
         height: 42px;
@@ -362,10 +370,12 @@
         place-items: center;
         border-radius: 8px;
         border: 1px solid var(--line-strong);
-        background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.055));
+        background:
+          linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.055)),
+          linear-gradient(135deg, rgba(216,189,106,.22), rgba(117,216,207,.14));
         color: #fff;
         font-weight: 900;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 16px 36px rgba(0,0,0,.22);
+        box-shadow: var(--frame);
       }
 
       h1, h2, h3, p { margin-top: 0; }
@@ -393,7 +403,8 @@
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.045);
+        background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.032));
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
       }
 
       .mode-toggle-row {
@@ -466,7 +477,7 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         color: var(--text);
-        background: rgba(255,255,255,.065);
+        background: rgba(255,255,255,.075);
       }
 
       .search-input {
@@ -508,7 +519,7 @@
         gap: 12px;
         padding: 10px 11px;
         color: var(--text);
-        background: rgba(255,255,255,.025);
+        background: rgba(255,255,255,.035);
         border: 1px solid transparent;
         border-radius: 8px;
         text-align: left;
@@ -517,7 +528,7 @@
 
       .company:hover, .company.active {
         transform: translateX(3px);
-        background: rgba(255,255,255,.08);
+        background: rgba(255,255,255,.09);
         border-color: var(--line);
       }
 
@@ -566,7 +577,14 @@
       .topbar {
         justify-content: space-between;
         gap: 22px;
-        margin-bottom: 20px;
+        margin-bottom: 22px;
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,.09);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
+          rgba(9,10,13,.28);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
       }
 
       .eyebrow {
@@ -585,10 +603,11 @@
         border: 0;
         color: #fff;
         background: transparent;
-        font-size: clamp(2rem, 4.8vw, 4rem);
+        font-size: clamp(2rem, 4.2vw, 3.7rem);
         font-weight: 900;
         line-height: .95;
         letter-spacing: 0;
+        font-family: "Red Hat Display", "Inter", sans-serif;
       }
 
       .topbar p {
@@ -610,7 +629,10 @@
         padding: 13px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.045);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.026)),
+          rgba(255,255,255,.02);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
       }
 
       .workflow-step span {
@@ -648,7 +670,7 @@
         background: #08090b;
         isolation: isolate;
         overflow: hidden;
-        box-shadow: 0 16px 34px rgba(0,0,0,.42);
+        box-shadow: 0 16px 34px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.09);
       }
 
       .glow-button::before {
@@ -673,7 +695,7 @@
         padding: 0 12px;
         color: #fff;
         border: 1px solid var(--line);
-        background: rgba(255,255,255,.075);
+        background: linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.065));
         backdrop-filter: blur(18px);
       }
 
@@ -695,10 +717,10 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         background:
-          linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)),
+          linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
           var(--panel);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(20px);
+        box-shadow: var(--frame);
+        backdrop-filter: blur(24px);
       }
 
       .stat {
@@ -714,7 +736,7 @@
         inset: auto 14px 0;
         height: 3px;
         background: linear-gradient(90deg, rgba(255,255,255,.9), var(--amber), var(--aqua));
-        opacity: .74;
+        opacity: .82;
       }
 
       .stat span {
@@ -729,7 +751,8 @@
         display: block;
         margin-top: 10px;
         color: #fff;
-        font-size: 1.74rem;
+        font-size: 1.82rem;
+        font-family: "Red Hat Display", "Inter", sans-serif;
         line-height: 1;
       }
 
@@ -752,7 +775,7 @@
         inset: 0;
         pointer-events: none;
         opacity: 0;
-        background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.13), transparent 34%);
+        background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.16), transparent 34%);
         transition: opacity 180ms ease;
       }
 
@@ -768,7 +791,9 @@
         align-items: center;
         gap: 12px;
         border-bottom: 1px solid var(--line);
-        background: rgba(255,255,255,.045);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.028)),
+          rgba(255,255,255,.02);
       }
 
       .editor, .review, .source-body, .strategy-body { padding: 16px; }
@@ -866,14 +891,20 @@
         padding: 14px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(7,8,10,.34);
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02)),
+          rgba(7,8,10,.34);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
       }
 
       .section-card:hover {
-        transform: translateY(-1px);
-        border-color: rgba(102,210,200,.42);
-        background: rgba(255,255,255,.07);
+        transform: translateY(-2px);
+        border-color: rgba(117,216,207,.44);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.035)),
+          rgba(255,255,255,.04);
+        box-shadow: 0 18px 48px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.075);
       }
 
       .section-card-body {
@@ -890,6 +921,7 @@
         background: transparent;
         font-size: .95rem;
         font-weight: 950;
+        font-family: "Red Hat Display", "Inter", sans-serif;
       }
 
       .section-open {
@@ -929,7 +961,7 @@
         height: 32px;
         border-radius: 8px;
         border: 1px solid var(--line);
-        background: rgba(255,255,255,.055);
+        background: rgba(255,255,255,.065);
       }
 
       .section-move {
@@ -988,8 +1020,11 @@
         padding: 14px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.045);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
+          rgba(255,255,255,.025);
         overflow: hidden;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
       }
 
       .signal-card span {
@@ -1056,6 +1091,7 @@
           linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
           linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
         background-size: 50% 50%;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
       }
 
       .matrix-dot {
@@ -1078,7 +1114,10 @@
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255,255,255,.045);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025)),
+          rgba(255,255,255,.02);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
       }
 
       .source-card strong { display: block; color: #fff; font-size: .9rem; }
@@ -1479,7 +1518,7 @@
         width: 100%;
         height: 100%;
         min-height: 0;
-        padding: clamp(20px, 4vw, 42px);
+        padding: clamp(20px, 4vw, 42px) clamp(20px, 4vw, 42px) clamp(260px, 58vh, 620px);
         border: 0;
         border-radius: 0;
         color: var(--text);
@@ -2821,14 +2860,13 @@
         if (!reportModal.classList.contains("hidden")) closeReport();
       });
       function finishIntro() {
+        if (welcome.classList.contains("hide")) return;
         welcome.classList.add("opening");
-        setTimeout(() => welcome.classList.add("hide"), 420);
+        setTimeout(() => welcome.classList.add("hide"), 260);
       }
 
       $("skipIntroBtn").addEventListener("click", () => welcome.classList.add("hide"));
-      window.addEventListener("load", () => {
-        setTimeout(finishIntro, 1250);
-      });
+      setTimeout(finishIntro, 620);
       reportSearch.addEventListener("input", () => {
         searchTerm = reportSearch.value.trim().toLowerCase();
         renderCompanies(activeCompany());
