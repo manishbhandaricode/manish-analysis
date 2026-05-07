@@ -1460,7 +1460,8 @@
 
       .format-button,
       .font-select,
-      .size-select {
+      .size-trigger,
+      .size-option {
         min-height: 36px;
         border: 1px solid rgba(255,255,255,.14);
         border-radius: 6px;
@@ -1483,13 +1484,14 @@
 
       .format-button:hover,
       .font-select:hover,
-      .size-select:hover {
+      .size-trigger:hover,
+      .size-option:hover,
+      .size-option:focus {
         border-color: rgba(102,210,200,.45);
         background: rgba(102,210,200,.12);
       }
 
-      .font-select,
-      .size-select {
+      .font-select {
         width: min(260px, 100%);
         padding: 0 12px;
         color: #f4f5f1;
@@ -1497,21 +1499,58 @@
         font-weight: 750;
       }
 
-      .size-select {
+      .size-menu {
+        position: relative;
         width: 112px;
       }
 
-      .font-select option,
-      .size-select option {
+      .size-trigger {
+        width: 100%;
+        padding: 0 12px;
+        justify-content: space-between;
+        font-weight: 850;
+      }
+
+      .size-options {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 6px);
+        z-index: 18;
+        width: 126px;
+        display: none;
+        gap: 4px;
+        padding: 6px;
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        background: #f7f7f2;
+        box-shadow: 0 18px 48px rgba(0,0,0,.34);
+      }
+
+      .size-menu:hover .size-options,
+      .size-menu:focus-within .size-options {
+        display: grid;
+      }
+
+      .size-option {
+        width: 100%;
+        min-height: 32px;
+        justify-content: flex-start;
+        padding: 0 10px;
+        color: #151922;
+        background: transparent;
+        border-color: transparent;
+        font-weight: 800;
+        text-align: left;
+      }
+
+      .font-select option {
         background: #f7f7f2;
         color: #151922;
         font-weight: 700;
       }
 
       .font-select option:checked,
-      .font-select option:hover,
-      .size-select option:checked,
-      .size-select option:hover {
+      .font-select option:hover {
         background: #d8ebff;
         color: #0c1016;
       }
@@ -1952,18 +1991,21 @@
             <option value="Georgia, Times New Roman, serif">Georgia</option>
             <option value="Arial, Inter, sans-serif">Arial</option>
           </select>
-          <select class="size-select" id="fontSizeSelect" aria-label="Font size">
-            <option value="12">12 px</option>
-            <option value="14">14 px</option>
-            <option value="16" selected>16 px</option>
-            <option value="18">18 px</option>
-            <option value="20">20 px</option>
-            <option value="24">24 px</option>
-            <option value="28">28 px</option>
-            <option value="32">32 px</option>
-            <option value="40">40 px</option>
-            <option value="48">48 px</option>
-          </select>
+          <div class="size-menu" id="fontSizeMenu">
+            <button class="size-trigger" id="fontSizeTrigger" type="button" aria-haspopup="listbox" aria-expanded="false">16 px</button>
+            <div class="size-options" role="listbox" aria-label="Font size">
+              <button class="size-option" type="button" data-font-size="12">12 px</button>
+              <button class="size-option" type="button" data-font-size="14">14 px</button>
+              <button class="size-option" type="button" data-font-size="16">16 px</button>
+              <button class="size-option" type="button" data-font-size="18">18 px</button>
+              <button class="size-option" type="button" data-font-size="20">20 px</button>
+              <button class="size-option" type="button" data-font-size="24">24 px</button>
+              <button class="size-option" type="button" data-font-size="28">28 px</button>
+              <button class="size-option" type="button" data-font-size="32">32 px</button>
+              <button class="size-option" type="button" data-font-size="40">40 px</button>
+              <button class="size-option" type="button" data-font-size="48">48 px</button>
+            </div>
+          </div>
         </div>
         <div class="focus-body">
           <div class="focus-editor" id="focusEditor" contenteditable="true" role="textbox" aria-multiline="true"></div>
@@ -2533,14 +2575,42 @@
         focusEditor.focus();
         restoreEditorSelection();
         document.execCommand("fontSize", false, "7");
+        let lastSizedSpan = null;
         focusEditor.querySelectorAll('font[size="7"]').forEach((font) => {
           const span = document.createElement("span");
           span.style.fontSize = `${size}px`;
           span.innerHTML = font.innerHTML;
           font.replaceWith(span);
+          lastSizedSpan = span;
         });
+        if (lastSizedSpan) {
+          const range = document.createRange();
+          range.selectNodeContents(lastSizedSpan);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          savedEditorRange = range.cloneRange();
+        }
         rememberEditorSelection();
         updateFocusStats();
+        ensureCaretVisible();
+        $("fontSizeTrigger").textContent = `${size} px`;
+      }
+
+      function ensureCaretVisible() {
+        const selection = window.getSelection();
+        if (!selection.rangeCount || !focusEditor.contains(selection.anchorNode)) return;
+        const range = selection.getRangeAt(0).cloneRange();
+        range.collapse(false);
+        const rect = range.getBoundingClientRect();
+        const editorRect = focusEditor.getBoundingClientRect();
+        if (!rect.height && !rect.width) return;
+        const margin = 90;
+        if (rect.bottom > editorRect.bottom - margin) {
+          focusEditor.scrollTop += rect.bottom - editorRect.bottom + margin;
+        } else if (rect.top < editorRect.top + margin) {
+          focusEditor.scrollTop -= editorRect.top + margin - rect.top;
+        }
       }
 
       function insertTable() {
@@ -2946,9 +3016,15 @@
       window.addEventListener("afterprint", () => document.body.classList.remove("print-mode"));
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", closeFocusEditor);
-      focusEditor.addEventListener("input", updateFocusStats);
+      focusEditor.addEventListener("input", () => {
+        updateFocusStats();
+        ensureCaretVisible();
+      });
       focusEditor.addEventListener("paste", handleEditorPaste);
-      focusEditor.addEventListener("keyup", rememberEditorSelection);
+      focusEditor.addEventListener("keyup", () => {
+        rememberEditorSelection();
+        ensureCaretVisible();
+      });
       focusEditor.addEventListener("mouseup", rememberEditorSelection);
       focusEditor.addEventListener("blur", rememberEditorSelection);
       document.querySelectorAll("[data-format]").forEach((button) => {
@@ -2958,7 +3034,19 @@
       $("insertTableBtn").addEventListener("mousedown", (event) => event.preventDefault());
       $("insertTableBtn").addEventListener("click", insertTable);
       $("fontSelect").addEventListener("change", (event) => applyFormat("fontName", event.target.value));
-      $("fontSizeSelect").addEventListener("change", (event) => applyFontSize(event.target.value));
+      $("fontSizeMenu").addEventListener("mouseenter", () => $("fontSizeTrigger").setAttribute("aria-expanded", "true"));
+      $("fontSizeMenu").addEventListener("mouseleave", () => $("fontSizeTrigger").setAttribute("aria-expanded", "false"));
+      document.querySelectorAll("[data-font-size]").forEach((button) => {
+        button.addEventListener("mousedown", (event) => event.preventDefault());
+        button.addEventListener("mouseenter", () => applyFontSize(button.dataset.fontSize));
+        button.addEventListener("focus", () => applyFontSize(button.dataset.fontSize));
+        button.addEventListener("click", () => applyFontSize(button.dataset.fontSize));
+      });
+      focusModal.addEventListener("wheel", (event) => {
+        if (focusModal.classList.contains("hidden") || event.target.closest("#focusEditor")) return;
+        event.preventDefault();
+        focusEditor.scrollTop += event.deltaY;
+      }, { passive: false });
       window.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (!focusModal.classList.contains("hidden")) {
