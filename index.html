@@ -1459,7 +1459,8 @@
       }
 
       .format-button,
-      .font-select {
+      .font-select,
+      .size-select {
         min-height: 36px;
         border: 1px solid rgba(255,255,255,.14);
         border-radius: 6px;
@@ -1481,12 +1482,14 @@
       }
 
       .format-button:hover,
-      .font-select:hover {
+      .font-select:hover,
+      .size-select:hover {
         border-color: rgba(102,210,200,.45);
         background: rgba(102,210,200,.12);
       }
 
-      .font-select {
+      .font-select,
+      .size-select {
         width: min(260px, 100%);
         padding: 0 12px;
         color: #f4f5f1;
@@ -1494,14 +1497,21 @@
         font-weight: 750;
       }
 
-      .font-select option {
+      .size-select {
+        width: 112px;
+      }
+
+      .font-select option,
+      .size-select option {
         background: #f7f7f2;
         color: #151922;
         font-weight: 700;
       }
 
       .font-select option:checked,
-      .font-select option:hover {
+      .font-select option:hover,
+      .size-select option:checked,
+      .size-select option:hover {
         background: #d8ebff;
         color: #0c1016;
       }
@@ -1941,6 +1951,18 @@
             <option value="Merriweather, Georgia, serif">Merriweather</option>
             <option value="Georgia, Times New Roman, serif">Georgia</option>
             <option value="Arial, Inter, sans-serif">Arial</option>
+          </select>
+          <select class="size-select" id="fontSizeSelect" aria-label="Font size">
+            <option value="12">12 px</option>
+            <option value="14">14 px</option>
+            <option value="16" selected>16 px</option>
+            <option value="18">18 px</option>
+            <option value="20">20 px</option>
+            <option value="24">24 px</option>
+            <option value="28">28 px</option>
+            <option value="32">32 px</option>
+            <option value="40">40 px</option>
+            <option value="48">48 px</option>
           </select>
         </div>
         <div class="focus-body">
@@ -2506,6 +2528,21 @@
         updateFocusStats();
       }
 
+      function applyFontSize(value) {
+        const size = clampNumber(value, 10, 72);
+        focusEditor.focus();
+        restoreEditorSelection();
+        document.execCommand("fontSize", false, "7");
+        focusEditor.querySelectorAll('font[size="7"]').forEach((font) => {
+          const span = document.createElement("span");
+          span.style.fontSize = `${size}px`;
+          span.innerHTML = font.innerHTML;
+          font.replaceWith(span);
+        });
+        rememberEditorSelection();
+        updateFocusStats();
+      }
+
       function insertTable() {
         const rowValue = prompt("Rows", "3");
         if (rowValue === null) return;
@@ -2921,6 +2958,7 @@
       $("insertTableBtn").addEventListener("mousedown", (event) => event.preventDefault());
       $("insertTableBtn").addEventListener("click", insertTable);
       $("fontSelect").addEventListener("change", (event) => applyFormat("fontName", event.target.value));
+      $("fontSizeSelect").addEventListener("change", (event) => applyFontSize(event.target.value));
       window.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (!focusModal.classList.contains("hidden")) {
