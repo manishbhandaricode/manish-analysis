@@ -2080,6 +2080,8 @@
       let searchTerm = "";
       let activeFocusField = null;
       let savedEditorRange = null;
+      let pointerFrame = null;
+      let pointerState = { x: 0, y: 0, active: false, glowTarget: null };
 
       function defaultSections(mode, analysis = {}) {
         return (modeFields[mode] || modeFields.analysis).map((field) => ({
@@ -2529,13 +2531,13 @@
         const text = clipboard.getData("text/plain");
         if (html && /<table[\s>]/i.test(html)) {
           event.preventDefault();
-          insertHtmlAtCursor(extractTableHtml(html));
+          insertHtmlAtCursor(pasteHtmlFragment(html));
           return;
         }
-        const tableHtml = tableFromText(text);
-        if (tableHtml) {
+        const mixedHtml = richContentFromText(text);
+        if (mixedHtml) {
           event.preventDefault();
-          insertHtmlAtCursor(tableHtml);
+          insertHtmlAtCursor(mixedHtml);
         }
       }
 
@@ -2693,10 +2695,47 @@
         const body = Array.from({ length: Math.max(0, rows - 1) }, () => `<tr>${Array.from({ length: columns }, () => "<td><br></td>").join("")}</tr>`).join("");
         return `<table>${header}${body}</table><p><br></p>`;
       }
-      function extractTableHtml(html = "") {
-        const template = document.createElement("template");
-        template.innerHTML = html;
-        return [...template.content.querySelectorAll("table")].map((table) => table.outerHTML).join("<p><br></p>");
+      function pasteHtmlFragment(html = "") {
+        const doc = document.implementation.createHTMLDocument("");
+        doc.body.innerHTML = String(html || "");
+        doc.body.querySelectorAll("meta, link, title, style, script, svg, canvas").forEach((node) => node.remove());
+        doc.body.querySelectorAll("table").forEach((table) => {
+          table.removeAttribute("width");
+          table.removeAttribute("height");
+          table.removeAttribute("cellpadding");
+          table.removeAttribute("cellspacing");
+        });
+        return doc.body.innerHTML.trim();
+      }
+      function richContentFromText(text = "") {
+        const lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+        const blocks = [];
+        let paragraph = [];
+        let convertedTable = false;
+        const flushParagraph = () => {
+          if (!paragraph.length) return;
+          blocks.push(plainTextToHtml(paragraph.join("\n")));
+          paragraph = [];
+        };
+        for (let index = 0; index < lines.length;) {
+          const table = collectTextTable(lines, index);
+          if (table) {
+            flushParagraph();
+            blocks.push(table.html);
+            convertedTable = true;
+            index = table.nextIndex;
+            continue;
+          }
+          const line = lines[index];
+          if (line.trim()) {
+            paragraph.push(line);
+          } else {
+            flushParagraph();
+          }
+          index += 1;
+        }
+        flushParagraph();
+        return convertedTable ? blocks.join("") : "";
       }
       function tableFromText(text = "") {
         const rows = String(text || "").trim().split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
@@ -2712,12 +2751,43 @@
         const bodyRows = body.map((row) => `<tr>${row.map((cell) => `<td>${esc(cell) || "<br>"}</td>`).join("")}</tr>`).join("");
         return `<table>${header}${bodyRows}</table><p><br></p>`;
       }
+      function collectTextTable(lines, startIndex) {
+        const first = lines[startIndex]?.trim();
+        const delimiter = tableDelimiterForLine(first);
+        if (!delimiter) return null;
+        const rows = [];
+        let index = startIndex;
+        let width = 0;
+        while (index < lines.length) {
+          const line = lines[index].trim();
+          if (!line) break;
+          const currentDelimiter = tableDelimiterForLine(line);
+          if (currentDelimiter !== delimiter) break;
+          const cells = splitTableRow(line, delimiter);
+          if (cells.length < 2) break;
+          if (!width) width = cells.length;
+          if (cells.length !== width) break;
+          rows.push(cells);
+          index += 1;
+        }
+        if (rows.length < 2) return null;
+        const [head, ...body] = rows;
+        const header = `<tr>${head.map((cell) => `<th>${esc(cell)}</th>`).join("")}</tr>`;
+        const bodyRows = body.map((row) => `<tr>${row.map((cell) => `<td>${esc(cell) || "<br>"}</td>`).join("")}</tr>`).join("");
+        return { html: `<table>${header}${bodyRows}</table><p><br></p>`, nextIndex: index };
+      }
       function detectTableDelimiter(rows) {
         const candidates = ["\t", "|", ","];
         return candidates.find((delimiter) => {
           const counts = rows.map((row) => splitTableRow(row, delimiter).length);
           return counts.every((count) => count > 1) && Math.max(...counts) === Math.min(...counts);
         }) || "";
+      }
+      function tableDelimiterForLine(line = "") {
+        if (line.includes("\t")) return "\t";
+        if ((line.match(/\|/g) || []).length >= 1) return "|";
+        if ((line.match(/,/g) || []).length >= 1) return ",";
+        return "";
       }
       function splitTableRow(row, delimiter) {
         if (delimiter === "|") return row.replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim());
@@ -2873,20 +2943,28 @@
       });
 
       window.addEventListener("pointermove", (event) => {
-        if (!cursorDot || !cursorRing) return;
-        cursorDot.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
-        cursorRing.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
-        const target = event.target.closest("button, .company, .editor-card, .panel, .stat, [contenteditable='true']");
-        document.body.classList.toggle("cursor-active", Boolean(target));
-      });
+        pointerState = {
+          x: event.clientX,
+          y: event.clientY,
+          active: Boolean(event.target.closest("button, .company, .editor-card, .panel, .stat, [contenteditable='true']")),
+          glowTarget: event.target.closest(".panel, .stat")
+        };
+        if (!pointerFrame) pointerFrame = requestAnimationFrame(updatePointerEffects);
+      }, { passive: true });
 
-      document.addEventListener("pointermove", (event) => {
-        const target = event.target.closest(".panel, .stat");
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
-        target.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-        target.style.setProperty("--my", `${event.clientY - rect.top}px`);
-      });
+      function updatePointerEffects() {
+        pointerFrame = null;
+        if (cursorDot && cursorRing) {
+          const transform = `translate(${pointerState.x}px, ${pointerState.y}px) translate(-50%, -50%)`;
+          cursorDot.style.transform = transform;
+          cursorRing.style.transform = transform;
+          document.body.classList.toggle("cursor-active", pointerState.active);
+        }
+        if (!pointerState.glowTarget) return;
+        const rect = pointerState.glowTarget.getBoundingClientRect();
+        pointerState.glowTarget.style.setProperty("--mx", `${pointerState.x - rect.left}px`);
+        pointerState.glowTarget.style.setProperty("--my", `${pointerState.y - rect.top}px`);
+      }
 
       render();
     </script>
