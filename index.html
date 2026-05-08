@@ -2609,6 +2609,13 @@
         selection.removeAllRanges();
       }
 
+      function clearActiveStyleWrappers() {
+        if (activeSizeWrapper) activeSizeWrapper.removeAttribute("data-live-size");
+        if (activeFontWrapper) activeFontWrapper.removeAttribute("data-live-font");
+        activeSizeWrapper = null;
+        activeFontWrapper = null;
+      }
+
       function saveFocusEditor({ close = true } = {}) {
         if (!activeFocusField) return;
         updateCompany((company) => {
@@ -2697,14 +2704,21 @@
 
       function commitFontSize(value) {
         applyFontSize(value);
-        if (activeSizeWrapper) activeSizeWrapper.removeAttribute("data-live-size");
-        activeSizeWrapper = null;
+        clearActiveStyleWrappers();
         $("fontSizeMenu").classList.add("committed");
         $("fontSizeTrigger").setAttribute("aria-expanded", "false");
         $("fontSizeTrigger").focus({ preventScroll: true });
       }
 
       function wrapSelectedContent(range, styles) {
+        const styleTarget = fullySelectedStyleTarget(range);
+        if (styleTarget) {
+          styleTarget.dataset[styles.marker] = "true";
+          Object.entries(styles).forEach(([property, value]) => {
+            if (property !== "marker") setWrapperStyle(styleTarget, property, value);
+          });
+          return styleTarget;
+        }
         const fragment = range.extractContents();
         const wrapper = document.createElement(fragmentNeedsBlockWrapper(fragment) ? "div" : "span");
         wrapper.appendChild(fragment);
@@ -2714,6 +2728,18 @@
         });
         range.insertNode(wrapper);
         return wrapper;
+      }
+
+      function fullySelectedStyleTarget(range) {
+        if (range.collapsed) return null;
+        const target = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+          ? range.commonAncestorContainer
+          : range.commonAncestorContainer.parentElement;
+        if (!target || target === focusEditor || !focusEditor.contains(target)) return null;
+        if (!target.matches("p, div, li, td, th, h1, h2, h3, h4, h5, h6, blockquote")) return null;
+        const startsAtBeginning = range.startContainer === target && range.startOffset === 0;
+        const endsAtEnd = range.endContainer === target && range.endOffset === target.childNodes.length;
+        return startsAtBeginning && endsAtEnd ? target : null;
       }
 
       function setWrapperStyle(wrapper, property, value) {
@@ -3162,10 +3188,16 @@
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", closeFocusEditor);
       focusEditor.addEventListener("input", () => {
+        clearActiveStyleWrappers();
         updateFocusStats();
         ensureCaretVisible();
       });
-      focusEditor.addEventListener("paste", handleEditorPaste);
+      focusEditor.addEventListener("paste", (event) => {
+        clearActiveStyleWrappers();
+        handleEditorPaste(event);
+      });
+      focusEditor.addEventListener("mousedown", clearActiveStyleWrappers);
+      focusEditor.addEventListener("keydown", clearActiveStyleWrappers);
       focusEditor.addEventListener("keyup", () => {
         rememberEditorSelection();
         ensureCaretVisible();
