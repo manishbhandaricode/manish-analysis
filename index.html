@@ -40,6 +40,10 @@
         font-size: 15px;
       }
 
+      body.focus-mode {
+        overflow: hidden;
+      }
+
       .cursor-dot,
       .cursor-ring {
         position: fixed;
@@ -1531,6 +1535,11 @@
         display: grid;
       }
 
+      .size-menu.committed .size-options {
+        display: none;
+        pointer-events: none;
+      }
+
       .size-option {
         width: 100%;
         min-height: 32px;
@@ -1577,6 +1586,7 @@
         line-height: 1.72;
         overflow: auto;
         overscroll-behavior: contain;
+        touch-action: pan-y;
         outline: none;
         scrollbar-width: thin;
         scrollbar-color: rgba(102,210,200,.58) rgba(255,255,255,.08);
@@ -2597,6 +2607,21 @@
         $("fontSizeTrigger").textContent = `${size} px`;
       }
 
+      function commitFontSize(value) {
+        applyFontSize(value);
+        const selection = window.getSelection();
+        if (selection.rangeCount && focusEditor.contains(selection.anchorNode)) {
+          const range = selection.getRangeAt(0).cloneRange();
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          savedEditorRange = range.cloneRange();
+        }
+        $("fontSizeMenu").classList.add("committed");
+        $("fontSizeTrigger").setAttribute("aria-expanded", "false");
+        focusEditor.focus({ preventScroll: true });
+      }
+
       function ensureCaretVisible() {
         const selection = window.getSelection();
         if (!selection.rangeCount || !focusEditor.contains(selection.anchorNode)) return;
@@ -3034,16 +3059,22 @@
       $("insertTableBtn").addEventListener("mousedown", (event) => event.preventDefault());
       $("insertTableBtn").addEventListener("click", insertTable);
       $("fontSelect").addEventListener("change", (event) => applyFormat("fontName", event.target.value));
-      $("fontSizeMenu").addEventListener("mouseenter", () => $("fontSizeTrigger").setAttribute("aria-expanded", "true"));
-      $("fontSizeMenu").addEventListener("mouseleave", () => $("fontSizeTrigger").setAttribute("aria-expanded", "false"));
+      $("fontSizeMenu").addEventListener("mouseenter", () => {
+        $("fontSizeMenu").classList.remove("committed");
+        $("fontSizeTrigger").setAttribute("aria-expanded", "true");
+      });
+      $("fontSizeMenu").addEventListener("mouseleave", () => {
+        $("fontSizeMenu").classList.remove("committed");
+        $("fontSizeTrigger").setAttribute("aria-expanded", "false");
+      });
       document.querySelectorAll("[data-font-size]").forEach((button) => {
         button.addEventListener("mousedown", (event) => event.preventDefault());
         button.addEventListener("mouseenter", () => applyFontSize(button.dataset.fontSize));
         button.addEventListener("focus", () => applyFontSize(button.dataset.fontSize));
-        button.addEventListener("click", () => applyFontSize(button.dataset.fontSize));
+        button.addEventListener("click", () => commitFontSize(button.dataset.fontSize));
       });
       focusModal.addEventListener("wheel", (event) => {
-        if (focusModal.classList.contains("hidden") || event.target.closest("#focusEditor")) return;
+        if (focusModal.classList.contains("hidden") || event.target.closest(".size-options")) return;
         event.preventDefault();
         focusEditor.scrollTop += event.deltaY;
       }, { passive: false });
