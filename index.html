@@ -1658,6 +1658,7 @@
       .focus-body {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 280px;
+        grid-template-rows: minmax(0, 1fr);
         gap: 0;
         min-height: 0;
         overflow: hidden;
@@ -1665,8 +1666,11 @@
 
       .focus-editor {
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-height: 100%;
         min-height: 0;
+        min-width: 0;
+        align-self: stretch;
         padding: clamp(20px, 4vw, 42px) clamp(20px, 4vw, 42px) clamp(260px, 58vh, 620px);
         border: 0;
         border-radius: 0;
@@ -3462,11 +3466,6 @@
         button.addEventListener("focus", () => applyFontSize(button.dataset.fontSize));
         button.addEventListener("click", (event) => event.preventDefault());
       });
-      focusModal.addEventListener("wheel", (event) => {
-        if (focusModal.classList.contains("hidden") || event.target.closest(".size-options")) return;
-        event.preventDefault();
-        focusEditor.scrollTop += event.deltaY;
-      }, { passive: false });
       window.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (!focusModal.classList.contains("hidden")) {
