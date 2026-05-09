@@ -1298,31 +1298,6 @@
         box-shadow: 0 0 0 4px rgba(215,183,96,.22);
       }
 
-      .free-note {
-        position: absolute;
-        z-index: 2;
-        min-width: 180px;
-        min-height: 42px;
-        max-width: min(360px, calc(100% - 40px));
-        padding: 10px 12px;
-        border: 1px solid #cfd4cc;
-        border-radius: 8px;
-        color: #151922;
-        background: #fffdf5;
-        box-shadow: 0 12px 34px rgba(17, 24, 39, .12);
-        line-height: 1.55;
-      }
-
-      .free-note:focus {
-        outline: 0;
-        box-shadow: 0 0 0 4px rgba(215,183,96,.22), 0 12px 34px rgba(17, 24, 39, .12);
-      }
-
-      .free-note:empty::before {
-        content: "Type here...";
-        color: #8a9099;
-      }
-
       .source-list-report { margin: 0; padding-left: 18px; line-height: 1.7; }
       .report-footer {
         margin-top: 44px;
@@ -2581,9 +2556,6 @@
             <p contenteditable="true" data-doc-text="${doc.id}">${esc(doc.text)}</p>
           </section>
         `).join("");
-        const freeNotes = (company.freeNotes || []).map((note) => `
-          <div class="free-note" contenteditable="true" data-free-note="${note.id}" style="left:${note.x}px; top:${note.y}px;">${note.html || ""}</div>
-        `).join("");
         return `
           <div class="report-cover">
             <span>${copy.reportLabel}</span>
@@ -2612,7 +2584,6 @@
             <span>Inscrbe</span>
             <span>Research to Reality</span>
           </footer>
-          ${freeNotes}
         `;
       }
 
@@ -2655,12 +2626,6 @@
             const doc = company.documents.find((item) => item.id === node.dataset.docText);
             if (doc) doc.text = node.textContent.trim();
           });
-          company.freeNotes = Array.from(reportPaper.querySelectorAll("[data-free-note]")).map((node) => ({
-            id: node.dataset.freeNote,
-            x: parseFloat(node.style.left) || 0,
-            y: parseFloat(node.style.top) || 0,
-            html: sanitizeHtml(node.innerHTML.trim())
-          })).filter((note) => note.html);
         });
         docStatus.textContent = "Report edits saved";
         openReport();
@@ -2671,21 +2636,6 @@
         reportModal.classList.add("hidden");
         document.body.classList.remove("report-mode");
         render();
-      }
-
-      function addFreeNoteAt(event) {
-        if (event.target.closest("[contenteditable='true'], button, a")) return;
-        const rect = reportPaper.getBoundingClientRect();
-        const x = Math.max(16, Math.min(event.clientX - rect.left, reportPaper.clientWidth - 220));
-        const y = Math.max(16, event.clientY - rect.top + reportPaper.scrollTop);
-        const note = document.createElement("div");
-        note.className = "free-note";
-        note.contentEditable = "true";
-        note.dataset.freeNote = `note-${Date.now().toString(36)}-${Math.random().toString(16).slice(2, 6)}`;
-        note.style.left = `${x}px`;
-        note.style.top = `${y}px`;
-        reportPaper.appendChild(note);
-        note.focus();
       }
 
       function placeFocusCaretAtEnd() {
@@ -3402,7 +3352,6 @@
       $("copyReportBtn").addEventListener("click", copyReportText);
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
-      reportPaper.addEventListener("click", addFreeNoteAt);
       window.addEventListener("afterprint", () => document.body.classList.remove("print-mode"));
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", requestCloseFocusEditor);
