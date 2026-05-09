@@ -1433,6 +1433,7 @@
       }
 
       .focus-window {
+        position: relative;
         width: min(1180px, 100%);
         height: calc(100vh - 44px);
         max-height: calc(100vh - 44px);
@@ -1472,6 +1473,70 @@
       }
 
       .focus-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .autosave-toggle {
+        min-height: 42px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 6px;
+        background: rgba(255,255,255,.055);
+        color: var(--text);
+        font-size: .82rem;
+        font-weight: 850;
+        cursor: pointer;
+      }
+
+      .autosave-toggle input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--accent);
+      }
+
+      .unsaved-guard {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: rgba(4,5,7,.64);
+        backdrop-filter: blur(10px);
+      }
+
+      .unsaved-guard.hidden {
+        display: none;
+      }
+
+      .unsaved-card {
+        width: min(460px, 100%);
+        padding: 22px;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 8px;
+        background: #15181d;
+        box-shadow: 0 28px 80px rgba(0,0,0,.42);
+      }
+
+      .unsaved-card h3 {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: 1.2rem;
+      }
+
+      .unsaved-card p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .unsaved-actions {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -2026,6 +2091,10 @@
             <span id="focusHint">Write with more room and less dashboard noise.</span>
           </div>
           <div class="focus-actions">
+            <label class="autosave-toggle" for="autoSaveToggle">
+              <input id="autoSaveToggle" type="checkbox">
+              Auto-save
+            </label>
             <button class="glass-button" id="closeFocusBtn">Back</button>
             <button class="glow-button" id="saveFocusBtn">Save Section</button>
           </div>
@@ -2072,6 +2141,17 @@
               <span>Characters <b id="focusChars">0</b></span>
             </div>
           </aside>
+        </div>
+        <div class="unsaved-guard hidden" id="unsavedGuard" role="alertdialog" aria-modal="true" aria-labelledby="unsavedTitle" aria-describedby="unsavedMessage">
+          <div class="unsaved-card">
+            <h3 id="unsavedTitle">Unsaved document</h3>
+            <p id="unsavedMessage">You have changes that are not saved yet. Save before going back?</p>
+            <div class="unsaved-actions">
+              <button class="glass-button" id="cancelBackBtn" type="button">Continue Editing</button>
+              <button class="glass-button" id="discardBackBtn" type="button">No, Go Back</button>
+              <button class="glow-button" id="saveBackBtn" type="button">Yes, Save</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2139,6 +2219,7 @@
 
       const defaultData = {
         mode: "analysis",
+        autoSave: false,
         activeId: "company-x",
         companies: [
           {
@@ -2202,6 +2283,9 @@
       let savedEditorRange = null;
       let activeSizeWrapper = null;
       let activeFontWrapper = null;
+      let lastSavedFocusHtml = "";
+      let focusDirty = false;
+      let autoSaveTimer = null;
       let pointerFrame = null;
       let pointerState = { x: 0, y: 0, active: false, glowTarget: null };
 
@@ -2266,6 +2350,7 @@
           const saved = raw ? JSON.parse(raw) : null;
           if (!saved || !Array.isArray(saved.companies)) return structuredClone(defaultData);
           saved.mode = saved.mode === "docs" ? "docs" : "analysis";
+          saved.autoSave = Boolean(saved.autoSave);
           saved.companies.forEach((company) => {
             company.analysis = migrateAnalysis(company.analysis || {});
             migrateSections(company);
@@ -2630,6 +2715,10 @@
         savedEditorRange = null;
         activeSizeWrapper = null;
         activeFontWrapper = null;
+        lastSavedFocusHtml = sanitizeHtml(focusEditor.innerHTML.trim());
+        setFocusDirty(false);
+        $("autoSaveToggle").checked = Boolean(state.autoSave);
+        $("unsavedGuard").classList.add("hidden");
         updateFocusStats();
         focusModal.classList.remove("hidden");
         document.body.classList.add("focus-mode");
@@ -2690,14 +2779,42 @@
         activeFontWrapper = null;
       }
 
-      function saveFocusEditor({ close = true } = {}) {
+      function currentFocusHtml() {
+        return sanitizeHtml(focusEditor.innerHTML.trim());
+      }
+
+      function setFocusDirty(isDirty) {
+        focusDirty = Boolean(isDirty);
+        $("saveFocusBtn").textContent = focusDirty ? "Save Changes" : "Save Section";
+        if (focusDirty && !state.autoSave) docStatus.textContent = "Unsaved changes";
+      }
+
+      function markFocusChanged() {
+        const isDirty = currentFocusHtml() !== lastSavedFocusHtml;
+        setFocusDirty(isDirty);
+        if (isDirty && state.autoSave) scheduleAutoSave();
+      }
+
+      function scheduleAutoSave() {
+        clearTimeout(autoSaveTimer);
+        docStatus.textContent = "Auto-saving...";
+        autoSaveTimer = setTimeout(() => saveFocusEditor({ close: false, silent: true }), 450);
+      }
+
+      function saveFocusEditor({ close = true, silent = false } = {}) {
         if (!activeFocusField) return;
-        updateCompany((company) => {
-          const section = sectionsForMode(company).find((item) => item.id === activeFocusField);
-          if (section) section.body = sanitizeHtml(focusEditor.innerHTML.trim());
-        });
-        docStatus.textContent = "Section saved";
-        if (close) closeFocusEditor();
+        clearTimeout(autoSaveTimer);
+        const company = activeCompany();
+        const section = sectionsForMode(company).find((item) => item.id === activeFocusField);
+        const html = currentFocusHtml();
+        if (section) section.body = html;
+        company.updatedAt = Date.now();
+        lastSavedFocusHtml = html;
+        persist();
+        setFocusDirty(false);
+        docStatus.textContent = state.autoSave && !close ? "Auto-saved" : "Section saved";
+        if (!silent) docStatus.textContent = "Section saved";
+        if (close) closeFocusEditor({ force: true });
       }
 
       function applyFormat(command, value = null) {
@@ -2706,6 +2823,7 @@
         document.execCommand(command, false, value);
         rememberEditorSelection();
         updateFocusStats();
+        markFocusChanged();
       }
 
       function applyFontFamily(value) {
@@ -2734,6 +2852,7 @@
         updateFocusStats();
         if (!wasCollapsed) parkEditorSelection();
         preserveEditorScroll(previousScroll);
+        markFocusChanged();
       }
 
       function applyFontSize(value) {
@@ -2779,6 +2898,7 @@
       function commitFontSize(value) {
         applyFontSize(value);
         clearActiveStyleWrappers();
+        markFocusChanged();
         $("fontSizeMenu").classList.add("committed");
         $("fontSizeTrigger").setAttribute("aria-expanded", "false");
         $("fontSizeTrigger").focus({ preventScroll: true });
@@ -2872,6 +2992,7 @@
         document.execCommand("insertHTML", false, sanitizeHtml(html));
         rememberEditorSelection();
         updateFocusStats();
+        markFocusChanged();
       }
 
       function handleEditorPaste(event) {
@@ -2891,13 +3012,31 @@
         }
       }
 
-      function closeFocusEditor() {
+      function requestCloseFocusEditor() {
+        if (!focusDirty || state.autoSave) {
+          if (state.autoSave && focusDirty) saveFocusEditor({ close: false, silent: true });
+          closeFocusEditor({ force: true });
+          return;
+        }
+        $("unsavedGuard").classList.remove("hidden");
+        $("saveBackBtn").focus();
+      }
+
+      function closeFocusEditor({ force = false } = {}) {
+        if (!force && focusDirty) {
+          requestCloseFocusEditor();
+          return;
+        }
+        clearTimeout(autoSaveTimer);
+        $("unsavedGuard").classList.add("hidden");
         focusModal.classList.add("hidden");
         document.body.classList.remove("focus-mode");
         activeFocusField = null;
         savedEditorRange = null;
         activeSizeWrapper = null;
         activeFontWrapper = null;
+        lastSavedFocusHtml = "";
+        focusDirty = false;
         render();
       }
 
@@ -3262,11 +3401,24 @@
       reportPaper.addEventListener("click", addFreeNoteAt);
       window.addEventListener("afterprint", () => document.body.classList.remove("print-mode"));
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
-      $("closeFocusBtn").addEventListener("click", closeFocusEditor);
+      $("closeFocusBtn").addEventListener("click", requestCloseFocusEditor);
+      $("autoSaveToggle").addEventListener("change", (event) => {
+        state.autoSave = event.target.checked;
+        persist();
+        docStatus.textContent = state.autoSave ? "Auto-save enabled" : "Auto-save disabled";
+        if (state.autoSave && focusDirty) saveFocusEditor({ close: false, silent: true });
+      });
+      $("saveBackBtn").addEventListener("click", () => saveFocusEditor());
+      $("discardBackBtn").addEventListener("click", () => closeFocusEditor({ force: true }));
+      $("cancelBackBtn").addEventListener("click", () => {
+        $("unsavedGuard").classList.add("hidden");
+        focusEditorWithoutScroll();
+      });
       focusEditor.addEventListener("input", () => {
         clearActiveStyleWrappers();
         updateFocusStats();
         ensureCaretVisible();
+        markFocusChanged();
       });
       focusEditor.addEventListener("paste", (event) => {
         clearActiveStyleWrappers();
@@ -3318,7 +3470,7 @@
       window.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (!focusModal.classList.contains("hidden")) {
-          closeFocusEditor();
+          requestCloseFocusEditor();
           return;
         }
         if (!reportModal.classList.contains("hidden")) closeReport();
