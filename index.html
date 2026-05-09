@@ -2599,6 +2599,24 @@
         note.focus();
       }
 
+      function placeFocusCaretAtEnd() {
+        focusEditorWithoutScroll();
+        if (!focusEditor.innerHTML.trim()) focusEditor.innerHTML = "<p><br></p>";
+        const range = document.createRange();
+        range.selectNodeContents(focusEditor);
+        range.collapse(false);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        savedEditorRange = range.cloneRange();
+      }
+
+      function handleFocusEditorClick(event) {
+        if (event.target !== focusEditor) return;
+        clearActiveStyleWrappers();
+        placeFocusCaretAtEnd();
+      }
+
       function openFocusEditor(sectionId) {
         const company = activeCompany();
         const section = sectionsForMode(company).find((item) => item.id === sectionId);
@@ -3241,7 +3259,7 @@
       $("copyReportBtn").addEventListener("click", copyReportText);
       $("saveReportBtn").addEventListener("click", saveReportEdits);
       $("closeReportBtn").addEventListener("click", closeReport);
-      reportPaper.addEventListener("dblclick", addFreeNoteAt);
+      reportPaper.addEventListener("click", addFreeNoteAt);
       window.addEventListener("afterprint", () => document.body.classList.remove("print-mode"));
       $("saveFocusBtn").addEventListener("click", () => saveFocusEditor());
       $("closeFocusBtn").addEventListener("click", closeFocusEditor);
@@ -3254,6 +3272,7 @@
         clearActiveStyleWrappers();
         handleEditorPaste(event);
       });
+      focusEditor.addEventListener("click", handleFocusEditorClick);
       focusEditor.addEventListener("mousedown", clearActiveStyleWrappers);
       focusEditor.addEventListener("keydown", clearActiveStyleWrappers);
       focusEditor.addEventListener("keyup", () => {
@@ -3277,11 +3296,19 @@
         $("fontSizeMenu").classList.remove("committed");
         $("fontSizeTrigger").setAttribute("aria-expanded", "false");
       });
+      $("fontSizeTrigger").addEventListener("pointerdown", () => {
+        $("fontSizeMenu").classList.remove("committed");
+        $("fontSizeTrigger").setAttribute("aria-expanded", "true");
+      });
       document.querySelectorAll("[data-font-size]").forEach((button) => {
+        button.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
+          commitFontSize(button.dataset.fontSize);
+        });
         button.addEventListener("mousedown", (event) => event.preventDefault());
         button.addEventListener("mouseenter", () => applyFontSize(button.dataset.fontSize));
         button.addEventListener("focus", () => applyFontSize(button.dataset.fontSize));
-        button.addEventListener("click", () => commitFontSize(button.dataset.fontSize));
+        button.addEventListener("click", (event) => event.preventDefault());
       });
       focusModal.addEventListener("wheel", (event) => {
         if (focusModal.classList.contains("hidden") || event.target.closest(".size-options")) return;
